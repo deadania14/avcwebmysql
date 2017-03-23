@@ -1,0 +1,23 @@
+{% load staticfiles %}
+<html>
+
+<head>
+    <title>Event AVC</title>
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+<head>
+<body>
+    <div class="container">
+        <div class="row">
+
+            {% for event in events %}
+            <h1><a href ="">{{event.event_name}}</a></h1>
+            <p>{{event.desc|linebreaksbr}}</p>
+            <p class = "align-right">{{event.created_date}}</p>
+            {% endfor %}
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="{% static 'js/bootstrap.js' %}"></script>
+</body>
+
+</html>
