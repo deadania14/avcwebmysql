@@ -12,7 +12,8 @@
             {% for event in events %}
             <h1><a href ="">{{event.event_name}}</a></h1>
             <p>{{event.desc|linebreaksbr}}</p>
-            <p class = "align-right">{{event.created_date}}</p>
+            <br><img class="img-circle" src="{{event.image.url}}" height='150' width='150'> 
+            <p>{{event.created_date}}</p>
             {% endfor %}
         </div>
     </div>

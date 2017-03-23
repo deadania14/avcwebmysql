@@ -9,7 +9,8 @@ class Event(models.Model):
     sender = models.CharField(max_length=20)
     phone = models.CharField(max_length=20)
     email = models.EmailField()
-    attachment = models.FileField(blank=True)
+    image = models.ImageField(null=True, blank=True, upload_to='images/events')
+    attachment = models.FileField(blank=True, verbose_name = "proposal atau undangan", upload_to='files/events')
     event_date = models.DateTimeField( default = timezone.now)
     created_date = models.DateTimeField(
             default=timezone.now)
