@@ -2,8 +2,7 @@ from django.db import models
 from django.utils import timezone
 
 class Event(models.Model):
-    event_id = models.AutoField(primary_key = True)
-    event_name = models.CharField(max_length=20)
+    event_name = models.CharField(max_length=50)
     corporate = models.CharField(max_length=50)
     desc = models.TextField()
     sender = models.CharField(max_length=20)

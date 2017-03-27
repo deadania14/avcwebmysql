@@ -1,0 +1,49 @@
+{% load staticfiles %}
+<html>
+
+<head>
+    <title>{% block title %}{% endblock%}</title>
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/public.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
+    <head>
+
+        <body>
+            <nav class="navbar" role="navigation">
+                <div class="container">
+                    <div class="navbar-header">
+                        <h1><a	href="/">Alliance Violin Community</a></h1>
+                    </div>
+                    <div class="collapse navbar-collapse" id="top-navbar-1">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                <a href="/"><br>Beranda</a>
+                            </li>
+                            <li>
+                                <a href="registration/"><br>Pendaftaran</a>
+                            </li>
+                            <li>
+                                <a href="#acara.html"><br>Acara</a>
+                            </li>
+                            <li>
+                                <a href="#about.html"><br>Tentang AVC</a>
+                            </li>
+                            <li>
+                                <a href="#contact.html"><br>Hubungi Kami</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <div class="container">
+                <div class="row">
+                    {% block content %} {% endblock %}
+                </div>
+            </div>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+            <script src="{% static 'js/bootstrap.js' %}"></script>
+        </body>
+
+</html>
