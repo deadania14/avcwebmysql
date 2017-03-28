@@ -18,13 +18,14 @@
                     </div>
                     <div class="nav navbar-nav navbar-right">
                     <span style="font-size:30px;cursor:pointer;" onclick="openNav()">&#9776;</span>
-                    <div>
+                  </div>
+
                     <div id="mySidenav" class="sidenav">
                         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
                         <ul class="">
                           <li><a href="#">HPD</a></li>
                           <ul>
-                            <li><a href="list_article/">Daftar Article</a></li>
+                            <li><a href="{% url 'manajemen:list_article' %}">Daftar Article</a></li>
                           </ul>
                         </ul>
                     </div>

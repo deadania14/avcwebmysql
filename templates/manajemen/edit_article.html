@@ -1,0 +1,14 @@
+{% extends 'manajemen/base.html' %}
+{% block title%}
+{% endblock %}
+
+{% block content %}
+ini list article
+<h1>
+New Article
+</h1>
+<form method="POST"> {% csrf_token %}
+  {{form.as_p}}
+  <button type="submit" class="save btn btn-default">Save</button>
+</form>
+{% endblock %}

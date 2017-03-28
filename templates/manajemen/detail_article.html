@@ -1,0 +1,10 @@
+{% extends 'manajemen/base.html' %}
+{% block content %}
+<div>
+  <h1>{{articleid.title}}</h1>
+  <p>{{articleid.text|linebreaksbr}}</p>
+  {% if articleid.image %}
+  <br><img class="img-circle" src="{{articleid.image.url}}" height='150' width='150'>{% endif %}
+  <p>{{articleid.created_date}}</p>
+</div>
+{% endblock %}
