@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from .models import Article
 from .forms import ArticleForm
 
@@ -27,7 +29,7 @@ def new_article(request):
             narticle.author = request.user
             narticle.published_date= timezone.now()
             narticle.save()
-            return redirect('detail_article', pk=narticle.pk)
+            return HttpResponseRedirect(reverse('manajemen:detail_article', args=(narticle.id,)))
     else :
         form = ArticleForm()
     return render(request, 'manajemen/edit_article.html', {'form':form})

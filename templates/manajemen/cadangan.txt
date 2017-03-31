@@ -1,0 +1,1 @@
+return HttpResponseRedirect(reverse('detail_article', article_id=(narticle.pk,)))

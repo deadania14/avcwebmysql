@@ -5,9 +5,8 @@
 {% block content %}
 ini list article
 <div>
-
+  <a	href="{%	url	'manajemen:new_article'	%}"	class="top-menu"><span	class="glyphicon	glyphicon-plus">add</span><a>
 </div>
-<a	href="{%	url	'manajemen:new_article'	%}"	class="top-menu"><span	class="glyphicon	glyphicon-plus">add</span><a>
 {% for article in articles %}
 <div>
   <h1><a href= "{% url 'manajemen:detail_article' article.id %}">{{article.title}}</a></h1>

@@ -1,10 +1,22 @@
-{% extends 'public/base.html' %}
-{% block title %} Beranda {% endblock %}
-{% block content %}
-<div class ="col-md-8">
-{% for event in events %}
-<div class = "align-center"><img class="img-circle" src="{{event.image.url}}" height='150' width='150'><div>
-<h1><a href ="{% url 'public:event_detail' event.id %}">{{event.event_name}}</a></h1>
-<p>{{event.desc|slice:":100"}}...<a href ="">read more</a></p>
-<br>
-<p>{{event.created_date}}</p> {% endfor %}</div> {% endblock %}
+{% extends 'public/base.html' %} {% block title %} Beranda {% endblock %} {% block content %}
+<div class="col-md-6">
+    {% for event in events %}
+    <div class="align-center">
+        {% if event.image %}
+        <img class="img-circle" src="{{event.image.url}}" height='150' width='150'> {% endif %}</div>
+    <h1><a href ="{% url 'public:event_detail' event.id %}">{{event.event_name}}</a></h1>
+    <p>{{event.desc|slice:":100"}}...<a href="">read more</a></p>
+    <br>
+    <p>{{event.created_date}}</p> {% endfor %}</div>
+<div class="col-md-6">
+    {% for article in articles %}
+    <div class="align-center">
+        <h1><a href= "">{{article.title}}</a></h1>
+        <p>published : {{article.published_date}}</p>
+        <p>{{article.text|linebreaksbr}}</p>
+        {% if article.image %}
+        <img class="img-circle" src="{{article.image.url}}" height='150' width='150'>{% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

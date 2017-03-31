@@ -1,6 +1,7 @@
 {% extends 'manajemen/base.html' %}
 {% block content %}
 <div>
+
   <h1>{{articleid.title}}</h1>
   <p>{{articleid.text|linebreaksbr}}</p>
   {% if articleid.image %}
