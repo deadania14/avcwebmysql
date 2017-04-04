@@ -19,3 +19,10 @@ if request.method =='POST':
 
 
 <a	href="{%	url	'event_new'	%}"	class="top-menu"><span	class="glyphicon	glyphicon-plus"></span></a>
+
+
+def send_mail(request):
+    subject = request.POST.get('subject', '')
+    message = request.POST.get('message', '')
+    from_email = request.POST.get('from_email', '')
+    if subject and message and from_email:

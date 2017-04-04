@@ -5,6 +5,7 @@ from django.urls import reverse
 from .models import Article
 from .forms import ArticleForm
 
+
 def index(request):
     context={}
     return render(request, 'manajemen/index.html', context)

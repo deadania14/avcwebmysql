@@ -5,7 +5,7 @@
 
 {% block content %}
 <h1> Penawaran Acara </h1>
-<form action="//"method="POST" class= "post-form">{% crsf_token %}
+<form method="POST" class= "post-form">{% csrf_token %}
   {{form.as_p}}
   <button type="submit" class="save btn btn-default" value="Submit">Kirim Ajuan</button>
 </form>

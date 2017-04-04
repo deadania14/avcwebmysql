@@ -7,4 +7,8 @@ urlpatterns = [
     url(r'^registration/$', views.registration, name="registration"),
     #/event_detail
     url(r'^event/(?P<event_id>[0-9]+)/$', views.event_detail, name='event_detail'),
+    #/event_new
+    url(r'^event/new/$', views.event_new, name='event_new'),
+    #/register
+    url(r'^register/$', views.register, name='register'),
 ]

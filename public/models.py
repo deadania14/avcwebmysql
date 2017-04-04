@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 class Event(models.Model):
     event_name = models.CharField(max_length=50)
@@ -29,3 +30,19 @@ class Event(models.Model):
 
     def __str__(self):
         return self.event_name
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, related_name= "profile")
+    gender_choices = (
+        ('wanita', 'Wanita',),
+        ('pria', 'Pria',),
+        ('lainnya', 'Lainnya',),
+    )
+    gender = models.CharField(max_length = 10, default = "pria", choices= gender_choices)
+    phone = models.CharField(max_length=20)
+    address = models.TextField()
+    photo = models.ImageField(null=True, blank=True, upload_to='images/profile_images')
+    update_time = models.DateTimeField(
+            default=timezone.now)
+    def __str__(self):
+        return self.user.username

@@ -9,4 +9,5 @@ urlpatterns = [
     #/new_article
     url(r'^article/new/$', views.new_article, name='new_article'),
     #/url(r'^article/edit-(?P<pk>\d+)/$', views.edit_article, name='edit_article'),
+    
 ]

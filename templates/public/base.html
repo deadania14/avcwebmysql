@@ -22,16 +22,25 @@
                                 <a href="/"><br>Beranda</a>
                             </li>
                             <li>
-                                <a href="registration/"><br>Pendaftaran</a>
-                            </li>
-                            <li>
-                                <a href="#acara.html"><br>Acara</a>
+                                <a href="{% url 'public:event_new' %}"><br>Acara</a>
                             </li>
                             <li>
                                 <a href="#about.html"><br>Tentang AVC</a>
                             </li>
                             <li>
                                 <a href="#contact.html"><br>Hubungi Kami</a>
+                            </li>
+                            <li>
+                              {% if user.is_authenticated %}
+                              <br><p>Hi {{ user.username }} !</p>
+                              <li>
+                                <a href="{% url 'login:logout' %}"><br>logout</a>
+                              </li>
+                              {% else %}
+                              <a href="{% url 'public:register' %}"><br>Pendaftaran</a>
+                            </li>
+                            <li>
+                              <a href="{% url 'login:login' %}"><br>Login</a>{% endif %}
                             </li>
                         </ul>
                     </div>
