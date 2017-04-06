@@ -6,4 +6,4 @@ class ArticleForm(forms.ModelForm):
     class Meta:
         model = Article
         fields = ('title','text',
-        'image', 'created_date',)
+        'image',)

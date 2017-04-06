@@ -3,6 +3,8 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name="index"),
+    #about
+    url(r'^about/$', views.about, name="about"),
     #/registration
     url(r'^registration/$', views.registration, name="registration"),
     #/event_detail

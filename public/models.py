@@ -38,6 +38,17 @@ class UserProfile(models.Model):
         ('pria', 'Pria',),
         ('lainnya', 'Lainnya',),
     )
+    tipe_user_choices = (
+        ('member', 'Member',),
+        ('tutor', 'Tutor',),
+        ('ketua/wakil', 'Ketua/Wakil',),
+        ('sekretaris', 'Sekretaris',),
+        ('bendahara', 'Bendahara',),
+        ('hpd', 'HPD'),
+        ('inventaris', 'Inventaris',),
+        ('program','Program',),
+    )
+    tipe_user = models.CharField(max_length = 20, default = "member", choices=tipe_user_choices) 
     gender = models.CharField(max_length = 10, default = "pria", choices= gender_choices)
     phone = models.CharField(max_length=20)
     address = models.TextField()

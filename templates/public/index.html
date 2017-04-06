@@ -13,6 +13,7 @@
     <div class="align-center">
         <h1><a href= "">{{article.title}}</a></h1>
         <p>published : {{article.published_date}}</p>
+        <p>updated : {{article.updated_date}}</p>
         <p>{{article.text|linebreaksbr}}</p>
         {% if article.image %}
         <img class="img-circle" src="{{article.image.url}}" height='150' width='150'>{% endif %}

@@ -16,6 +16,9 @@ def index(request):
     context['articles'] = articles_query
     return render(request, 'public/index.html', context)
 
+def about(request):
+    return render(request, 'public/about.html')
+
 def register(request):
     registered = False
     if request.method == 'POST':

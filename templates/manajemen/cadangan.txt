@@ -1,1 +1,9 @@
 return HttpResponseRedirect(reverse('detail_article', article_id=(narticle.pk,)))
+
+
+<li><a href="#">PSDM</a>
+    <ul>
+        <li><a href="">Absensi</a></li>
+        <li><a href="">Jadwal Latihan</li>
+    </ul>
+</li>

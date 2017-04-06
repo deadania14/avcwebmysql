@@ -3,6 +3,7 @@
 <div>
 
   <h1>{{articleid.title}}</h1>
+  <a class="btn	btn-default" href="{%	url	'manajemen:edit_article'	articleid.id	%}"><span	class="glyphicon	glyphicon-pencil"></span></a>
   <p>{{articleid.text|linebreaksbr}}</p>
   {% if articleid.image %}
   <br><img class="img-circle" src="{{articleid.image.url}}" height='150' width='150'>{% endif %}

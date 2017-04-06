@@ -3,9 +3,7 @@
 {% endblock %}
 
 {% block content %}
-<h1>
-Pengajuan Acara
-</h1>
+<h1>Edit Article</h1>
 <form method="POST"> {% csrf_token %}
   {{form.as_p}}
   <button type="submit" class="save btn btn-default">Save</button>
