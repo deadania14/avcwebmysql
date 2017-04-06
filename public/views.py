@@ -17,7 +17,18 @@ def index(request):
     return render(request, 'public/index.html', context)
 
 def about(request):
-    return render(request, 'public/about.html')
+    context={}
+    sejarah = Article.objects.get(title = 'Sejarah AVC')
+    context['history'] = sejarah
+    companyprofile = Article.objects.get(title = 'Company Profile')
+    context['cprofile'] = companyprofile
+    return render(request, 'public/about.html', context)
+
+def contact(request):
+    context={}
+    contact_us = Article.objects.get(title = 'Hubungi Kami')
+    context['contactus'] = contact_us
+    return render(request, 'public/contact_us.html', context)
 
 def register(request):
     registered = False

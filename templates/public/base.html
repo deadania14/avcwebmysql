@@ -28,7 +28,7 @@
                                 <a href="{% url 'public:about' %}"><br>Tentang AVC</a>
                             </li>
                             <li>
-                                <a href="#contact.html"><br>Hubungi Kami</a>
+                                <a href="{% url 'public:contact' %}"><br>Hubungi Kami</a>
                             </li>
                             <li>
                               {% if user.is_authenticated %}

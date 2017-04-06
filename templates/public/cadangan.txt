@@ -16,8 +16,13 @@ if request.method =='POST':
       form = EventForm()
   	return	render(request,	'public/event_new.html', {'form': form})
 
+~~~~~~~~~````
+
+  
 
 
+
+~~~~~~~~~~~~~``
 <a	href="{%	url	'event_new'	%}"	class="top-menu"><span	class="glyphicon	glyphicon-plus"></span></a>
 
 

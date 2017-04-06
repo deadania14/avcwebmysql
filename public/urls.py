@@ -5,6 +5,8 @@ urlpatterns = [
     url(r'^$', views.index, name="index"),
     #about
     url(r'^about/$', views.about, name="about"),
+    #contact
+    url(r'^contact-us/$', views.contact, name="contact"),
     #/registration
     url(r'^registration/$', views.registration, name="registration"),
     #/event_detail
