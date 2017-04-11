@@ -55,3 +55,33 @@ class PracticeAttendance(models.Model):
     tutor = models.ForeignKey(User, related_name= "tutor_practice_attendances", null=True)
     tutor_pendamping = models.ManyToManyField(User, related_name= "tutor_pendamping_practice_attendances")
     # objects = PracticeAttendanceManager()
+
+class AdministrationType(models.Model):
+    paymentstype = models.CharField(max_length = 50 )
+    nominal = models.IntegerField()
+    created_date = models.DateTimeField(
+        default = timezone.now
+    )
+    def __str__(self):
+        return self.paymentstype
+
+class Administrasi(models.Model):
+    method_choices= (
+        ('cash','Cash',),
+        ('transfer', 'Transfer',),
+    )
+    status_choices= (
+        ('pending','Pending',),
+        ('paid', 'Paid',),
+        ('cancelled', 'Cancelled',),
+    )
+    user = models.ForeignKey(User, related_name="administrasi", null = True)
+    jenis = models.ForeignKey(AdministrationType,related_name= "administrasi_jenis", null = True)
+    method = models.CharField(max_length=20, choices = method_choices, default= 'cash')
+    image = models.ImageField(null=True, blank=True, upload_to='images/bukti_payments')
+    status = models.CharField(max_length=20, choices = status_choices, default= 'pending')
+    created_date = models.DateTimeField(
+        default = timezone.now
+    )
+    def __str__(self):
+        return self.jenis.paymentstype

@@ -13,7 +13,11 @@ def user_login(request):
         if user:
             if user.is_active:
                 login(request, user)
-                return HttpResponseRedirect(reverse('public:index'))
+                if user.profile.tipe_user == 'member':
+                    return HttpResponseRedirect(reverse('member:index'))
+                else:
+                    return HttpResponseRedirect(reverse('manajemen:index'))
+
             else:
                 return HttpResponse("Your account is disabled.")
         else:

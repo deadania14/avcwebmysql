@@ -1,0 +1,18 @@
+{% extends 'member/base.html' %}
+{% block title%}
+Member
+{% endblock %}
+
+{% block content %}
+
+{% if request.user.profile.is_registration_paid %}
+  <p>
+    Selamat datang
+  </p>
+{% else %}
+<p>
+  mohon konfirmasi pembayaran
+</p>
+{% endif %}
+
+{% endblock %}

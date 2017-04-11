@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'', include('public.urls', namespace='public')),
     url(r'^manajemen/', include('manajemen.urls', namespace='manajemen')),
+    url(r'^member/', include('member.urls', namespace='member')),
     url(r'^login/', include('login.urls', namespace='login')),
 ]
 if settings.DEBUG:

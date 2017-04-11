@@ -7,3 +7,29 @@ return HttpResponseRedirect(reverse('detail_article', article_id=(narticle.pk,))
         <li><a href="">Jadwal Latihan</li>
     </ul>
 </li>
+
+member_query = UserProfile.objects.get(tipe_user= "member")
+  context['members']= member_query
+  tutor_query = UserProfile.objects.get(tipe_user= "tutor")
+  context['tutors']= tutor_query
+
+
+  {% for member in members %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>username</th>
+        <th>kelas</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{member.username}}</td>
+        <td></td>
+      </tr>
+    </tbody>
+  {% endfor %}
+
+  {% for tutor in tutors %}
+
+  {% endfor %}

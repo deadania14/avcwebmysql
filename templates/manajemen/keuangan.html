@@ -1,0 +1,30 @@
+{% extends 'manajemen/base.html' %}
+{% block title%}
+{% endblock %}
+
+{% block content %}
+<div>
+    <h3>Pembayaran</h3>
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Jenis Pembayaran</th>
+                <th>Metode Pembayaran</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for admn in adminitrasis %}
+            <tr>
+                <td>{{admn.user}}</td>
+                <td>{{admn.jenis.paymentstype}}</td>
+                <td>{{admn.method}}</td>
+                <td>Konfirmasi</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

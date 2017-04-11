@@ -4,9 +4,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.http import HttpResponseRedirect
 from django.utils import timezone
 from django.urls import reverse
-from manajemen.models import Article
+from manajemen.models import Article, Administrasi, AdministrationType
 from .models import Event
-from .forms import EventForm, UserForm, UserProfileForm
+from .forms import EventForm, UserForm, UserProfileForm, AdministrasiForm
 
 def index(request):
     context={}
@@ -35,7 +35,7 @@ def register(request):
     if request.method == 'POST':
         user_form = UserForm(data = request.POST)
         profile_form = UserProfileForm(data = request.POST)
-
+        administrasi_form = AdministrasiForm(data = request.POST)
         if user_form.is_valid() and profile_form.is_valid:
             user = user_form.save()
             user.set_password(user.password)
@@ -46,13 +46,20 @@ def register(request):
                 profile.photo = request.FILES['photo']
             profile.save()
             registered = True
+            administrasi = administrasi_form.save(commit = False)
+            regis_pay = AdministrationType.objects.get(paymentstype="Registration and First Dues")
+            administrasi.jenis = regis_pay
+            administrasi.user = user
+            administrasi.save()
         else:
             print (user_form.errors, profile_form.errors)
     else:
         user_form = UserForm()
         profile_form = UserProfileForm()
+        administrasi_form = AdministrasiForm()
     return render (request, 'public/register.html',
                     {'user_form' : user_form, 'profile_form' : profile_form,
+                    'administrasi_form' : administrasi_form,
                     'registered' : registered})
 
 def event_detail(request, event_id):
@@ -61,9 +68,9 @@ def event_detail(request, event_id):
     context['eventid'] = eventid_query
     return render(request, 'public/event_detail.html', context)
 
-def registration(request):
-    context={}
-    return render(request, 'public/registration.html', context)
+#def registration(request):
+#    context={}
+#    return render(request, 'public/registration.html', context)
 
 def event_new(request):
     if request.method=="POST":

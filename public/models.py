@@ -48,12 +48,13 @@ class UserProfile(models.Model):
         ('inventaris', 'Inventaris',),
         ('program','Program',),
     )
-    tipe_user = models.CharField(max_length = 20, default = "member", choices=tipe_user_choices) 
+    tipe_user = models.CharField(max_length = 20, default = "member", choices=tipe_user_choices)
     gender = models.CharField(max_length = 10, default = "pria", choices= gender_choices)
     phone = models.CharField(max_length=20)
     address = models.TextField()
     photo = models.ImageField(null=True, blank=True, upload_to='images/profile_images')
     update_time = models.DateTimeField(
-            default=timezone.now)
+        default=timezone.now)
+    is_registration_paid = models.BooleanField(default=False)
     def __str__(self):
         return self.user.username

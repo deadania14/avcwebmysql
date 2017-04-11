@@ -1,0 +1,46 @@
+{% extends 'manajemen/base.html' %} {% block title%} Sumber Daya Manusia - AVC {% endblock %} {% block content %}
+<div>
+    <h3>Pengguna</h3>
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Tipe Pengguna</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for profile in userprofiles %}
+            <tr>
+                <td>{{profile.user}}</td>
+                <td>{{profile.tipe_user}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div>
+    <h3>Jadwal Latihan</h3> {% if user.is_authenticated %}
+    <div>
+        <a href="{%	url	'manajemen:new_schedule'	%}" class="top-menu"><span	class="glyphicon	glyphicon-plus">add</span><a>
+  </div>
+  {% endif %}
+<table class="table table-responsive">
+    <thead>
+        <tr>
+            <th>Tanggal</th>
+            <th>Tempat</th>
+            <th>Actions<th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for practice in practices %}
+      <tr>
+          <td>{{practice.date}}</td>
+          <td>{{practice.place}}</td>
+          <td><a class="btn	btn-default" href="{%	url	'manajemen:edit_schedule'	practice.id	%}"><span	class="glyphicon	glyphicon-pencil"></span></a></td>
+      </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}

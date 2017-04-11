@@ -3,8 +3,9 @@ from django.utils import timezone
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.models import User
-from .models import Article, Practice
-from .forms import ArticleForm
+from .models import Article, Practice, Administrasi
+from .forms import ArticleForm, SchedulesForm
+from public.models import UserProfile
 
 
 def index(request):
@@ -17,11 +18,19 @@ def list_article(request):
     context['articles'] = articles_query
     return render(request, 'manajemen/list_article.html', context)
 
-def list_practice(request):
-    context = {}
+def home_psdm(request):
+    context={}
+    user_profile = UserProfile.objects.all()
+    context['userprofiles']= user_profile
     practice_query = Practice.objects.all()
     context['practices'] = practice_query
-    return render(request, 'manajemen/practice_schedules.html', context)
+    return render(request, 'manajemen/psdm.html', context)
+
+def home_keuangan(request):
+    context={}
+    administrasi_query = Administrasi.objects.all()
+    context['adminitrasis']= administrasi_query
+    return render(request, 'manajemen/keuangan.html', context)
 
 def absensi_practice(request, practice_id):
     context={}
@@ -49,6 +58,19 @@ def edit_article(request, article_id):
         form = ArticleForm(instance = narticle)
     return render(request, 'manajemen/edit_article.html', {'form':form})
 
+def edit_schedule(request, schedule_id):
+    nschedule = get_object_or_404(Practice, id=schedule_id)
+    if request.method=="POST":
+        form = SchedulesForm(request.POST, instance = nschedule)
+        if form.is_valid():
+            nschedule = form.save(commit = False)
+            nschedule.created_date= timezone.now()
+            nschedule.save()
+            return HttpResponseRedirect(reverse('manajemen:home_psdm', ))
+    else :
+        form = SchedulesForm(instance = nschedule)
+    return render(request, 'manajemen/edit_schedule.html', {'form':form})
+
 def new_article(request):
     if request.method=="POST":
         form = ArticleForm(request.POST)
@@ -61,3 +83,15 @@ def new_article(request):
     else :
         form = ArticleForm()
     return render(request, 'manajemen/edit_article.html', {'form':form})
+
+def new_schedule(request):
+    if request.method=="POST":
+        form = SchedulesForm(request.POST)
+        if form.is_valid():
+            nschedule = form.save(commit = False)
+            nschedule.created_date= timezone.now()
+            nschedule.save()
+            return HttpResponseRedirect(reverse('manajemen:home_psdm', ))
+    else :
+        form = SchedulesForm()
+    return render(request, 'manajemen/edit_schedule.html', {'form':form})
