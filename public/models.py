@@ -36,7 +36,6 @@ class UserProfile(models.Model):
     gender_choices = (
         ('wanita', 'Wanita',),
         ('pria', 'Pria',),
-        ('lainnya', 'Lainnya',),
     )
     tipe_user_choices = (
         ('member', 'Member',),

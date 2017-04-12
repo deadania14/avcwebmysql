@@ -3,23 +3,33 @@
 
 <head>
     <title>{% block title %}{% endblock%}</title>
+    <meta charset = "utf-8" />
+    <meta name= "viewport" content= "width=device-width, initial-scale=1, maximum-scale=1,
+    user-scalable=no">
+
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
     <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
     <link href="{% static 'css/public.css' %}" rel="stylesheet">
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'fonts/droidsans.css' %}" rel="stylesheet">
+    <link href="{% static 'fonts/opensans.css' %}" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
 
     <head>
 
         <body>
+
             <nav class="navbar" role="navigation">
                 <div class="container">
                     <div class="navbar-header">
                         <h1><a	href="/">Alliance Violin Community</a></h1>
+
                     </div>
-                    <div class="collapse navbar-collapse" id="top-navbar-1">
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav navbar-right">
                             <li>
-                                <a href="/"><br>Beranda</a>
+                                <a href="{% url 'public:index' %}">
+                                  <br>Beranda</a>
                             </li>
                             <li>
                                 <a href="{% url 'public:event_new' %}"><br>Acara</a>
@@ -32,7 +42,7 @@
                             </li>
                             <li>
                               {% if user.is_authenticated %}
-                              <br><p>Hi {{ user.username }} !</p>
+                              <!-- <br><p>Hi {{ user.username }} !</p> -->
                               <li>
                                 <a href="{% url 'login:logout' %}"><br>logout</a>
                               </li>
@@ -46,11 +56,64 @@
                     </div>
                 </div>
             </nav>
+            <!-- Page Title -->
+            <div class="page-title-container">
+                <div class="container">
+                    <div class="row">
+                      {% block page_title %}
+
+                      {% endblock %}
+                    </div>
+                </div>
+            </div>
+
             <div class="container">
                 <div class="row">
                     {% block content %} {% endblock %}
                 </div>
             </div>
+
+  <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6 footer-box wow fadeInUp">
+                    <!--Post Tag About Us-->
+                    <h4>Tentang AVC</h4>
+                    <div class="footer-box-text">
+                        <p>
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et.
+                        </p>
+                        <p><a href="about.html">Read more...</a></p>
+                    </div>
+                </div>
+                <div class="col-sm-6 footer-box wow fadeInDown">
+                    <h4>Hubungi Kami</h4>
+                    <div class="footer-box-text footer-box-text-regist">
+                        <p><i class="fa fa-map-marker"></i> Alamat: Jl. Boulevard Anggrek 3 New Extention<br> Blok B No 10, Depok Jawa Barat</p>
+                        <p><i class="fa fa-phone"></i> Call: +62857 1761 8687 atau +62812 8643 7259</p>
+                        <p><i class="fa fa-envelope"></i> Email: <a href="">avcdepok@gmail.com</a></p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 wow fadeIn">
+                    <div class="footer-border"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-7 footer-copyright wow fadeIn">
+                    <p>Copyright 2017 Indonesia - All rights reserved. Template by <a href="http://azmind.com">Azmind</a>.</p>
+                </div>
+                <div class="col-sm-5 footer-social wow fadeIn">
+                    <a href="https://web.facebook.com/komunitas.biola.depok"><i class="fa fa-facebook"></i></a>
+                    <a href="https://twitter.com/avcdepok"><i class="fa fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/avcdepok/?hl=id"><i class="fa fa-instagram"></i></a>
+                    <a href="https://www.youtube.com/channel/UCSd55y9XuS-4p-XyywUmFKQ"><i class="fa fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
             <script src="{% static 'js/bootstrap.js' %}"></script>
         </body>

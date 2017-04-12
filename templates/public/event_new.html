@@ -1,12 +1,28 @@
 {% extends 'public/base.html' %}
-{% block title%}
-
+{% block page_title%}
+<div class="col-sm-12 wow fadeIn">
+    <i class="fa fa-key"></i>
+    <h1>Acara /</h1>
+    <p>Upcoming events <i> Alliance Violin Community</i></p>
+</div>
 {% endblock %}
 
 {% block content %}
+<div class="col-sm-6 wow fadeIn">
+  {% for deals in devent %}
+  <div>
+    <h1><a href= "">{{deals.event_name}}</a></h1>
+    <p>{{deals.image}}</p>
+    <p>{{deals.desc|linebreaksbr}}</p>
+    <p>{{deals.event_date}}</p>
+  </div>
+  {% endfor %}
+</div>
+<div class="col-sm-6 wow fadeIn">
 <h1> Penawaran Acara </h1>
 <form method="POST" class= "post-form">{% csrf_token %}
   {{form.as_p}}
   <button type="submit" class="save btn btn-default" value="Submit">Kirim Ajuan</button>
 </form>
+</div>
 {% endblock %}

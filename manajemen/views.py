@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.models import User
@@ -7,8 +8,10 @@ from .models import Article, Practice, Administrasi
 from .forms import ArticleForm, SchedulesForm
 from public.models import UserProfile
 
-
+@login_required
 def index(request):
+    if request.user.profile.tipe_user == 'member':
+        return HttpResponseRedirect(reverse('member:index'))
     context={}
     return render(request, 'manajemen/index.html', context)
 
@@ -17,6 +20,12 @@ def list_article(request):
     articles_query = Article.objects.all()
     context['articles'] = articles_query
     return render(request, 'manajemen/list_article.html', context)
+
+def home_hpd(request):
+    context={}
+    articles_query = Article.objects.all()
+    context['articles'] = articles_query
+    return render(request, 'manajemen/hpd.html', context)
 
 def home_psdm(request):
     context={}
@@ -31,6 +40,10 @@ def home_keuangan(request):
     administrasi_query = Administrasi.objects.all()
     context['adminitrasis']= administrasi_query
     return render(request, 'manajemen/keuangan.html', context)
+
+def home_inventaris(request):
+    context= {}
+    return render(request, 'manajemen/inventaris.html', context)
 
 def absensi_practice(request, practice_id):
     context={}

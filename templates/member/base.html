@@ -21,6 +21,14 @@
                             <li>
                                 <a href=""><br>Beranda</a>
                             </li>
+                            {% if request.user.profile.is_registration_paid %}
+                            <li>
+                                <a href="{% url 'member:latihan' %}"><br>Latihan</a>
+                            </li>
+                            <li>
+                                <a href=""><br>Administrasi</a>
+                            </li>
+                            {% endif %}
                         </ul>
                     </div>
                 </div>

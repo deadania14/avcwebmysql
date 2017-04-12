@@ -14,6 +14,10 @@ member_query = UserProfile.objects.get(tipe_user= "member")
   context['tutors']= tutor_query
 
 
+  def payments_confirmation(request, payment_id):
+      context={}
+      
+
   {% for member in members %}
   <table class="table">
     <thead>

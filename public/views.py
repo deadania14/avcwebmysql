@@ -10,7 +10,7 @@ from .forms import EventForm, UserForm, UserProfileForm, AdministrasiForm
 
 def index(request):
     context={}
-    events_query = Event.objects.all()
+    events_query = Event.objects.all()[:4]
     context['events'] = events_query
     articles_query = Article.objects.all()
     context['articles'] = articles_query
@@ -73,6 +73,9 @@ def event_detail(request, event_id):
 #    return render(request, 'public/registration.html', context)
 
 def event_new(request):
+    context={}
+    deal_event= Event.objects.all()
+    context["devent"] = deal_event
     if request.method=="POST":
         form = EventForm(request.POST)
         if form.is_valid():
@@ -83,4 +86,4 @@ def event_new(request):
             return HttpResponseRedirect(reverse('public:event_detail', args=(nevent.id,)))
     else :
         form = EventForm()
-    return render(request, 'public/event_new.html', {'form':form})
+    return render(request, 'public/event_new.html', {'form':form}, context)
