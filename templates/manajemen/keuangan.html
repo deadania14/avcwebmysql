@@ -22,8 +22,55 @@
                 <td>{{admn.jenis.paymentstype}}</td>
                 <td>{{admn.method}}</td>
                 <th>{{admn.status}}</th>
-                <td>Konfirmasi</td>
+                <td>
+                  {% if admn.status == "pending" %}
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalConfirm{{admn.id}}">Confirm</button>
+                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModalCancelled{{admn.id}}">Cancelled</button>
+                  {% else %}
+                  <p> - </p>
+                  {% endif %}
+                </td>
             </tr>
+            <!-- Modal Confirm-->
+            <div id="myModalConfirm{{admn.id}}" class="modal fade" role="dialog">
+              <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Konfirmasi Penerimaan Pembayaran</h4>
+                  </div>
+                  <div class="modal-body">
+                    <p>Apakah Anda yakin telah menerima pembayaran<h3>{{admn.jenis.paymentstype}}</h3> oleh saudara
+                    <h4>{{admn.user}}</h4> ? </p>
+                  </div>
+                  <div class="modal-footer">
+                    <a href="{% url 'manajemen:confirmation_payment' admn.id %}"><button type="button" class="btn btn-primary">Ya</button></a>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Modal Cencelled-->
+            <div id="myModalCancelled{{admn.id}}" class="modal fade" role="dialog">
+              <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Gagalkan Pembayaran</h4>
+                  </div>
+                  <div class="modal-body">
+                    <p>Apakah Anda yakin akan menggalkan pembayaran <h3>{{admn.jenis.paymentstype}}</h3> oleh saudara
+                    <h4>{{admn.user}}</h4> ? </p>
+                  </div>
+                  <div class="modal-footer">
+                    <a href="{% url 'manajemen:cancel_payment' admn.id %}"><button type="button" class="btn btn-primary">Ya</button></a>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
             {% endfor %}
         </tbody>
     </table>

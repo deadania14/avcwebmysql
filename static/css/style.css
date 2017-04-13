@@ -115,8 +115,8 @@ a.big-link-3:active {
 
 /***** Top menu *****/
 
-.navbar {
-	margin-bottom: 0;
+.navbar-new {
+	margin-bottom: 0px;
 	background: #fff;
 	border: 0;
 	-moz-border-radius: 0; -webkit-border-radius: 0; border-radius: 0;
@@ -464,7 +464,7 @@ ul.navbar-nav li.active .dropdown-menu > .active > a:focus { background: #b71c1c
 footer {
     margin: 0 auto;
     padding-bottom: 10px;
-    
+    background: #f8f8f8;
     -moz-box-shadow: 0 5px 15px 0 rgba(0,0,0,.05) inset; -webkit-box-shadow: 0 5px 15px 0 rgba(0,0,0,.05) inset; box-shadow: 0 5px 15px 0 rgba(0,0,0,.05) inset;
 }
 
@@ -934,4 +934,56 @@ footer {
 .portfolio-box-text p {
     line-height: 24px;
     font-style: italic;
+}
+
+.x_panel {
+    text-align: left;
+    position: relative;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px 17px;
+    display: inline-block;
+    background: #fff;
+    -webkit-column-break-inside: avoid;
+    -moz-column-break-inside: avoid;
+    column-break-inside: avoid;
+    opacity: 1;
+    transition: all .2s ease
+}
+.x_title {
+    border-bottom: 2px solid #E6E9ED;
+    padding: 1px 5px 6px;
+    margin-bottom: 10px
+}
+
+.x_title .filter {
+    width: 40%;
+    float: right
+}
+
+.x_title h2 {
+    margin: 5px 0 6px;
+    float: left;
+    display: block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap
+}
+.x_title h2 small {
+    margin-left: 10px
+}
+.x_title span {
+    color: #BDBDBD
+}
+.x_content {
+    padding: 0 5px 6px;
+    position: relative;
+    width: 100%;
+    float: left;
+    clear: both;
+    margin-top: 5px
+}
+.x_content h4 {
+    font-size: 16px;
+    font-weight: 500
 }

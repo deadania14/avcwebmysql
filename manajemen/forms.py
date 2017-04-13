@@ -10,7 +10,6 @@ class ArticleForm(forms.ModelForm):
         'image',)
 
 class SchedulesForm(forms.ModelForm):
-            
     class Meta:
         model = Practice
         exclude = ('created_date',)

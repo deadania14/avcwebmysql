@@ -13,3 +13,11 @@ def index(request):
 def latihan(request):
     context={}
     return render(request, 'member/latihan.html', context)
+
+def pembayaran(request):
+    context={}
+    return render(request, 'member/pembayaran.html', context)
+
+def contact(request):
+    context={}
+    return render(request, 'member/kontak.html', context)

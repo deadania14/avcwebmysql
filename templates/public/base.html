@@ -7,9 +7,10 @@
     <meta name= "viewport" content= "width=device-width, initial-scale=1, maximum-scale=1,
     user-scalable=no">
 
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
     <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
     <link href="{% static 'css/public.css' %}" rel="stylesheet">
+    <link href="{% static 'css/font-awesome.css' %}" rel="stylesheet">
     <link href="{% static 'fonts/droidsans.css' %}" rel="stylesheet">
     <link href="{% static 'fonts/opensans.css' %}" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
@@ -18,8 +19,7 @@
     <head>
 
         <body>
-
-            <nav class="navbar" role="navigation">
+            <nav class="navbar-new" role="navigation">
                 <div class="container">
                     <div class="navbar-header">
                         <h1><a	href="/">Alliance Violin Community</a></h1>
@@ -42,7 +42,6 @@
                             </li>
                             <li>
                               {% if user.is_authenticated %}
-                              <!-- <br><p>Hi {{ user.username }} !</p> -->
                               <li>
                                 <a href="{% url 'login:logout' %}"><br>logout</a>
                               </li>
@@ -84,7 +83,7 @@
                         <p>
                             Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et.
                         </p>
-                        <p><a href="about.html">Read more...</a></p>
+                        <p><a href="{% url 'public:about' %}">Read more...</a></p>
                     </div>
                 </div>
                 <div class="col-sm-6 footer-box wow fadeInDown">

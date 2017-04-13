@@ -42,8 +42,27 @@ def home_keuangan(request):
     return render(request, 'manajemen/keuangan.html', context)
 
 def home_inventaris(request):
-    context= {}
+    context={}
     return render(request, 'manajemen/inventaris.html', context)
+
+def confirmation_payment(request, payment_id):
+    payment = Administrasi.objects.get(id=payment_id)
+    payment.status = "paid"
+    payment.save()
+    if payment.jenis.paymentstype == 'Registration and First Dues':
+        userp = UserProfile.objects.get(user = payment.user)
+        userp.is_registration_paid = True
+        userp.save()
+    return HttpResponseRedirect(reverse('manajemen:home_keuangan'))
+
+def cancel_payment(request, payment_id):
+    payment = Administrasi.objects.get(id=payment_id)
+    payment.status = "cancelled"
+    payment.save()
+    if payment.jenis.paymentstype == 'Registration and First Dues':
+        payment.user.is_active = False
+        payment.user.save()
+    return HttpResponseRedirect(reverse('manajemen:home_keuangan'))
 
 def absensi_practice(request, practice_id):
     context={}
@@ -56,6 +75,17 @@ def detail_article(request, article_id):
     articleid_query= Article.objects.get(id=article_id)
     context['articleid'] = articleid_query
     return render(request, 'manajemen/detail_article.html', context)
+
+def detail_schedule(request, schedule_id):
+    context={}
+    schedule_query= Practice.objects.get(id=schedule_id)
+    context['scheduleid'] = schedule_query
+    return render(request, 'manajemen/detail_schedule.html', context)
+
+def delete_schedule(request, schedule_id):
+    practice_query = Practice.objects.get(id=schedule_id)
+    practice_query.delete()
+    return HttpResponseRedirect(reverse('manajemen:home_psdm'))
 
 def edit_article(request, article_id):
     narticle = get_object_or_404(Article, id=article_id)

@@ -1,46 +1,82 @@
 {% extends 'manajemen/base.html' %} {% block title%} Sumber Daya Manusia - AVC {% endblock %} {% block content %}
-<div>
-    <h3>Pengguna</h3>
-    <table class="table table-responsive">
-        <thead>
-            <tr>
-                <th>Username</th>
-                <th>Tipe Pengguna</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for profile in userprofiles %}
-            <tr>
-                <td>{{profile.user}}</td>
-                <td>{{profile.tipe_user}}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>Pengguna</h2>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <table class="table table-responsive">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Tipe Pengguna</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for profile in userprofiles %}
+                    <tr>
+                        <td>{{profile.user}}</td>
+                        <td>{{profile.tipe_user}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="x_panel">
+      <div class="x_title">
+        <h2>Jadwal Latihan{% if user.is_authenticated %}<small>
+            <a href="{%	url	'manajemen:new_schedule'	%}"> add-new</span></a>
+        </small>{% endif %}</h2>
+        <div class="clearfix"></div>
+      </div>
+        <div class="x_content">
+            <table class="table table-responsive">
+                <thead>
+                    <tr>
+                        <th>Tanggal</th>
+                        <th>Tempat</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for practice in practices %}
+                    <tr>
+                        <td>{{practice.date}}</td>
+                        <td>{{practice.place}}</td>
+                        <td><a class="btn	btn-info" href= "{% url 'manajemen:detail_schedule' practice.id %}"><span	class="glyphicon glyphicon-open"></span></a>
+                          <a class="btn	btn-warning" href="{%	url	'manajemen:edit_schedule'	practice.id	%}"><span	class="glyphicon	glyphicon-pencil"></span></a>
+                          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal{{practice.id}}"><span	class="glyphicon	glyphicon-trash"></span></button>
+                        </td>
+
+                    </tr>
+
+                    <!-- Modal -->
+                    <div id="myModal{{practice.id}}" class="modal fade" role="dialog">
+                      <div class="modal-dialog">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Hapus Jadwal Latihan</h4>
+                          </div>
+                          <div class="modal-body">
+                            <p>Apakah Anda yakin untuk menghapus jadwal Latihan pada <h3>{{practice.date}} </h3>
+                            <small>{{practice.place}}</small></p>
+                          </div>
+                          <div class="modal-footer">
+                            <a href="{% url 'manajemen:delete_schedule' practice.id %}"><button type="button" class="btn btn-danger">Delete</button></a>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
-<div>
-    <h3>Jadwal Latihan</h3> {% if user.is_authenticated %}
-    <div>
-        <a href="{%	url	'manajemen:new_schedule'	%}" class="top-menu"><span	class="glyphicon	glyphicon-plus">add</span><a>
-  </div>
-  {% endif %}
-<table class="table table-responsive">
-    <thead>
-        <tr>
-            <th>Tanggal</th>
-            <th>Tempat</th>
-            <th>Actions<th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for practice in practices %}
-      <tr>
-          <td>{{practice.date}}</td>
-          <td>{{practice.place}}</td>
-          <td><a class="btn	btn-default" href="{%	url	'manajemen:edit_schedule'	practice.id	%}"><span	class="glyphicon	glyphicon-pencil"></span></a></td>
-      </tr>
-        {% endfor %}
-    </tbody>
-</table>
-</div>
-{% endblock %}
+
+    {% endblock %}

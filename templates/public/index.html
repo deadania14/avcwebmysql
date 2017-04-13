@@ -11,7 +11,7 @@
                 <div class="col-sm-3">
                     <div class="work wow fadeInUp">
                       {% if event.image %}
-                      <img class="img-circle" src="{{event.image.url}}" height='150' width='150'> {% endif %}
+                      <img src="{{event.image.url}}" height='150' width='150'> {% endif %}
                         <h3>{{event.event_name}}</h3>
                         <p>{{event.desc|slice:":100"}}...</p>
                         <div class="work-bottom">

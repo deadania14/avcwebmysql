@@ -19,16 +19,26 @@
                     <div class="collapse navbar-collapse" id="top-navbar-1">
                         <ul class="nav navbar-nav navbar-right">
                             <li>
-                                <a href=""><br>Beranda</a>
+                                <a href="{% url 'member:index' %}"><br>Beranda</a>
                             </li>
                             {% if request.user.profile.is_registration_paid %}
                             <li>
                                 <a href="{% url 'member:latihan' %}"><br>Latihan</a>
                             </li>
                             <li>
-                                <a href=""><br>Administrasi</a>
+                                <a href="{% url 'member:pembayaran' %}"><br>Administrasi</a>
                             </li>
                             {% endif %}
+                            <li>
+                                <a href="{% url 'member:contact-us' %}"><br>Hubungi Kami</a>
+                            </li>
+                            <li>
+                                {% if user.is_authenticated %}
+                                <li>
+                                    <a href="{% url 'login:logout' %}"><br>logout</a>
+                                </li>
+                                {% endif %}
+                            </li>
                         </ul>
                     </div>
                 </div>

@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 
 def user_login(request):
+    logged_in = True
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -19,12 +20,14 @@ def user_login(request):
                     return HttpResponseRedirect(reverse('manajemen:index'))
 
             else:
-                return HttpResponse("Your account is disabled.")
+                logged_in = False
+                return render(request, 'login/login.html', {"logged_in": logged_in})
         else:
             print ("Invalid login details: {0},{1}".format(username, password))
-            return HttpResponse("invalid login details supplied.")
+            logged_in = False
+            return render(request, 'login/login.html', {"logged_in": logged_in})
     else:
-        return render(request, 'login/login.html', {})
+        return render(request, 'login/login.html', {"logged_in": logged_in})
 
 def some_view(request):
     if not request.user.is_authenticated():

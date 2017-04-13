@@ -1,12 +1,10 @@
-{% extends 'manajemen/base.html' %} {% block title%} {% endblock %} {% block content %} ini list article {% if user.is_authenticated %}
-<div>
-    <a href="{%	url	'manajemen:new_article'	%}" class="top-menu"><span	class="glyphicon	glyphicon-plus">add</span><a>
-</div>
-{% endif %}
+{% extends 'manajemen/base.html' %} {% block title%} {% endblock %} {% block content %}
 <div class="col-md-12 col-sm-12 col-xs-12">
   <div class="x_panel">
     <div class="x_title">
-      <h2>Daftar Article <small>Users</small></h2>
+      <h2>Daftar Artikel{% if user.is_authenticated %}<small>
+          <a href="{%	url	'manajemen:new_article'	%}"> add-new</span></a>
+      </small>{% endif %}</h2>
       <div class="clearfix"></div>
     </div>
     <div class="x_content">
@@ -18,13 +16,16 @@
       <tr>
         <th>Judul Artikel</th>
         <th>Tanggal Publish</th>
+        <th>Action</th>
       </tr>
     </thead>
     <tbody>
       {% for article in articles %}
       <tr>
-        <td><a href= "{% url 'manajemen:detail_article' article.id %}">{{article.title}}</td>
+        <td>{{article.title}}</td>
         <td>{{article.published_date}}</td>
+        <td><a class="btn	btn-default" href= "{% url 'manajemen:detail_article' article.id %}"><span	class="glyphicon glyphicon-open"></span></a>
+            <a class="btn	btn-default" href="{%	url	'manajemen:edit_article'	article.id	%}"><span	class="glyphicon	glyphicon-pencil"></span></a></td>
       </tr>
       {% endfor %}
     </tbody>

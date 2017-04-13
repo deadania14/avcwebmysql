@@ -18,11 +18,19 @@ urlpatterns = [
     url(r'^psdm/$', views.home_psdm, name='home_psdm'),
     #Keuangan
     url(r'^keuangan/$', views.home_keuangan, name='home_keuangan'),
+    #confirmation_payments
+    url(r'^keuangan/konfirmasi_pembayaran/(?P<payment_id>[0-9]+)/$', views.confirmation_payment, name='confirmation_payment'),
+    #Cancel_payments
+    url(r'^keuangan/gagalkan_pembayaran/(?P<payment_id>[0-9]+)/$', views.cancel_payment, name='cancel_payment'),
     #Inventaris
     url(r'^inventaris/$', views.home_inventaris, name='home_inventaris'),
     #/new_article
     url(r'^psdm/new_schedule/$', views.new_schedule, name='new_schedule'),
+    #/detail_article
+    url(r'^psdm/detail_schedule/(?P<schedule_id>[0-9]+)$', views.detail_schedule, name='detail_schedule'),
     #/schedule_edit
     url(r'^psdm/edit_schedule/(?P<schedule_id>[0-9]+)/$', views.edit_schedule, name='edit_schedule'),
+    #/schedule_delete
+    url(r'^psdm/delete_schedule/(?P<schedule_id>[0-9]+)/$', views.delete_schedule, name='delete_schedule'),
 
 ]
