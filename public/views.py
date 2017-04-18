@@ -77,7 +77,7 @@ def event_new(request):
     deal_event= Event.objects.all()
     context["devent"] = deal_event
     if request.method=="POST":
-        form = EventForm(request.POST)
+        form = EventForm(request.POST, request.FILES)
         if form.is_valid():
             nevent = form.save(commit = False)
             nevent.status_choices = "waiting"

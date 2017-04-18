@@ -16,7 +16,7 @@ member_query = UserProfile.objects.get(tipe_user= "member")
 
   def payments_confirmation(request, payment_id):
       context={}
-      
+
 
   {% for member in members %}
   <table class="table">
@@ -37,3 +37,11 @@ member_query = UserProfile.objects.get(tipe_user= "member")
   {% for tutor in tutors %}
 
   {% endfor %}
+  #practice_absensi
+    url(r'^latihan/absensi/(?P<practice_id>[0-9]+)/$', views.absensi_practice, name='absensi_practice'),
+
+    def absensi_practice(request, practice_id):
+        context={}
+        user_query = User.objects.all()
+        context['users'] = user_query
+        return render(request, 'manajemen/absensi.html', context)

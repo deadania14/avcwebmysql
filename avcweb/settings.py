@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'manajemen',
     'login',
     'member',
+    'bootstrap3'
 ]
 
 MIDDLEWARE = [

@@ -4,8 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.models import User
-from .models import Article, Practice, Administrasi
-from .forms import ArticleForm, SchedulesForm
+from .models import Article, Practice, Administrasi, Kelas, PracticeAttendance
+from .forms import ArticleForm, SchedulesForm, ClassForm, AbsensiForm, AbsensiNewForm
 from public.models import UserProfile
 
 @login_required
@@ -33,7 +33,20 @@ def home_psdm(request):
     context['userprofiles']= user_profile
     practice_query = Practice.objects.all()
     context['practices'] = practice_query
+    kelas_query = Kelas.objects.all()
+    context['classes'] = kelas_query
+    present_query = PracticeAttendance.objects.all()
+    context['presents'] = present_query
     return render(request, 'manajemen/psdm.html', context)
+
+def home_tutor(request):
+    context={}
+    practice_query = Practice.objects.all()
+    context['practices'] = practice_query
+    present_query = PracticeAttendance.objects.all()
+    context['presents'] = present_query
+    context['now'] = timezone.now().date()
+    return render(request, 'manajemen/tutor.html', context)
 
 def home_keuangan(request):
     context={}
@@ -61,14 +74,8 @@ def cancel_payment(request, payment_id):
     payment.save()
     if payment.jenis.paymentstype == 'Registration and First Dues':
         payment.user.is_active = False
-        payment.user.save()
+        paymnt.user.save()
     return HttpResponseRedirect(reverse('manajemen:home_keuangan'))
-
-def absensi_practice(request, practice_id):
-    context={}
-    user_query = User.objects.all()
-    context['users'] = user_query
-    return render(request, 'manajemen/absensi.html', context)
 
 def detail_article(request, article_id):
     context={}
@@ -114,6 +121,46 @@ def edit_schedule(request, schedule_id):
         form = SchedulesForm(instance = nschedule)
     return render(request, 'manajemen/edit_schedule.html', {'form':form})
 
+def edit_kelas(request, kelas_id):
+    nclass = get_object_or_404(Kelas, id=kelas_id)
+    if request.method=="POST":
+        form = ClassForm(request.POST, instance = nclass)
+        if form.is_valid():
+            nclass.updated_date= timezone.now()
+            nclass.save()
+            return HttpResponseRedirect(reverse('manajemen:home_psdm',))
+    else :
+        form = ClassForm(instance = nclass)
+    return render(request, 'manajemen/edit_class.html', {'form':form})
+
+def edit_attendance(request, attendance_id):
+    npresent = get_object_or_404(PracticeAttendance, id=attendance_id)
+    if request.method=="POST":
+        form_edit_absensi = AbsensiForm(request.POST, instance = npresent)
+
+        if form_edit_absensi.is_valid():
+            form_edit_absensi.save()
+            return HttpResponseRedirect(reverse('manajemen:home_psdm', ))
+    else :
+        form_edit_absensi = AbsensiForm(instance = npresent)
+    form_edit_absensi.fields['is_present'].queryset = User.objects.filter(kelas=npresent.kelas)
+    form_edit_absensi.fields['tutor_pendamping'].queryset = User.objects.filter(profile__tipe_user='tutor').exclude(id=npresent.tutor.id)
+    return render(request, 'manajemen/edit_attendance.html', {'form_edit_absensi':form_edit_absensi})
+
+def new_attendance(request):
+    if request.method=="POST":
+        form_new_absensi = AbsensiNewForm(request.POST)
+        if form_new_absensi.is_valid():
+            npresent = form_new_absensi.save(commit = False)
+            npresent.updated_date= timezone.now()
+            npresent.save()
+            return HttpResponseRedirect(reverse('manajemen:home_psdm', ))
+    else :
+        form_new_absensi = AbsensiNewForm()
+    form_new_absensi.fields['tutor'].queryset = User.objects.filter(profile__tipe_user='tutor')
+    form_new_absensi.fields['practice'].queryset = Practice.objects.filter(date__gte=timezone.now().date())
+    return render(request, 'manajemen/new_attendance.html', {'form_new_absensi':form_new_absensi})
+
 def new_article(request):
     if request.method=="POST":
         form = ArticleForm(request.POST)
@@ -138,3 +185,15 @@ def new_schedule(request):
     else :
         form = SchedulesForm()
     return render(request, 'manajemen/edit_schedule.html', {'form':form})
+
+def new_kelas(request):
+    if request.method=="POST":
+        form = ClassForm(request.POST)
+        if form.is_valid():
+            nclass = form.save(commit = False)
+            nclass.updated_date= timezone.now()
+            nclass.save()
+            return HttpResponseRedirect(reverse('manajemen:home_psdm', ))
+    else :
+        form = ClassForm()
+    return render(request, 'manajemen/edit_class.html', {'form':form})

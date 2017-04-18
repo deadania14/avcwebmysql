@@ -1,5 +1,82 @@
-{% extends 'manajemen/base.html' %} {% block title%} Sumber Daya Manusia - AVC {% endblock %} {% block content %}
+{% extends 'manajemen/base.html' %}
+{% block title%}
+  PSDM
+{% endblock %}
+{% block content %}
 <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>Kelas<small>
+            <a href="{%	url	'manajemen:new_kelas'	%}"> add-new</a></small></h2>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <table class="table table-responsive">
+                <thead>
+                    <tr>
+                        <th>Kelas</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for kelas in classes %}
+                    <tr>
+                        <td>{{kelas.nama_kelas}}</td>
+                        <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal{{kelas.id}}">View</button><td>
+                    </tr>
+                    <!-- Modal -->
+                    <div id="myModal{{kelas.id}}" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">{{kelas.nama_kelas}}</h4>
+                                </div>
+                                <div class="modal-body">
+                                    {% for user in kelas.user.all %} <p>{{user}}</p> {% endfor %}
+                                        <p>last updated</p><small>{{kelas.updated_date}}</small>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="x_panel">
+        <div class="x_title">
+          <h2>Absensi
+            <small>
+            <a href="{%	url	'manajemen:new_attendance' %}">add-new</a></small></h2>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <table class="table table-responsive">
+                <thead>
+                    <tr>
+                        <th>Kelas</th>
+                        <th>Tanggal</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for presenting in presents %}
+                    <tr>
+                        <td>{{presenting.kelas}}</td>
+                        <td>{{presenting.practice}}</td>
+                        <td><a href="{%	url	'manajemen:edit_attendance'	presenting.id %}"> edit</a><td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
     <div class="x_panel">
         <div class="x_title">
             <h2>Pengguna</h2>
@@ -11,6 +88,8 @@
                     <tr>
                         <th>Username</th>
                         <th>Tipe Pengguna</th>
+                        <th>Kehadiran<br>(3 bulan terakhir)</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -18,6 +97,18 @@
                     <tr>
                         <td>{{profile.user}}</td>
                         <td>{{profile.tipe_user}}</td>
+                        <td>
+                            {{profile.attend_last_three_months_percent}}
+                            ({{profile.attend_last_three_months}}/{{profile.schedule_last_three_months}})
+
+                        </td>
+                        <td>
+                          {% if profile.user.is_active %}
+                          Aktif
+                          {% else %}
+                          Non Aktif
+                          {% endif %}
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -25,12 +116,12 @@
         </div>
     </div>
     <div class="x_panel">
-      <div class="x_title">
-        <h2>Jadwal Latihan{% if user.is_authenticated %}<small>
+        <div class="x_title">
+            <h2>Jadwal Latihan{% if user.is_authenticated %}<small>
             <a href="{%	url	'manajemen:new_schedule'	%}"> add-new</span></a>
         </small>{% endif %}</h2>
-        <div class="clearfix"></div>
-      </div>
+            <div class="clearfix"></div>
+        </div>
         <div class="x_content">
             <table class="table table-responsive">
                 <thead>
@@ -45,32 +136,33 @@
                     <tr>
                         <td>{{practice.date}}</td>
                         <td>{{practice.place}}</td>
-                        <td><a class="btn	btn-info" href= "{% url 'manajemen:detail_schedule' practice.id %}"><span	class="glyphicon glyphicon-open"></span></a>
-                          <a class="btn	btn-warning" href="{%	url	'manajemen:edit_schedule'	practice.id	%}"><span	class="glyphicon	glyphicon-pencil"></span></a>
-                          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal{{practice.id}}"><span	class="glyphicon	glyphicon-trash"></span></button>
+                        <td><a class="btn	btn-info" href="{% url 'manajemen:detail_schedule' practice.id %}"><span	class="glyphicon glyphicon-open"></span></a>
+                            <a class="btn	btn-warning" href="{%	url	'manajemen:edit_schedule'	practice.id	%}"><span	class="glyphicon	glyphicon-pencil"></span></a>
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal{{practice.id}}"><span	class="glyphicon	glyphicon-trash"></span></button>
                         </td>
 
                     </tr>
 
                     <!-- Modal -->
                     <div id="myModal{{practice.id}}" class="modal fade" role="dialog">
-                      <div class="modal-dialog">
-                        <!-- Modal content-->
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Hapus Jadwal Latihan</h4>
-                          </div>
-                          <div class="modal-body">
-                            <p>Apakah Anda yakin untuk menghapus jadwal Latihan pada <h3>{{practice.date}} </h3>
-                            <small>{{practice.place}}</small></p>
-                          </div>
-                          <div class="modal-footer">
-                            <a href="{% url 'manajemen:delete_schedule' practice.id %}"><button type="button" class="btn btn-danger">Delete</button></a>
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                          </div>
+                        <div class="modal-dialog">
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Hapus Jadwal Latihan</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Apakah Anda yakin untuk menghapus jadwal Latihan pada
+                                        <h3>{{practice.date}} </h3>
+                                        <small>{{practice.place}}</small></p>
+                                </div>
+                                <div class="modal-footer">
+                                    <a href="{% url 'manajemen:delete_schedule' practice.id %}"><button type="button" class="btn btn-danger">Delete</button></a>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                </div>
+                            </div>
                         </div>
-                      </div>
                     </div>
                     {% endfor %}
                 </tbody>
@@ -79,4 +171,4 @@
     </div>
 </div>
 
-    {% endblock %}
+{% endblock %}

@@ -2,6 +2,8 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 
+from manajemen.models import PracticeAttendance, Kelas
+
 class Event(models.Model):
     event_name = models.CharField(max_length=50)
     corporate = models.CharField(max_length=50)
@@ -31,6 +33,7 @@ class Event(models.Model):
     def __str__(self):
         return self.event_name
 
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name= "profile")
     gender_choices = (
@@ -55,5 +58,31 @@ class UserProfile(models.Model):
     update_time = models.DateTimeField(
         default=timezone.now)
     is_registration_paid = models.BooleanField(default=False)
+
     def __str__(self):
         return self.user.username
+
+    def schedule_last_three_months(self):
+
+        self_class = Kelas.objects.get(user=self.user)
+        schedule_last_three_months = self_class.schedule_last_three_months()
+
+        return schedule_last_three_months
+
+    def attend_last_three_months(self):
+        today = timezone.now()
+        three_months_ago = today + timezone.timedelta(days=-130)
+        attend_class = PracticeAttendance.objects.filter(is_present=self.user)
+        attend_class_three_months_ago = attend_class.filter(
+            practice__date__gte=three_months_ago,
+            practice__date__lte=today
+        )
+        return attend_class_three_months_ago.count()
+
+    def attend_last_three_months_percent(self):
+        attend_last_three_months =  self.attend_last_three_months()
+        self_class = Kelas.objects.get(user=self.user)
+        schedule_last_three_months = self_class.schedule_last_three_months()
+        if schedule_last_three_months == 0:
+            return 0.0
+        return attend_last_three_months/schedule_last_three_months * 100

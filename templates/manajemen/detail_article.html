@@ -6,7 +6,7 @@
   {% if user.is_authenticated %}
   <a class="btn	btn-default" href="{%	url	'manajemen:edit_article'	articleid.id	%}"><span	class="glyphicon	glyphicon-pencil"></span></a>
   {% endif %}
-  <p>{{articleid.text|linebreaksbr}}</p>
+  <p>{{articleid.text|safe|linebreaksbr}}</p>
   {% if articleid.image %}
   <br><img class="img-circle" src="{{articleid.image.url}}" height='150' width='150'>{% endif %}
   <p>{{articleid.created_date}}</p>

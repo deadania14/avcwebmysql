@@ -1,4 +1,5 @@
 {% extends 'public/base.html' %}
+{% load bootstrap3 %}
 {% block page_title%}
 <div class="col-sm-12 wow fadeIn">
     <i class="fa fa-key"></i>
@@ -8,6 +9,11 @@
 {% endblock %}
 
 {% block content %}
+<style>
+  .form-group {
+    text-align: left;
+  }
+</style>
 <div class="col-sm-6 wow fadeIn">
   {% for deals in devent %}
   <div>
@@ -20,8 +26,8 @@
 </div>
 <div class="col-sm-6 wow fadeIn">
 <h1> Penawaran Acara </h1>
-<form method="POST" class= "post-form">{% csrf_token %}
-  {{form.as_p}}
+<form method="POST" class= "post-form" enctype="multipart/form-data">{% csrf_token %}
+  {% bootstrap_form form %}
   <button type="submit" class="save btn btn-default" value="Submit">Kirim Ajuan</button>
 </form>
 </div>

@@ -10,12 +10,8 @@ urlpatterns = [
     url(r'^article/detail-(?P<article_id>[0-9]+)/$', views.detail_article, name='detail_article'),
     #/article_edit
     url(r'^article/detail-(?P<article_id>[0-9]+)/edit/$', views.edit_article, name='edit_article'),
-    #practice_absensi
-    url(r'^latihan/absensi/(?P<practice_id>[0-9]+)/$', views.absensi_practice, name='absensi_practice'),
     #hpd
     url(r'^hpd/$', views.home_hpd, name='home_hpd'),
-    #psdm
-    url(r'^psdm/$', views.home_psdm, name='home_psdm'),
     #Keuangan
     url(r'^keuangan/$', views.home_keuangan, name='home_keuangan'),
     #confirmation_payments
@@ -24,10 +20,22 @@ urlpatterns = [
     url(r'^keuangan/gagalkan_pembayaran/(?P<payment_id>[0-9]+)/$', views.cancel_payment, name='cancel_payment'),
     #Inventaris
     url(r'^inventaris/$', views.home_inventaris, name='home_inventaris'),
-    #/new_article
+    #psdm
+    url(r'^psdm/$', views.home_psdm, name='home_psdm'),
+    #tutor
+    url(r'^tutor/$', views.home_tutor, name='home_tutor'),
+    #/new_kelas
+    url(r'^psdm/new_kelas/$', views.new_kelas, name='new_kelas'),
+    #/edit_kelas
+    url(r'^psdm/kelas/-(?P<kelas_id>[0-9]+)/edit/$', views.edit_kelas, name='edit_kelas'),
+    #/new_schedule
     url(r'^psdm/new_schedule/$', views.new_schedule, name='new_schedule'),
+    #/edit_attendance
+    url(r'^psdm/edit_attendance/(?P<attendance_id>[0-9]+)/$', views.edit_attendance, name='edit_attendance'),
+    #/new_attendance
+    url(r'^psdm/new_attendance/$', views.new_attendance, name='new_attendance'),
     #/detail_article
-    url(r'^psdm/detail_schedule/(?P<schedule_id>[0-9]+)$', views.detail_schedule, name='detail_schedule'),
+    url(r'^psdm/detail_schedule/(?P<schedule_id>[0-9]+)/$', views.detail_schedule, name='detail_schedule'),
     #/schedule_edit
     url(r'^psdm/edit_schedule/(?P<schedule_id>[0-9]+)/$', views.edit_schedule, name='edit_schedule'),
     #/schedule_delete
