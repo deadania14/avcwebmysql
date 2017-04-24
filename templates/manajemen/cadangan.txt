@@ -45,3 +45,5 @@ member_query = UserProfile.objects.get(tipe_user= "member")
         user_query = User.objects.all()
         context['users'] = user_query
         return render(request, 'manajemen/absensi.html', context)
+        {% elif event.status == "deal" %}
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalFinish{{event.id}}">Done</button>

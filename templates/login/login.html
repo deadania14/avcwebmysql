@@ -1,14 +1,66 @@
-{% extends 'public/base.html' %} {% block title %}Login{% endblock %} {% block content %}
-<h1>Login to Rango</h1>
-{% if not logged_in %}
-  Sorry coy ngga bisa
-{% endif %}
+{% load staticfiles %}
 
-<form id="login_form" method="post">
-    {% csrf_token %} Username: <input type="text" name="username" value="" size="50" />
-    <br /> Password: <input type="password" name="password" value="" size="50" />
-    <br />
-    <input type="submit" value="submit" />
-</form>
+<html>
 
-{% endblock%}
+<head>
+    <title>Login</title>
+    <meta charset = "utf-8" />
+    <meta name= "viewport" content= "width=device-width, initial-scale=1, maximum-scale=1,
+    user-scalable=no">
+
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/font-awesome.css' %}" rel="stylesheet">
+    <link href="{% static 'css/nprogress.css' %}" rel="stylesheet">
+    <link href="{% static 'css/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/custom.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'fonts/droidsans.css' %}" rel="stylesheet">
+    <link href="{% static 'fonts/opensans.css' %}" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
+    <head>
+        <body class='login'>
+            <div class="login_wrapper">
+              <div class="animate form login_form">
+                <section class="login_content">
+                  <form id="login_form" method="post">
+                    <h1>Login Form</h1>
+                    {% if not logged_in %}
+                      Sorry coy ngga bisa
+                    {% endif %}
+                    {% csrf_token %}
+                    <div>
+                      <input label= 'Username' type="text" class="form-control" name="username" placeholder="Username" required="" />
+                    </div>
+                    <div>
+                      <input label= 'Password' type="password" class="form-control" name="username" placeholder="Password" required="" />
+                    </div>
+                    <div>
+                      <input class="btn btn-default submit" type="submit" value="submit" />
+                      <a class="reset_pass" href="#">Lost your password?</a>
+                    </div>
+
+                    <div class="clearfix"></div>
+
+                    <div class="separator">
+                      <p class="change_link">Belum Terdaftar?
+                        <a href="{% url 'public:register' %}" class="to_register"> Daftar </a>
+                      </p>
+
+                      <div class="clearfix"></div>
+                      <br />
+
+                      <div>
+                        <h1> Alliance Violin Community - Depok</h1>
+                        <p>Copyright 2017 Indonesia - All rights reserved. Template by <a href="http://azmind.com">Azmind</a>.</p>
+                      </div>
+                    </div>
+                  </form>
+                </section>
+              </div>
+            </div>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+            <script src="{% static 'js/bootstrap.js' %}"></script>
+        </body>
+
+</html>

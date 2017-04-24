@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from .models import Article, Practice, Administrasi, Kelas, PracticeAttendance
 from .forms import ArticleForm, SchedulesForm, ClassForm, AbsensiForm, AbsensiNewForm
-from public.models import UserProfile
+from public.models import UserProfile, Event
 
 @login_required
 def index(request):
@@ -57,6 +57,25 @@ def home_keuangan(request):
 def home_inventaris(request):
     context={}
     return render(request, 'manajemen/inventaris.html', context)
+
+def home_acara(request):
+    context={}
+    acara_query = Event.objects.all()
+    context['acaras']= acara_query
+    return render(request, 'manajemen/acara.html', context)
+
+def confirmation_event(request, event_id):
+    eventconf = Event.objects.get(id=event_id)
+    eventconf.status = "deal"
+    eventconf.save()
+    return HttpResponseRedirect(reverse('manajemen:home_acara'))
+
+def cancel_event(request, event_id):
+    eventconf = Event.objects.get(id=event_id)
+    eventconf.status = "cancelled"
+    eventconf.save()
+    return HttpResponseRedirect(reverse('manajemen:home_acara'))
+
 
 def confirmation_payment(request, payment_id):
     payment = Administrasi.objects.get(id=payment_id)

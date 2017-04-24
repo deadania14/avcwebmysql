@@ -1,0 +1,79 @@
+{% extends 'manajemen/base.html' %}
+{% block title%}
+Keuangan
+{% endblock %}
+
+{% block content %}
+<div>
+    <h3>Daftar Acara</h3>
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th>Nama Event</th>
+                <th>Perusahaan</th>
+                <th>Tanggal Acara</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for event in acaras %}
+            <tr>
+                <td>{{event.event_name}}</td>
+                <td>{{event.corporate}}</td>
+                <td>{{event.event_date}}</td>
+                <th>{{event.event_status}}</th>
+                <td>
+                  {% if event.event_status == "waiting" %}
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalConfirm{{event.id}}">Confirm</button>
+                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModalCancelled{{event.id}}">Cancelled</button>
+                  {% else %}
+                  -
+                  {% endif %}
+                </td>
+            </tr>
+            <!-- Modal Confirm-->
+            <div id="myModalConfirm{{event.id}}" class="modal fade" role="dialog">
+              <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Konfirmasi Penerimaan Kerja Sama Acara</h4>
+                  </div>
+                  <div class="modal-body">
+                    <p>Apakah Anda yakin telah menerima penawaran<h3>{{event.event_name}}</h3> oleh saudara
+                    <h4>{{event.sender}}</h4> ? </p>
+                  </div>
+                  <div class="modal-footer">
+                    <a href="{% url 'manajemen:confirmation_event' event.id %}"><button type="button" class="btn btn-primary">Ya</button></a>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Modal Cencelled-->
+            <div id="myModalCancelled{{event.id}}" class="modal fade" role="dialog">
+              <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Tolak Tawaran Acara</h4>
+                  </div>
+                  <div class="modal-body">
+                    <p>Apakah Anda yakin untuk menolak acara <h3>{{event.event_name}}</h3> yang ditawarkan oleh
+                    <h4>{{event.sender}}</h4> ? </p>
+                  </div>
+                  <div class="modal-footer">
+                    <a href="{% url 'manajemen:cancel_event' event.id %}"><button type="button" class="btn btn-primary">Ya</button></a>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -4,6 +4,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.http import HttpResponseRedirect
 from django.utils import timezone
 from django.urls import reverse
+from django.core.mail import send_mail
+from django.conf import settings
 from manajemen.models import Article, Administrasi, AdministrationType
 from .models import Event
 from .forms import EventForm, UserForm, UserProfileForm, AdministrasiForm
@@ -40,6 +42,13 @@ def register(request):
             user = user_form.save()
             user.set_password(user.password)
             user.save()
+            #email
+            subject = 'terima kasih telah mendaftar'
+            message = 'Selamat datang, segera lunasi pembayaran anda '
+            from_email = settings.EMAIL_HOST_USER
+            to_list = [user.email, settings.EMAIL_HOST_USER]
+            send_mail(subject, message, from_email, to_list, fail_silently = True)
+
             profile = profile_form.save(commit = False)
             profile.user = user
             if 'photo' in request.FILES :
@@ -51,6 +60,7 @@ def register(request):
             administrasi.jenis = regis_pay
             administrasi.user = user
             administrasi.save()
+
         else:
             print (user_form.errors, profile_form.errors)
     else:
@@ -83,6 +93,13 @@ def event_new(request):
             nevent.status_choices = "waiting"
             nevent.created_date= timezone.now()
             nevent.save()
+            #email
+            subject = 'Acara'+nevent.event_name+'Akan Dipertimbangkan'
+            message = 'Terima kasih telah mengirim ajuan. Acara Anda akan kami pertimbangkan segera.'
+            from_email = settings.EMAIL_HOST_USER
+            to_list = [user.email, settings.EMAIL_HOST_USER]
+            send_mail(subject, message, from_email, to_list, fail_silently = True)
+
             return HttpResponseRedirect(reverse('public:event_detail', args=(nevent.id,)))
     else :
         form = EventForm()

@@ -40,5 +40,10 @@ urlpatterns = [
     url(r'^psdm/edit_schedule/(?P<schedule_id>[0-9]+)/$', views.edit_schedule, name='edit_schedule'),
     #/schedule_delete
     url(r'^psdm/delete_schedule/(?P<schedule_id>[0-9]+)/$', views.delete_schedule, name='delete_schedule'),
-
+    #acara
+    url(r'^acara/$', views.home_acara, name='home_acara'),
+    #confirmation_event
+    url(r'^acara/konfirmasi_event/(?P<event_id>[0-9]+)/$', views.confirmation_event, name='confirmation_event'),
+    #cancel event
+    url(r'^acara/tolak_tawaran/(?P<event_id>[0-9]+)/$', views.cancel_event, name='cancel_event'),
 ]
