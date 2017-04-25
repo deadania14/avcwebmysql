@@ -47,6 +47,7 @@ class UserProfile(models.Model):
         ('sekretaris', 'Sekretaris',),
         ('bendahara', 'Bendahara',),
         ('hpd', 'HPD'),
+        ('psdm', 'PSDM'),
         ('inventaris', 'Inventaris',),
         ('program','Program',),
     )
@@ -66,7 +67,6 @@ class UserProfile(models.Model):
 
         self_class = Kelas.objects.get(user=self.user)
         schedule_last_three_months = self_class.schedule_last_three_months()
-
         return schedule_last_three_months
 
     def attend_last_three_months(self):
@@ -86,3 +86,13 @@ class UserProfile(models.Model):
         if schedule_last_three_months == 0:
             return 0.0
         return attend_last_three_months/schedule_last_three_months * 100
+
+class SettingsVariable (models.Model):
+    key = models.CharField(max_length=255, null=True)
+    value = models.TextField(null=True, blank = True)
+    updated_date = models.DateTimeField(
+        blank = True, null = True
+    )
+    def update(self):
+        self.updated_date = timezone.now()
+        self.save()

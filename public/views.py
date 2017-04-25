@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.core.mail import send_mail
 from django.conf import settings
 from manajemen.models import Article, Administrasi, AdministrationType
+from public.models import SettingsVariable
 from .models import Event
 from .forms import EventForm, UserForm, UserProfileForm, AdministrasiForm
 
@@ -104,3 +105,9 @@ def event_new(request):
     else :
         form = EventForm()
     return render(request, 'public/event_new.html', {'form':form}, context)
+
+def settingsvalue(request):
+    context={}
+    settingquery = SettingsVariable.objects.all()
+    context['setting'] = settingquery
+    return render(request, 'member/base.html', context)

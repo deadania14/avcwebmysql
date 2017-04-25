@@ -4,5 +4,27 @@ Administrasi
 {% endblock %}
 
 {% block content %}
-latihan
+<div>
+    <h3>Pembayaran</h3>
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th>Jenis Pembayaran</th>
+                <th>Metode Pembayaran</th>
+                <th>Tanggal</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for admn in adminitrasis %}
+            <tr>
+                <td>{{admn.jenis.paymentstype}}</td>
+                <td>{{admn.method}}</td>
+                <td>{{admn.created_date}}</td>
+                <th>{{admn.status}}</th>
+            </tr>
+            {% endfor %}
+        </tbody>
+     </table>
+</div>
 {% endblock %}

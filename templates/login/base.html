@@ -1,0 +1,43 @@
+{% load staticfiles %}
+<html>
+
+<head>
+    <title>{% block title %}{% endblock%}</title>
+    <meta charset = "utf-8" />
+    <meta name= "viewport" content= "width=device-width, initial-scale=1, maximum-scale=1,
+    user-scalable=no">
+
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/public.css' %}" rel="stylesheet">
+    <link href="{% static 'css/font-awesome.css' %}" rel="stylesheet">
+    <link href="{% static 'fonts/droidsans.css' %}" rel="stylesheet">
+    <link href="{% static 'fonts/opensans.css' %}" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
+    <style>
+      .form-group {
+        text-align: left;
+      }
+    </style>
+
+    <head>
+
+        <body>
+            <nav class="navbar-new" role="navigation">
+                <div class="container">
+                    <div class="navbar-header">
+                        <h1><a	href="{% url 'public:index' %}">Alliance Violin Community</a></h1>
+                    </div>
+                </div>
+            </nav>
+            <div class="container">
+                <div class="row">
+                    {% block content %} {% endblock %}
+                </div>
+            </div>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+            <script src="{% static 'js/bootstrap.js' %}"></script>
+        </body>
+
+</html>

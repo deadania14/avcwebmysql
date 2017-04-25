@@ -20,7 +20,7 @@ class Article(models.Model):
         self.published_date = timezone.now()
         self.save()
     def update(self):
-        self.update_date = timezone.now()
+        self.updated_date = timezone.now()
         self.save()
     def __str__(self):
         return self.title
@@ -100,6 +100,7 @@ class Administrasi(models.Model):
     method = models.CharField(max_length=20, choices = method_choices, default= 'cash')
     image = models.ImageField(null=True, blank=True, upload_to='images/bukti_payments')
     status = models.CharField(max_length=20, choices = status_choices, default= 'pending')
+    note = models.TextField(blank = True)
     created_date = models.DateTimeField(
         default = timezone.now
     )

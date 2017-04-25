@@ -25,6 +25,7 @@ def home_hpd(request):
     context={}
     articles_query = Article.objects.all()
     context['articles'] = articles_query
+    #manggil form edit data contact
     return render(request, 'manajemen/hpd.html', context)
 
 def home_psdm(request):
@@ -35,7 +36,8 @@ def home_psdm(request):
     context['practices'] = practice_query
     kelas_query = Kelas.objects.all()
     context['classes'] = kelas_query
-    present_query = PracticeAttendance.objects.all()
+    today = timezone.now().date()
+    present_query = PracticeAttendance.objects.filter(practice__date__gte=today)
     context['presents'] = present_query
     return render(request, 'manajemen/psdm.html', context)
 
@@ -93,7 +95,7 @@ def cancel_payment(request, payment_id):
     payment.save()
     if payment.jenis.paymentstype == 'Registration and First Dues':
         payment.user.is_active = False
-        paymnt.user.save()
+        payment.user.save()
     return HttpResponseRedirect(reverse('manajemen:home_keuangan'))
 
 def detail_article(request, article_id):

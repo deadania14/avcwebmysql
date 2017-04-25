@@ -47,3 +47,6 @@ member_query = UserProfile.objects.get(tipe_user= "member")
         return render(request, 'manajemen/absensi.html', context)
         {% elif event.status == "deal" %}
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalFinish{{event.id}}">Done</button>
+
+
+<div class= "col-xl-4 col-md-4"><i class="fa fa-phone"></i> Call: {% call1_footer %} {if call2_footer} atau {% call2_footer %}{% endif %}</div>

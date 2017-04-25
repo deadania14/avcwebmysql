@@ -6,6 +6,12 @@ from django.urls import reverse
 
 def user_login(request):
     logged_in = True
+    if request.user.is_authenticated():
+        if request.user.profile.tipe_user == 'member':
+            return HttpResponseRedirect(reverse('member:index'))
+        else:
+            return HttpResponseRedirect(reverse('manajemen:index'))
+
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
