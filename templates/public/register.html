@@ -13,6 +13,7 @@ Pendaftaran
 {% endblock %}
 {% endif %}
 {% block content %}
+<div class="col-md-6">
   <h3>Formulir Pendaftaran</h3>
   <h4>Harap Perhatikan Syarat dan Ketentuan yang berlaku</h4>
   {% if registered %}
@@ -28,4 +29,9 @@ Pendaftaran
         <input type="submit" name="submit" value="Register" />
     </form>
   {% endif %}
+</div>
+<div class="col-md-1"></div>
+<div class="col-md-5">
+  <h3>Syarat dan Ketentuan</h3>
+</div>
 {% endblock%}

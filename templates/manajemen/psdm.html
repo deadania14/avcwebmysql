@@ -2,12 +2,19 @@
 {% block title%}
   PSDM
 {% endblock %}
+{% block page_title %}
+<div class="col-sm-12 wow fadeIn">
+    <i class="fa fa-users"></i>
+    <h1><a href="{% url 'manajemen:home_psdm' %}">PSDM </a>/</h1>
+    <p>Pengelola Sumber Daya Manusia /<i> Alliance Violin Community</i></p>
+</div>
+{% endblock %}
 {% block content %}
 <div class="col-md-12 col-sm-12 col-xs-12">
     <div class="x_panel">
         <div class="x_title">
-            <h2>Kelas<small>
-            <a href="{%	url	'manajemen:new_kelas'	%}"> add-new</a></small></h2>
+            <h3>Kelas<small>
+            <a href="{%	url	'manajemen:new_kelas'	%}"> Tambah - Baru</a></small></h3>
             <div class="clearfix"></div>
         </div>
         <div class="x_content">
@@ -15,14 +22,17 @@
                 <thead>
                     <tr>
                         <th>Kelas</th>
-                        <th>Actions</th>
+                        <th>Tanggal <i>update<i></th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for kelas in classes %}
                     <tr>
                         <td>{{kelas.nama_kelas}}</td>
-                        <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal{{kelas.id}}">View</button><td>
+                        <td><strong>{{kelas.updated_date}}</strong></td>
+                        <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal{{kelas.id}}">Lihat</button>
+                          <a class="btn	btn-warning" href="{%	url	'manajemen:edit_kelas'	kelas.id	%}"><span	class="glyphicon	glyphicon-pencil"></span></a><td>
                     </tr>
                     <!-- Modal -->
                     <div id="myModal{{kelas.id}}" class="modal fade" role="dialog">
@@ -31,19 +41,21 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title">{{kelas.nama_kelas}}</h4>
+                                    <h4 class="modal-title">Kelas - {{kelas.nama_kelas}}</h4>
                                 </div>
                                 <div class="modal-body">
+                                    <h4>Member yang ada dalam Kelas ini : </h4>
                                     {% for user in kelas.user.all %} <p>{{user}}</p> {% endfor %}
-                                        <p>last updated</p><small>{{kelas.updated_date}}</small>
+                                    <div style= "text-align:center">
+                                      <p>last updated  <strong>{{kelas.updated_date}}</strong>   </p><p>  </p>
+                                    </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                                      <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                     {% endfor %}
                 </tbody>
             </table>
@@ -51,9 +63,9 @@
     </div>
     <div class="x_panel">
         <div class="x_title">
-          <h2>Absensi
+          <h3>Absensi
             <small>
-            <a href="{%	url	'manajemen:new_attendance' %}">add-new</a></small></h2>
+            <a href="{%	url	'manajemen:new_attendance' %}"> Tambah - Baru</a></small></h3>
             <div class="clearfix"></div>
         </div>
         <div class="x_content">
@@ -70,8 +82,34 @@
                     <tr>
                         <td>{{presenting.kelas}}</td>
                         <td>{{presenting.practice}}</td>
-                        <td><a href="{%	url	'manajemen:edit_attendance'	presenting.id %}"> edit</a><td>
+                        <td>
+                          {% if now <= presenting.practice.date.date %}
+                            <a class="btn	btn-warning" href="{%	url	'manajemen:edit_attendance'	presenting.id %}"><span	class="glyphicon	glyphicon-pencil"></span></a>
+                          {% else %}
+                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModalAttendanceDetails{{presenting.id}}">Lihat</button>
+                          {% endif %}
+                        <td>
                     </tr>
+                    <!-- Modal -->
+                    <div id="myModalAttendanceDetails{{presenting.id}}" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Absensi - {{presenting.kelas}} - {{presenting.practice.date}} -  {{presenting.practice.place}}</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <h4>Member yang hadir: </h4>
+                                    <!-- member yang hadir dan tutor yang hadir -->
+                                    {% for user in kelas.user.all %} <ul>{{user}}</ul> {% endfor %}
+                                </div>
+                                <div class="modal-footer">
+                                      <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     {% endfor %}
                 </tbody>
             </table>
@@ -117,9 +155,9 @@
     </div>
     <div class="x_panel">
         <div class="x_title">
-            <h2>Jadwal Latihan{% if user.is_authenticated %}<small>
-            <a href="{%	url	'manajemen:new_schedule'	%}"> add-new</span></a>
-        </small>{% endif %}</h2>
+            <h3>Jadwal Latihan{% if user.is_authenticated %}<small>
+            <a href="{%	url	'manajemen:new_schedule'	%}"> Tambah - Baru</span></a>
+        </small>{% endif %}</h3>
             <div class="clearfix"></div>
         </div>
         <div class="x_content">
@@ -128,7 +166,7 @@
                     <tr>
                         <th>Tanggal</th>
                         <th>Tempat</th>
-                        <th>Actions</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -136,15 +174,17 @@
                     <tr>
                         <td>{{practice.date}}</td>
                         <td>{{practice.place}}</td>
-                        <td><a class="btn	btn-info" href="{% url 'manajemen:detail_schedule' practice.id %}"><span	class="glyphicon glyphicon-open"></span></a>
+                        <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModalDetails{{practice.id}}">Lihat</button>
+                            {% if now <= practice.date.date %}
                             <a class="btn	btn-warning" href="{%	url	'manajemen:edit_schedule'	practice.id	%}"><span	class="glyphicon	glyphicon-pencil"></span></a>
-                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal{{practice.id}}"><span	class="glyphicon	glyphicon-trash"></span></button>
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModalHapus{{practice.id}}"><span	class="glyphicon	glyphicon-trash"></span></button>
+                            {% endif %}
                         </td>
 
                     </tr>
 
                     <!-- Modal -->
-                    <div id="myModal{{practice.id}}" class="modal fade" role="dialog">
+                    <div id="myModalHapus{{practice.id}}" class="modal fade" role="dialog">
                         <div class="modal-dialog">
                             <!-- Modal content-->
                             <div class="modal-content">
@@ -160,6 +200,26 @@
                                 <div class="modal-footer">
                                     <a href="{% url 'manajemen:delete_schedule' practice.id %}"><button type="button" class="btn btn-danger">Delete</button></a>
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Modal Detail Schedule-->
+                    <div id="myModalDetails{{practice.id}}" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Detail Jadwal Latihan</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <strong><p>Tanggal : {{practice.date}} </p>
+                                    <p><i>Tempat </i>:{{practice.place}}</p>
+                                    <p>Catatan : {{practice.note}}</p></strong>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
                                 </div>
                             </div>
                         </div>

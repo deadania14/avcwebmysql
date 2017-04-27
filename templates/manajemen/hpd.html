@@ -2,38 +2,66 @@
 {% block title%}
   HPD
 {% endblock %}
+{% block page_title %}
+<div class="col-sm-12 wow fadeIn">
+    <i class="fa fa-bullhorn"></i>
+    <h1><a href="{% url 'manajemen:home_hpd' %}">HPD</a> /</h1>
+    <p>Artikel - Profile <i><small> Alliance Violin Community</small></i></p>
+</div>
+{% endblock %}
 {% block content %}
 <div class="col-md-12 col-sm-12 col-xs-12">
   <div class="x_panel">
     <div class="x_title">
-      <h2>Daftar Artikel{% if user.is_authenticated %}<small>
-          <a href="{%	url	'manajemen:new_article'	%}"> add-new</span></a>
-      </small>{% endif %}</h2>
+      <h3>Daftar Artikel{% if user.is_authenticated %} ~<small>
+          <a href="{%	url	'manajemen:new_article'	%}"> Tambah Baru</span></a>
+      </small>{% endif %}</h3>
       <div class="clearfix"></div>
     </div>
     <div class="x_content">
     <p class="text-muted font-13 m-b-30">
-    The Buttons extension for DataTables provides a common set of options, API methods and styling to display buttons on a page that will interact with a DataTable. The core library provides the based framework upon which plug-ins can built.
+    Daftar artikel publikasi
     </p>
-    <table id="datatable-buttons" class="table table-striped table-bordered">
+    <table id="datatable-buttons" class="font-13 table table-striped table-bordered">
     <thead>
       <tr>
         <th>Judul Artikel</th>
-        <th>Tanggal Publish</th>
-        <th>Action</th>
+        <th>Tanggal Pembaharuan</th>
+        <th>Aksi</th>
       </tr>
     </thead>
     <tbody>
       {% for article in articles %}
       <tr>
         <td>{{article.title}}</td>
-        <td>{{article.published_date}}</td>
-        <td><a class="btn	btn-default" href= "{% url 'manajemen:detail_article' article.id %}"><span	class="glyphicon glyphicon-open"></span></a>
-            <a class="btn	btn-default" href="{%	url	'manajemen:edit_article'	article.id	%}"><span	class="glyphicon	glyphicon-pencil"></span></a></td>
+        <td>{{article.updated_date}}</td>
+        <td><a class="btn	btn-default" href= "{% url 'manajemen:detail_article' article.id %}">Lihat</a>
+          <p></p>
+          {% if article.title == "Sejarah AVC" or article.title == "Company Profile" %}
+            <a class="btn	btn-info" href="{%	url	'manajemen:edit_mainarticle'	article.id	%}"><span	class="glyphicon	glyphicon-pencil"></span></a>
+          {% else %}
+            <a class="btn	btn-warning" href="{%	url	'manajemen:edit_article'	article.id	%}"><span	class="glyphicon	glyphicon-pencil"></span></a>
+          {% endif %}
+        </td>
       </tr>
       {% endfor %}
     </tbody>
     </table>
+    </div>
+  </div>
+</div>
+<div class="col-md-12 col-sm-12 col-xs-12">
+  <div class="x_panel">
+    <div class="x_title">
+      <h3>Kontak AVC ~</h3>
+      <div class="clearfix"></div>
+    </div>
+    <div class="x_content">
+      {% if user.is_authenticated %}
+      <div class="right">
+        <a class="btn	btn-warning" href="{%	url	'manajemen:edit_contact'	%}"><span	class="glyphicon	glyphicon-pencil"></span></a>
+      </div>
+      {% endif %}
     </div>
   </div>
 </div>

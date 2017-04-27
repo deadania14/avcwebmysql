@@ -1,19 +1,27 @@
 {% extends 'manajemen/base.html' %}
 {% load admin_static %}
+{% load bootstrap3 %}
 {% block title%}
-Kelas
+Ubah Kelas
 {% endblock %}
-
+{% block addhead %}
+<link href="{% static 'css/custom.min.css' %}" rel="stylesheet">
+{% endblock %}
+{% block page_title %}
+<div class="col-sm-12 wow fadeIn">
+  <i class="fa fa-pencil"></i>
+  <h1><a href="{% url 'manajemen:home_psdm' %}">PSDM/</a></h1>
+  <p>Ubah Kelas<i> Alliance Violin Community</i></p>
+</div>
+{% endblock %}
 {% block content %}
-<h1>Edit Kelas</h1>
-<form method="POST"> {% csrf_token %}
-  {{form.as_p}}
-  <button type="submit" class="save btn btn-default">Save</button>
-</form>
-<!-- <script>
-  $( function() {
-    $( "#id_date" ).datepicker();
-  } );
-
-</script> -->
+<div class ="col-md-8">
+  <br>
+  <form method="POST"> {% csrf_token %}
+    {% bootstrap_form form_edit_kelas %}
+    <!-- <select class="select2_multiple form-control" multiple="multiple">
+    </select-->
+    <button class = "btn btn-primary" type="submit" class="save btn btn-default">Save</button>
+  </form>
+</div>
 {% endblock %}

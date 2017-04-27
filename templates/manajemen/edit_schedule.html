@@ -1,14 +1,24 @@
 {% extends 'manajemen/base.html' %}
-{% load admin_static %}
+{% load admin_static bootstrap3%}
 {% block title%}
+Jadwal Latihan
 {% endblock %}
-
+{% block page_title %}
+<div class="col-sm-12 wow fadeIn">
+  <i class="fa fa-pencil"></i>
+  <h1><a href="{% url 'manajemen:home_psdm' %}">PSDM</a>/</h1>
+  <p>Ubah Kelas<i> Alliance Violin Community</i></p>
+</div>
+{% endblock %}
 {% block content %}
-<h1>Jadwal Latihan</h1>
-<form method="POST"> {% csrf_token %}
-  {{form.as_p}}
-  <button type="submit" class="save btn btn-default">Save</button>
-</form>
+<div class= "col-md-4"></div>
+<div class= "col-md-4">
+  <h1>Jadwal Latihan</h1>
+  <form method="POST"> {% csrf_token %}
+    {% bootstrap_form form_edit_schedule%}
+    <button type="submit" class="save btn btn-primary">Save</button>
+  </form>
+</div>
 <!-- <script>
   $( function() {
     $( "#id_date" ).datepicker();

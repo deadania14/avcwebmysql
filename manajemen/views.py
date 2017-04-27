@@ -5,8 +5,8 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.models import User
 from .models import Article, Practice, Administrasi, Kelas, PracticeAttendance
-from .forms import ArticleForm, SchedulesForm, ClassForm, AbsensiForm, AbsensiNewForm
-from public.models import UserProfile, Event
+from .forms import ArticleForm, MainArticleForm, SchedulesForm, ClassForm, AbsensiForm, AbsensiNewForm, AVCContactForm, NewEventForm
+from public.models import UserProfile, Event, SettingsVariable
 
 @login_required
 def index(request):
@@ -25,27 +25,28 @@ def home_hpd(request):
     context={}
     articles_query = Article.objects.all()
     context['articles'] = articles_query
-    #manggil form edit data contact
     return render(request, 'manajemen/hpd.html', context)
 
 def home_psdm(request):
     context={}
+    today = timezone.now().date()
     user_profile = UserProfile.objects.all()
     context['userprofiles']= user_profile
     practice_query = Practice.objects.all()
     context['practices'] = practice_query
     kelas_query = Kelas.objects.all()
     context['classes'] = kelas_query
-    today = timezone.now().date()
-    present_query = PracticeAttendance.objects.filter(practice__date__gte=today)
+    present_query = PracticeAttendance.objects.all()
     context['presents'] = present_query
+    context['now'] = today
     return render(request, 'manajemen/psdm.html', context)
 
 def home_tutor(request):
     context={}
-    practice_query = Practice.objects.all()
+    today = timezone.now().date()
+    practice_query = Practice.objects.filter(date__gte=today)
     context['practices'] = practice_query
-    present_query = PracticeAttendance.objects.all()
+    present_query = PracticeAttendance.objects.filter(practice__date__gte=today)
     context['presents'] = present_query
     context['now'] = timezone.now().date()
     return render(request, 'manajemen/tutor.html', context)
@@ -115,44 +116,73 @@ def delete_schedule(request, schedule_id):
     practice_query.delete()
     return HttpResponseRedirect(reverse('manajemen:home_psdm'))
 
+def edit_contact(request):
+    context={}
+    context=["address", "phone1", "phone2", "email",]
+    contacts = get_object_or_404(SettingsVariable, key = "email")
+    if request.method=="POST":
+        form_edit_contact = AVCContactForm(request.POST, instance = contacts)
+        if form_edit_contact.is_valid():
+            contacts = form_edit_contact.save(commit = False)
+            contacts.updated_date= timezone.now()
+            contacts.save()
+            return HttpResponseRedirect(reverse('manajemen:home_phd', ))
+    else :
+        form_edit_contact = AVCContactForm(instance = contacts)
+    return render(request, 'manajemen/edit_contact.html', {'form_edit_contact':form_edit_contact})
+
 def edit_article(request, article_id):
     narticle = get_object_or_404(Article, id=article_id)
     if request.method=="POST":
-        form = ArticleForm(request.POST, instance = narticle)
-        if form.is_valid():
-            narticle = form.save(commit = False)
+        form_edit_article = ArticleForm(request.POST, instance = narticle)
+        if form_edit_article.is_valid():
+            narticle = form_edit_article.save(commit = False)
             narticle.author = request.user
             narticle.updated_date= timezone.now()
             narticle.save()
             return HttpResponseRedirect(reverse('manajemen:detail_article', args=(narticle.id,)))
     else :
-        form = ArticleForm(instance = narticle)
-    return render(request, 'manajemen/edit_article.html', {'form':form})
+        form_edit_article = ArticleForm(instance = narticle)
+    return render(request, 'manajemen/edit_article.html', {'form_edit_article':form_edit_article})
+
+def edit_mainarticle(request, article_id):
+    narticle = get_object_or_404(Article, id=article_id)
+    if request.method=="POST":
+        form_edit_article = MainArticleForm(request.POST, instance = narticle)
+        if form_edit_article.is_valid():
+            narticle = form_edit_article.save(commit = False)
+            narticle.author = request.user
+            narticle.updated_date= timezone.now()
+            narticle.save()
+            return HttpResponseRedirect(reverse('manajemen:detail_article', args=(narticle.id,)))
+    else :
+        form_edit_article = MainArticleForm(instance = narticle)
+    return render(request, 'manajemen/edit_article.html', {'form_edit_article':form_edit_article})
 
 def edit_schedule(request, schedule_id):
     nschedule = get_object_or_404(Practice, id=schedule_id)
     if request.method=="POST":
-        form = SchedulesForm(request.POST, instance = nschedule)
-        if form.is_valid():
-            nschedule = form.save(commit = False)
+        form_edit_schedule = SchedulesForm(request.POST, instance = nschedule)
+        if form_edit_schedule.is_valid():
+            nschedule = form_edit_schedule.save(commit = False)
             nschedule.created_date= timezone.now()
             nschedule.save()
             return HttpResponseRedirect(reverse('manajemen:home_psdm', ))
     else :
-        form = SchedulesForm(instance = nschedule)
-    return render(request, 'manajemen/edit_schedule.html', {'form':form})
+        form_edit_schedule = SchedulesForm(instance = nschedule)
+    return render(request, 'manajemen/edit_schedule.html', {'form_edit_schedule':form_edit_schedule})
 
 def edit_kelas(request, kelas_id):
     nclass = get_object_or_404(Kelas, id=kelas_id)
     if request.method=="POST":
-        form = ClassForm(request.POST, instance = nclass)
-        if form.is_valid():
+        form_edit_kelas = ClassForm(request.POST, instance = nclass)
+        if form_edit_kelas.is_valid():
             nclass.updated_date= timezone.now()
             nclass.save()
             return HttpResponseRedirect(reverse('manajemen:home_psdm',))
     else :
-        form = ClassForm(instance = nclass)
-    return render(request, 'manajemen/edit_class.html', {'form':form})
+        form_edit_kelas = ClassForm(instance = nclass)
+    return render(request, 'manajemen/edit_class.html', {'form_edit_kelas':form_edit_kelas})
 
 def edit_attendance(request, attendance_id):
     npresent = get_object_or_404(PracticeAttendance, id=attendance_id)
@@ -167,6 +197,24 @@ def edit_attendance(request, attendance_id):
     form_edit_absensi.fields['is_present'].queryset = User.objects.filter(kelas=npresent.kelas)
     form_edit_absensi.fields['tutor_pendamping'].queryset = User.objects.filter(profile__tipe_user='tutor').exclude(id=npresent.tutor.id)
     return render(request, 'manajemen/edit_attendance.html', {'form_edit_absensi':form_edit_absensi})
+
+def new_event(request):
+    context={}
+    deal_event= Event.objects.all()
+    context["devent"] = deal_event
+    if request.method=="POST":
+        form_new_event = NewEventForm(request.POST, request.FILES)
+        if form_new_event.is_valid():
+            nevent = form_new_event.save(commit = False)
+            nevent.corporate = "AVC"
+            nevent.sender = request.user
+            nevent.status_choices = "deal"
+            nevent.created_date= timezone.now()
+            nevent.save()
+            return HttpResponseRedirect(reverse('manajemen:home_acara'))
+    else :
+        form_new_event = NewEventForm()
+    return render(request, 'manajemen/new_event.html', {'form_new_event':form_new_event}, context)
 
 def new_attendance(request):
     if request.method=="POST":
@@ -184,37 +232,37 @@ def new_attendance(request):
 
 def new_article(request):
     if request.method=="POST":
-        form = ArticleForm(request.POST)
-        if form.is_valid():
-            narticle = form.save(commit = False)
+        form_edit_article = ArticleForm(request.POST)
+        if form_edit_article.is_valid():
+            narticle = form_edit_article.save(commit = False)
             narticle.author = request.user
             narticle.published_date= timezone.now()
             narticle.save()
             return HttpResponseRedirect(reverse('manajemen:detail_article', args=(narticle.id,)))
     else :
-        form = ArticleForm()
-    return render(request, 'manajemen/edit_article.html', {'form':form})
+        form_edit_article = ArticleForm()
+    return render(request, 'manajemen/new_article.html', {'form_edit_article':form_edit_article})
 
 def new_schedule(request):
     if request.method=="POST":
-        form = SchedulesForm(request.POST)
-        if form.is_valid():
-            nschedule = form.save(commit = False)
+        form_edit_schedule = SchedulesForm(request.POST)
+        if form_edit_schedule.is_valid():
+            nschedule = form_edit_schedule.save(commit = False)
             nschedule.created_date= timezone.now()
             nschedule.save()
             return HttpResponseRedirect(reverse('manajemen:home_psdm', ))
     else :
-        form = SchedulesForm()
-    return render(request, 'manajemen/edit_schedule.html', {'form':form})
+        form_edit_schedule = SchedulesForm()
+    return render(request, 'manajemen/edit_schedule.html', {'form_edit_schedule':form_edit_schedule})
 
 def new_kelas(request):
     if request.method=="POST":
-        form = ClassForm(request.POST)
-        if form.is_valid():
-            nclass = form.save(commit = False)
+        form_new_kelas = ClassForm(request.POST)
+        if form_new_kelas.is_valid():
+            nclass = form_new_kelas.save(commit = False)
             nclass.updated_date= timezone.now()
             nclass.save()
             return HttpResponseRedirect(reverse('manajemen:home_psdm', ))
     else :
-        form = ClassForm()
-    return render(request, 'manajemen/edit_class.html', {'form':form})
+        form_new_kelas = ClassForm()
+    return render(request, 'manajemen/new_class.html', {'form_new_kelas':form_new_kelas})

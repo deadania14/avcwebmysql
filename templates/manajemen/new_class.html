@@ -1,21 +1,22 @@
 {% extends 'manajemen/base.html' %}
+{% load admin_static %}
 {% load bootstrap3 %}
 {% block title%}
-Edit Article
+Buat Kelas Baru
 {% endblock %}
 {% block page_title %}
 <div class="col-sm-12 wow fadeIn">
   <i class="fa fa-pencil"></i>
-  <h1><a href="{% url 'manajemen:home_hpd' %}">HPD /</a></h1>
-  <p>Ubah Artikel <i> Alliance Violin Community</i></p>
+  <h1><a href="{% url 'manajemen:home_psdm' %}">PSDM</a></h1>
+  <p>Buat Kelas Baru<i> Alliance Violin Community</i></p>
 </div>
 {% endblock %}
 {% block content %}
 <div class ="col-md-8">
   <br>
   <form method="POST"> {% csrf_token %}
-    {% bootstrap_form form_edit_article %}
-    <button class = "btn btn-primary" type="submit" class="save btn btn-default">Save</button>
+    {% bootstrap_form form_new_kelas %}
+    <button class = "btn btn-info" type="submit" class="save btn btn-default">Save</button>
   </form>
 </div>
 {% endblock %}

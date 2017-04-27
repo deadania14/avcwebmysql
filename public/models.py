@@ -64,7 +64,6 @@ class UserProfile(models.Model):
         return self.user.username
 
     def schedule_last_three_months(self):
-
         self_class = Kelas.objects.get(user=self.user)
         schedule_last_three_months = self_class.schedule_last_three_months()
         return schedule_last_three_months

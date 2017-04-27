@@ -1,19 +1,23 @@
 {% extends 'manajemen/base.html' %}
 {% load admin_static %}
+{% load bootstrap3 %}
 {% block title%}
 Absensi
 {% endblock %}
-
+{% block page_title %}
+<div class="col-sm-12 wow fadeIn">
+  <i class="fa fa-plus"></i>
+  <h1><a href="{% url 'manajemen:home_psdm' %}">PSDM</a>/</h1>
+  <p> Absensi Baru<i> Alliance Violin Community</i></p>
+</div>
+{% endblock %}
 {% block content %}
-<h1>Absensi</h1>
-<form method="POST"> {% csrf_token %}
-  {{form_new_absensi.as_p}}
-  <button type="submit" class="save btn btn-default">Save</button>
-</form>
-<!-- <script>
-  $( function() {
-    $( "#id_date" ).datepicker();
-  } );
-
-</script> -->
+<div class= "col-md-4"></div>
+<div class= "col-md-4">
+  <h1>Absensi</h1>
+  <form method="POST"> {% csrf_token %}
+    {% bootstrap_form form_new_absensi %}
+    <button type="submit" class="save btn btn-primary">Save</button>
+  </form>
+</div>
 {% endblock %}

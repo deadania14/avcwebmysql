@@ -9,140 +9,160 @@
     user-scalable=no">
 
     <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
     <link href="{% static 'css/public.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
     <link href="{% static 'css/font-awesome.css' %}" rel="stylesheet">
     <link href="{% static 'fonts/droidsans.css' %}" rel="stylesheet">
     <link href="{% static 'fonts/opensans.css' %}" rel="stylesheet">
     <link href="{% static 'css/datetimepicker.css' %}" rel="stylesheet">
     <link href="{% static 'css/dataTables.bootstrap.min.css' %}" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-
-    <head>
-
-        <body>
-            <nav class="navbar" role="navigation">
-                <div class="container">
-                    <div class="navbar-header">
-                        <h1><a	href="/">Alliance Violin Community</a></h1>
-                    </div>
-                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                        <ul class="nav navbar-nav navbar-right">
-                          <!-- <a class = "btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                            <span class= "icon-bar"></span>
-                            <span class= "icon-bar"></span>
-                            <span class= "icon-bar"></span>
-                          </a> -->
-                          <!-- <div class = "nav-collapse collapse"> -->
-                            <li>
-                                <a href="{% url 'manajemen:index' %}">
-                                    <br>Beranda</a>
-                            </li>
-                            {% if user.profile.tipe_user == "hpd" %}
-                            <li>
-                                <a href="{% url 'manajemen:home_hpd' %}"><br>HPD</a>
-                            </li>
-                            {% endif %}
-                            {% if user.profile.tipe_user == "psdm" %}
-                            <li>
-                                <a href="{% url 'manajemen:home_psdm' %}"><br>PSDM</a>
-                            </li>
-                            {% endif %}
-                            {% if user.profile.tipe_user == "tutor" or user.profile.tipe_user == "psdm"%}
-                            <li>
-                                <a href="{% url 'manajemen:home_tutor' %}"><br>Tutor</a>
-                            </li>
-                            {% endif %}
-                            {% if user.profile.tipe_user == "bendahara" %}
-                            <li>
-                                <a href="{% url 'manajemen:home_keuangan' %}"><br>Keuangan</a>
-                            </li>
-                            {% endif %}
-                            {% if user.profile.tipe_user == "program" %}
-                            <li>
-                                <a href="{% url 'manajemen:home_acara' %}"><br>Acara</a>
-                            </li>
-                            {% endif %}
-                            {% if user.profile.tipe_user == "inventaris" %}
-                            <li>
-                                <a href="{% url 'manajemen:home_inventaris' %}"><br>Inventaris</a>
-                            </li>
-                            {% endif %}
-                            <li>
-                                {% if user.is_authenticated %}
-                                <li>
-                                    <a href="{% url 'login:logout' %}"><br>logout</a>
-                                </li>
-                                {% endif %}
-                            </li>
-                          <!-- </div> -->
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-
-            <div class="container">
-                <div class="row">
-                    {% block content %} {% endblock %}
-                </div>
+    <style>
+      .form-group {
+        text-align: left;
+      }
+      .right{
+        text-align: right;
+      }
+      .table {
+        font-size: 14px;
+      }
+    </style>
+    {% block addhead %}
+    
+    {% endblock %}
+</head>
+<body>
+    <nav class="navbar" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <h1><a	href="/">Alliance Violin Community</a></h1>
             </div>
-            <!-- Footer -->
-              <footer>
-                  <div class="container">
-                      <div class="row">
-                          <div class="col-sm-12 footer-box wow fadeInDown">
-                              <h4>Hubungi Kami</h4>
-                              <div class="footer-box-text footer-box-text-regist">
-                                  <div class= "col-xl-4 col-md-4"><i class="fa fa-map-marker"></i> Alamat: Jl. Boulevard Anggrek 3 New Extention<br> Blok B No 10, Depok Jawa Barat</div>
-                                  <div class= "col-xl-4 col-md-4"><i class="fa fa-phone"></i>
-                                    Call: {% call1_footer %}
-                                    {% call2_footer as call2_footer %}
-                                    {% if call2_footer%}
-                                      atau
-                                    {% endif %}
-                                    {% call2_footer %}
-                                  </div>
-                                  <div class= "col-xl-4 col-md-4"><i class="fa fa-envelope"></i> Email: <a href="">{% email_footer %}</a></div>
-                              </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                  <!-- <a class = "btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class= "icon-bar"></span>
+                    <span class= "icon-bar"></span>
+                    <span class= "icon-bar"></span>
+                  </a> -->
+                  <!-- <div class = "nav-collapse collapse"> -->
+                    <li>
+                        <a href="{% url 'manajemen:index' %}">
+                            <br>Beranda</a>
+                    </li>
+                    {% if user.profile.tipe_user == "hpd" or user.profile.tipe_user == "ketua/wakil"%}
+                    <li>
+                        <a href="{% url 'manajemen:home_hpd' %}"><br>HPD</a>
+                    </li>
+                    {% endif %}
+                    {% if user.profile.tipe_user == "psdm" or user.profile.tipe_user == "ketua/wakil"%}
+                    <li>
+                        <a href="{% url 'manajemen:home_psdm' %}"><br>PSDM</a>
+                    </li>
+                    {% endif %}
+                    {% if user.profile.tipe_user == "tutor" or user.profile.tipe_user == "psdm" or user.profile.tipe_user == "ketua/wakil" %}
+                    <li>
+                        <a href="{% url 'manajemen:home_tutor' %}"><br>Tutor</a>
+                    </li>
+                    {% endif %}
+                    {% if user.profile.tipe_user == "bendahara" or user.profile.tipe_user == "ketua/wakil"%}
+                    <li>
+                        <a href="{% url 'manajemen:home_keuangan' %}"><br>Keuangan</a>
+                    </li>
+                    {% endif %}
+                    {% if user.profile.tipe_user == "program" or user.profile.tipe_user == "ketua/wakil"%}
+                    <li>
+                        <a href="{% url 'manajemen:home_acara' %}"><br>Acara</a>
+                    </li>
+                    {% endif %}
+                    {% if user.profile.tipe_user == "inventaris" or user.profile.tipe_user == "ketua/wakil"%}
+                    <li>
+                        <a href="{% url 'manajemen:home_inventaris' %}"><br>Inventaris</a>
+                    </li>
+                    {% endif %}
+                    <li>
+                        {% if user.is_authenticated %}
+                        <li>
+                            <a href="{% url 'login:logout' %}"><br>logout</a>
+                        </li>
+                        {% endif %}
+                    </li>
+                  <!-- </div> -->
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Page Title -->
+    <div class="page-title-container">
+        <div class="container">
+            <div class="row">
+              {% block page_title %}
+              {% endblock %}
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            {% block content %} {% endblock %}
+        </div>
+    </div>
+    <!-- Footer -->
+      <footer>
+          <div class="container">
+              <div class="row">
+                  <div class="col-sm-12 footer-box wow fadeInDown">
+                      <h4>Hubungi Kami</h4>
+                      <div class="footer-box-text footer-box-text-regist">
+                          <div class= "col-xl-4 col-md-4"><i class="fa fa-map-marker"></i> Alamat: {% address_footer %}</div>
+                          <div class= "col-xl-4 col-md-4"><i class="fa fa-phone"></i>
+                            Call: {% call1_footer %}
+                            {% call2_footer as call2_footer %}
+                            {% if call2_footer%}
+                              atau
+                            {% endif %}
+                            {% call2_footer %}
                           </div>
-                      </div>
-                      <div class="row">
-                          <div class="col-sm-12 wow fadeIn">
-                              <div class="footer-border"></div>
-                          </div>
-                      </div>
-                      <div class="row">
-                          <div class="col-sm-7 footer-copyright wow fadeIn">
-                              <p>Copyright 2017 Indonesia - All rights reserved. Template by <a href="http://azmind.com">Azmind</a>.</p>
-                          </div>
-                          <div class="col-sm-5 footer-social wow fadeIn">
-                              <a href="https://web.facebook.com/komunitas.biola.depok"><i class="fa fa-facebook"></i></a>
-                              <a href="https://twitter.com/avcdepok"><i class="fa fa-twitter"></i></a>
-                              <a href="https://www.instagram.com/avcdepok/?hl=id"><i class="fa fa-instagram"></i></a>
-                              <a href="https://www.youtube.com/channel/UCSd55y9XuS-4p-XyywUmFKQ"><i class="fa fa-youtube"></i></a>
-                          </div>
+                          <div class= "col-xl-4 col-md-4"><i class="fa fa-envelope"></i> Email: <a href="">{% email_footer %}</a></div>
                       </div>
                   </div>
-              </footer>
+              </div>
+              <div class="row">
+                  <div class="col-sm-12 wow fadeIn">
+                      <div class="footer-border"></div>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-7 footer-copyright wow fadeIn">
+                      <p>Copyright 2017 Indonesia - All rights reserved. Template by <a href="http://azmind.com">Azmind</a>.</p>
+                  </div>
+                  <div class="col-sm-5 footer-social wow fadeIn">
+                      <a href="https://web.facebook.com/komunitas.biola.depok"><i class="fa fa-facebook"></i></a>
+                      <a href="https://twitter.com/avcdepok"><i class="fa fa-twitter"></i></a>
+                      <a href="https://www.instagram.com/avcdepok/?hl=id"><i class="fa fa-instagram"></i></a>
+                      <a href="https://www.youtube.com/channel/UCSd55y9XuS-4p-XyywUmFKQ"><i class="fa fa-youtube"></i></a>
+                  </div>
+              </div>
+          </div>
+      </footer>
 
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-            <script src="{% static 'js/bootstrap.js' %}"></script>
-            <script src="{% static 'js/datatables/dataTables.buttons.min.js' %}"></script>
-            <script src="{% static 'js/datatables/buttons.flash.min.js' %}"></script>
-            <script src="{% static 'js/datatables/buttons.html5.min.js' %}"></script>
-            <script src="{% static 'js/datatables/buttons.print.min.js' %}"></script>
-            <script>
-                function openNav() {
-                    document.getElementById("mySidenav").style.width = "250px";
-                    document.getElementById("main").style.marginLeft = "250px";
-                    document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
-                }
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="{% static 'js/bootstrap.js' %}"></script>
+    <script src="{% static 'js/datatables/dataTables.buttons.min.js' %}"></script>
+    <script src="{% static 'js/datatables/buttons.flash.min.js' %}"></script>
+    <script src="{% static 'js/datatables/buttons.html5.min.js' %}"></script>
+    <script src="{% static 'js/datatables/buttons.print.min.js' %}"></script>
+    <script>
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "250px";
+            document.getElementById("main").style.marginLeft = "250px";
+            document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
+        }
 
-                function closeNav() {
-                    document.getElementById("mySidenav").style.width = "0";
-                    document.getElementById("main").style.marginLeft = "0";
-                    document.body.style.backgroundColor = "white";
-                }
-            </script>
-        </body>
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+            document.getElementById("main").style.marginLeft = "0";
+            document.body.style.backgroundColor = "white";
+        }
+    </script>
+</body>
 </html>

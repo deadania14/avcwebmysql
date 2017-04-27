@@ -1,11 +1,17 @@
 {% extends 'manajemen/base.html' %}
+{% block page_title %}
+<div class="col-sm-12 wow fadeIn">
+  <i class="fa fa-adjust"></i>
+  <h1><a href="{% url 'manajemen:home_hpd' %}">HPD</a>/</h1>
+  <p>Detail Artikel <i> Alliance Violin Community</i></p>
+</div>
+{% endblock %}
 {% block content %}
-<div>
-
-  <h1>{{articleid.title}}</h1>
+<div class = 'form-group'>
+  <h1>{{articleid.title}} <small>
   {% if user.is_authenticated %}
-  <a class="btn	btn-default" href="{%	url	'manajemen:edit_article'	articleid.id	%}"><span	class="glyphicon	glyphicon-pencil"></span></a>
-  {% endif %}
+  <a class="btn	btn-warning" href="{%	url	'manajemen:edit_article'	articleid.id	%}"><span	class="glyphicon	glyphicon-pencil"></span></a>
+  {% endif %}</small></h1>
   <p>{{articleid.text|safe|linebreaksbr}}</p>
   {% if articleid.image %}
   <br><img class="img-circle" src="{{articleid.image.url}}" height='150' width='150'>{% endif %}

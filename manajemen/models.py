@@ -16,6 +16,8 @@ class Article(models.Model):
     published_date = models.DateTimeField(
         blank = True, null = True
     )
+    class Meta:
+        ordering =['-updated_date',]
     def publish(self):
         self.published_date = timezone.now()
         self.save()
@@ -27,11 +29,13 @@ class Article(models.Model):
 
 class Practice(models.Model):
     date = models.DateTimeField(blank = False)
-    place = models.CharField(max_length= 50)
+    place = models.CharField(max_length= 100)
     note = models.TextField()
     created_date = models.DateTimeField(
         default = timezone.now
         )
+    class Meta:
+        ordering =['-date',]
     def __str__(self):
         return "{}".format(self.date.date())
 
@@ -74,6 +78,8 @@ class PracticeAttendance(models.Model):
     def update(self):
         self.updated_date = timezone.now()
         self.save()
+    class Meta:
+        ordering =['-practice',]
 
 
 class AdministrationType(models.Model):
