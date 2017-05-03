@@ -1,4 +1,7 @@
 {% extends 'manajemen/base.html' %}
+{% block title %}
+ Detail Artikel
+{% endblock %}
 {% block page_title %}
 <div class="col-sm-12 wow fadeIn">
   <i class="fa fa-adjust"></i>
@@ -12,7 +15,9 @@
   {% if user.is_authenticated %}
   <a class="btn	btn-warning" href="{%	url	'manajemen:edit_article'	articleid.id	%}"><span	class="glyphicon	glyphicon-pencil"></span></a>
   {% endif %}</small></h1>
-  <p>{{articleid.text|safe|linebreaksbr}}</p>
+  <div style="font-size:18px">
+    <p>{{articleid.text|safe|linebreaksbr}}</p>
+  </div>
   {% if articleid.image %}
   <br><img class="img-circle" src="{{articleid.image.url}}" height='150' width='150'>{% endif %}
   <p>{{articleid.created_date}}</p>

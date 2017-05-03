@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
+    'ajax_select',
     'public',
     'manajemen',
     'login',
@@ -73,7 +75,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-            ],            
+            ],
         },
     },
 ]
@@ -114,7 +116,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'id'
 
 TIME_ZONE = 'UTC'
 
@@ -135,3 +137,12 @@ STATICFILES_DIRS = [
 ]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+from django.conf.locale.id import formats as id_formats
+id_formats.DATE_INPUT_FORMATS = [
+    '%d-%m-%Y', '%d/%m/%Y',             # '25-10-2009', 25/10/2009'
+    '%d-%m-%y', '%d/%m/%y',             # '25-10-09', 25/10/09'
+    '%d %b %Y',                         # '25 Oct 2006',
+    '%d %B %Y',                         # '25 October 2006'
+
+]

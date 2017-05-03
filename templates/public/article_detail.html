@@ -1,0 +1,17 @@
+{% extends 'public/base.html' %}
+{% block page_title %}
+<div class="col-sm-12 wow fadeIn">
+  <i class="fa fa-adjust"></i>
+  <h1>Detail Artikel /</h1>
+  <p><i> Alliance Violin Community</i></p>
+</div>
+{% endblock %}
+{% block content %}
+<div class = 'form-group'>
+  <h1>{{articleid.title}}</h1>
+  <p>{{articleid.text|safe|linebreaksbr}}</p>
+  {% if articleid.image %}
+  <br><img class="img-circle" src="{{articleid.image.url}}" height='150' width='150'>{% endif %}
+  <p>{{articleid.created_date}}</p>
+</div>
+{% endblock %}

@@ -1,8 +1,66 @@
 {% extends 'manajemen/base.html' %}
 {% block title%}
+Inventaris
 {% endblock %}
-
+{% block page_title %}
+<div class="col-sm-12 wow fadeIn">
+    <i class="fa fa-dropbox"></i>
+    <h1><a href="{% url 'manajemen:home_inventaris' %}">Inventaris </a>/</h1>
+    <p> <i> Alliance Violin Community</i></p>
+</div>
+{% endblock %}
 {% block content %}
-<h1>ini inventaris</h1>
-
+<div class="col-md-12 col-sm-12 col-xs-12">
+  <div class="x_panel">
+    <div class="x_title">
+      <h3>Daftar Barang{% if user.is_authenticated %} ~<small>
+          <a href=""> Tambah Baru</span></a>
+      </small>{% endif %}</h3>
+      <div class="clearfix"></div>
+    </div>
+    <div class="x_content">
+    <table id="datatable-buttons" class="font-13 table table-responsive">
+    <thead>
+      <tr>
+        <th>Nama Barang</th>
+        <th>Stok</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for barang in inventories %}
+      <tr>
+        <td>{{barang.thingsname}}</td>
+        <td>{{barang.stock}}</td>
+        <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModalDetailInventory{{barang.id}}">Lihat</button>
+          <a class="btn	btn-warning" href="{%	url	'manajemen:edit_barang'	barang.id	%}"><span	class="glyphicon	glyphicon-pencil"></span></a>
+        </td>
+      </tr>
+      <!-- Modal -->
+      <div id="myModalDetailInventory{{barang.id}}" class="modal fade" role="dialog">
+          <div class="modal-dialog">
+              <!-- Modal content-->
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">Detail Barang - {{barang.thingsname}}</h4>
+                  </div>
+                  <div class="modal-body">
+                      <p>Nama barang : {{barang.thingsname}}</p>
+                      <p>Stok        : {{barang.stock}}</p>
+                      <p>Keterangan  : {{barang.details}}</p>
+                      <p>Catatan     : {{barang.note}}</p>
+                  </div>
+                  <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+      {% endfor %}
+    </tbody>
+    </table>
+    </div>
+  </div>
+</div>
 {% endblock %}

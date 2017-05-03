@@ -8,17 +8,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,
     user-scalable=no">
 
-    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/public.css' %}" rel="stylesheet">
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
     <link href="{% static 'css/font-awesome.css' %}" rel="stylesheet">
     <link href="{% static 'fonts/droidsans.css' %}" rel="stylesheet">
     <link href="{% static 'fonts/opensans.css' %}" rel="stylesheet">
-    <link href="{% static 'css/datetimepicker.css' %}" rel="stylesheet">
+    <!-- <link href="{% static 'css/datetimepicker.css' %}" rel="stylesheet"> -->
     <link href="{% static 'css/dataTables.bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css" rel="stylesheet">
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script
+			  src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"
+			  integrity="sha256-ugED92WALymbx9ylw12aADWaCrsQysE29DyvnAv5i3w="
+			  crossorigin="anonymous"></script>
+    <script src="{% static 'ajax_select/js/ajax_select.js' %}"></script>
+    <script src="{% static 'admin/js/admin/DateTimeShortcuts.js' %}"></script>
+    {% block static_admin %}{% endblock %}
+
+    <script src="{% static 'ajax_select/js/bootstrap.js' %}"></script>
+
     <link href='https://fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <style>
       .form-group {
+        text-align: left;
+      }
+      .left {
         text-align: left;
       }
       .right{
@@ -29,69 +46,66 @@
       }
     </style>
     {% block addhead %}
-    
+
     {% endblock %}
 </head>
 <body>
-    <nav class="navbar" role="navigation">
-        <div class="container">
-            <div class="navbar-header">
-                <h1><a	href="/">Alliance Violin Community</a></h1>
-            </div>
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                  <!-- <a class = "btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                    <span class= "icon-bar"></span>
-                    <span class= "icon-bar"></span>
-                    <span class= "icon-bar"></span>
-                  </a> -->
-                  <!-- <div class = "nav-collapse collapse"> -->
-                    <li>
-                        <a href="{% url 'manajemen:index' %}">
-                            <br>Beranda</a>
-                    </li>
-                    {% if user.profile.tipe_user == "hpd" or user.profile.tipe_user == "ketua/wakil"%}
-                    <li>
-                        <a href="{% url 'manajemen:home_hpd' %}"><br>HPD</a>
-                    </li>
-                    {% endif %}
-                    {% if user.profile.tipe_user == "psdm" or user.profile.tipe_user == "ketua/wakil"%}
-                    <li>
-                        <a href="{% url 'manajemen:home_psdm' %}"><br>PSDM</a>
-                    </li>
-                    {% endif %}
-                    {% if user.profile.tipe_user == "tutor" or user.profile.tipe_user == "psdm" or user.profile.tipe_user == "ketua/wakil" %}
-                    <li>
-                        <a href="{% url 'manajemen:home_tutor' %}"><br>Tutor</a>
-                    </li>
-                    {% endif %}
-                    {% if user.profile.tipe_user == "bendahara" or user.profile.tipe_user == "ketua/wakil"%}
-                    <li>
-                        <a href="{% url 'manajemen:home_keuangan' %}"><br>Keuangan</a>
-                    </li>
-                    {% endif %}
-                    {% if user.profile.tipe_user == "program" or user.profile.tipe_user == "ketua/wakil"%}
-                    <li>
-                        <a href="{% url 'manajemen:home_acara' %}"><br>Acara</a>
-                    </li>
-                    {% endif %}
-                    {% if user.profile.tipe_user == "inventaris" or user.profile.tipe_user == "ketua/wakil"%}
-                    <li>
-                        <a href="{% url 'manajemen:home_inventaris' %}"><br>Inventaris</a>
-                    </li>
-                    {% endif %}
-                    <li>
-                        {% if user.is_authenticated %}
-                        <li>
-                            <a href="{% url 'login:logout' %}"><br>logout</a>
-                        </li>
-                        {% endif %}
-                    </li>
-                  <!-- </div> -->
-                </ul>
-            </div>
-        </div>
-    </nav>
+  <nav class="navbar-new" role="navigation">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#top-navbar-1">
+						<h3><span class="glyphicon glyphicon-menu-hamburger"></span><h3>
+					</button>
+          <h2 class = "left" style = "padding-left:15px"><a	href="{% url 'public:index' %}">Alliance Violin Community</a></h2>
+				</div>
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				<div class="collapse navbar-collapse left" id="top-navbar-1">
+					<ul class="nav navbar-nav navbar-right">
+            <li>
+                <a href="{% url 'manajemen:index' %}">
+                    <br>Beranda</a>
+            </li>
+            {% if user.profile.tipe_user == "hpd" or user.profile.tipe_user == "ketua/wakil"%}
+            <li>
+                <a href="{% url 'manajemen:home_hpd' %}"><br>HPD</a>
+            </li>
+            {% endif %}
+            {% if user.profile.tipe_user == "psdm" or user.profile.tipe_user == "ketua/wakil"%}
+            <li>
+                <a href="{% url 'manajemen:home_psdm' %}"><br>PSDM</a>
+            </li>
+            {% endif %}
+            {% if user.profile.tipe_user == "tutor" or user.profile.tipe_user == "psdm" or user.profile.tipe_user == "ketua/wakil" %}
+            <li>
+                <a href="{% url 'manajemen:home_tutor' %}"><br>Tutor</a>
+            </li>
+            {% endif %}
+            {% if user.profile.tipe_user == "bendahara" or user.profile.tipe_user == "ketua/wakil"%}
+            <li>
+                <a href="{% url 'manajemen:home_keuangan' %}"><br>Keuangan</a>
+            </li>
+            {% endif %}
+            {% if user.profile.tipe_user == "program" or user.profile.tipe_user == "ketua/wakil"%}
+            <li>
+                <a href="{% url 'manajemen:home_acara' %}"><br>Acara</a>
+            </li>
+            {% endif %}
+            {% if user.profile.tipe_user == "inventaris" or user.profile.tipe_user == "ketua/wakil"%}
+            <li>
+                <a href="{% url 'manajemen:home_inventaris' %}"><br>Inventaris</a>
+            </li>
+            {% endif %}
+            <li>
+                {% if user.is_authenticated %}
+                <li>
+                    <a href="{% url 'login:logout' %}"><br>logout</a>
+                </li>
+                {% endif %}
+            </li>
+          </ul>
+				</div>
+			</div>
+		</nav>
     <!-- Page Title -->
     <div class="page-title-container">
         <div class="container">
@@ -136,16 +150,17 @@
                       <p>Copyright 2017 Indonesia - All rights reserved. Template by <a href="http://azmind.com">Azmind</a>.</p>
                   </div>
                   <div class="col-sm-5 footer-social wow fadeIn">
-                      <a href="https://web.facebook.com/komunitas.biola.depok"><i class="fa fa-facebook"></i></a>
-                      <a href="https://twitter.com/avcdepok"><i class="fa fa-twitter"></i></a>
-                      <a href="https://www.instagram.com/avcdepok/?hl=id"><i class="fa fa-instagram"></i></a>
-                      <a href="https://www.youtube.com/channel/UCSd55y9XuS-4p-XyywUmFKQ"><i class="fa fa-youtube"></i></a>
+                      <a href="{% facebook_footer %}"><i class="fa fa-facebook"></i></a>
+                      <a href="{% twitter_footer %}"><i class="fa fa-twitter"></i></a>
+                      <a href="{% instagram_footer %}"><i class="fa fa-instagram"></i></a>
+                      <a href="{% youtube_footer %}"><i class="fa fa-youtube"></i></a>
                   </div>
               </div>
           </div>
       </footer>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
     <script src="{% static 'js/bootstrap.js' %}"></script>
     <script src="{% static 'js/datatables/dataTables.buttons.min.js' %}"></script>
     <script src="{% static 'js/datatables/buttons.flash.min.js' %}"></script>

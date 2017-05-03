@@ -1,8 +1,21 @@
-{% extends 'public/base.html' %} {% block title %} Beranda {% endblock %} {% block content %}
-<div class="col-md-12">
+{% extends 'public/base.html' %}
+{% block title %}
+Tentang
+{% endblock %}
+{% block page_title%}
+<div class="col-sm-12 wow fadeIn">
+    <i class="fa fa-star"></i>
+    <h1>Tentang /</h1>
+    <p><i> Alliance Violin Community</i></p>
+</div>
+{% endblock %}
+{% block content %}
+<div class="col-md-12 form-group">
     <div>
       <h1>{{history.title}}</h1>
-      <p>{{history.text|safe}}</p>
+      <div style="font-size:18px">
+        <p>{{history.text|safe}}</p>
+      </div>
     </div>
     <div>
       <h1>{{cprofile.title}}</h1>

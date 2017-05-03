@@ -18,7 +18,22 @@ def call2_footer():
     if phone2 == '': phone2=None
     return SettingsVariable.objects.get(key='phone2').value
 
-
 @register.simple_tag
 def address_footer():
     return SettingsVariable.objects.get(key='address').value
+
+@register.simple_tag
+def facebook_footer():
+    return SettingsVariable.objects.get(key='facebook').value
+
+@register.simple_tag
+def twitter_footer():
+    return SettingsVariable.objects.get(key='twitter').value
+
+@register.simple_tag
+def instagram_footer():
+    return SettingsVariable.objects.get(key='instagram').value
+
+@register.simple_tag
+def youtube_footer():
+    return SettingsVariable.objects.get(key='youtube').value

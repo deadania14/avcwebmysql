@@ -3,6 +3,24 @@
 {% block title%}
 Jadwal Latihan
 {% endblock %}
+{% block static_admin %}
+
+<link rel="stylesheet" type="text/css" href="/static/admin/css/forms.css" />
+<script type="text/javascript" src="/admin/jsi18n/"></script>
+
+<script type="text/javascript" src="/static/admin/js/core.js"></script>
+
+<script type="text/javascript" src="/static/admin/js/jquery.init.js"></script>
+<script type="text/javascript" src="/static/admin/js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="/static/admin/js/actions.js"></script>
+<script type="text/javascript" src="/static/admin/js/urlify.js"></script>
+<script type="text/javascript" src="/static/admin/js/prepopulate.js"></script>
+<script type="text/javascript" src="/static/admin/js/vendor/xregexp/xregexp.js"></script>
+
+
+<script type="text/javascript" src="/static/admin/js/calendar.js"></script>
+<script type="text/javascript" src="/static/admin/js/admin/DateTimeShortcuts.js"></script>
+{% endblock %}
 {% block page_title %}
 <div class="col-sm-12 wow fadeIn">
   <i class="fa fa-pencil"></i>
@@ -11,18 +29,27 @@ Jadwal Latihan
 </div>
 {% endblock %}
 {% block content %}
+{{form_edit_schedule.media}}
 <div class= "col-md-4"></div>
 <div class= "col-md-4">
   <h1>Jadwal Latihan</h1>
   <form method="POST"> {% csrf_token %}
     {% bootstrap_form form_edit_schedule%}
+
     <button type="submit" class="save btn btn-primary">Save</button>
+
   </form>
 </div>
-<!-- <script>
-  $( function() {
-    $( "#id_date" ).datepicker();
-  } );
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+var $j= jQuery.noConflict();
+$( document ).ready(function() {
+  // $j( "#id_date" ).datepicker({dateFormat: 'yy-mm-dd'});
+  // alert($j(".datetimeshortcuts").html());
 
-</script> -->
+} );
+
+</script>
+
 {% endblock %}

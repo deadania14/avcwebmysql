@@ -1,0 +1,21 @@
+{% extends 'manajemen/base.html' %}
+{% load bootstrap3 %}
+{% block title%}
+Ubah Data Barang
+{% endblock %}
+{% block page_title %}
+<div class="col-sm-12 wow fadeIn">
+    <i class="fa fa-dropbox"></i>
+    <h1><a href="{% url 'manajemen:home_inventaris' %}">Inventaris </a>/</h1>
+    <p> Ubah Data Barang <i> Alliance Violin Community</i></p>
+</div>
+{% endblock %}
+{% block content %}
+<div class ="col-md-8">
+  <br>
+  <form method="POST"> {% csrf_token %}
+    {% bootstrap_form form_edit_barang %}
+    <button class = "btn btn-primary" type="submit" class="save btn btn-default">Save</button>
+  </form>
+</div>
+{% endblock %}

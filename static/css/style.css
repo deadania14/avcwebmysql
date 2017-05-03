@@ -178,8 +178,8 @@ ul.navbar-nav li.active .dropdown-menu > .active > a:focus { background: #b71c1c
 .slider-container {
     margin: 0 auto;
     background: #f8f8f8 url(../img/pattern.jpg) left top repeat;
-    -moz-box-shadow: 0 5px 15px 0 rgba(0,0,0,.05) inset, 0 -5px 15px 0 rgba(0,0,0,.05) inset;
-    -webkit-box-shadow: 0 5px 15px 0 rgba(0,0,0,.05) inset, 0 -5px 15px 0 rgba(0,0,0,.05) inset;
+    /*-moz-box-shadow: 0 5px 15px 0 rgba(0,0,0,.05) inset, 0 -5px 15px 0 rgba(0,0,0,.05) inset;
+    -webkit-box-shadow: 0 5px 15px 0 rgba(0,0,0,.05) inset, 0 -5px 15px 0 rgba(0,0,0,.05) inset;*/
     box-shadow: 0 5px 15px 0 rgba(0,0,0,.05) inset, 0 -5px 15px 0 rgba(0,0,0,.05) inset;
 }
 
@@ -189,8 +189,6 @@ ul.navbar-nav li.active .dropdown-menu > .active > a:focus { background: #b71c1c
 }
 
 .flexslider {
-    margin-top: 90px;
-    margin-bottom: 55px;
     border: 6px solid #fff;
     -moz-border-radius: 0; -webkit-border-radius: 0; border-radius: 0;
     -moz-box-shadow: 0 5px 15px 0 rgba(0,0,0,.05), 0 -5px 15px 0 rgba(0,0,0,.05);
@@ -229,7 +227,37 @@ ul.navbar-nav li.active .dropdown-menu > .active > a:focus { background: #b71c1c
 .flex-direction-nav a:before { font-size: 26px; }
 
 .flex-direction-nav .flex-prev, .flex-direction-nav .flex-next { text-align: center; }
-
+/****thumb slider******/
+/*.flex-control-thumbs {
+  margin: 5px 0 0;
+  position: static;
+  overflow: hidden;
+}
+.flex-control-thumbs li {
+  width: 25%;
+  float: left;
+  margin: 0;
+}
+.flex-control-thumbs img {
+  width: 100%;
+  height: auto;
+  display: block;
+  opacity: .7;
+  cursor: pointer;
+  -moz-user-select: none;
+  -webkit-transition: all 1s ease;
+  -moz-transition: all 1s ease;
+  -ms-transition: all 1s ease;
+  -o-transition: all 1s ease;
+  transition: all 1s ease;
+}
+.flex-control-thumbs img:hover {
+  opacity: 1;
+}
+.flex-control-thumbs .flex-active {
+  opacity: 1;
+  cursor: default;
+}*/
 
 /***** Slider 2 *****/
 
@@ -341,6 +369,7 @@ ul.navbar-nav li.active .dropdown-menu > .active > a:focus { background: #b71c1c
 
 .work-container {
     margin-top: 50px;
+    margin-bottom: 50px;
 }
 
 .work-title {

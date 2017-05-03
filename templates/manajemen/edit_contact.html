@@ -19,35 +19,10 @@
       <div class="clearfix"></div>
     </div>
     <div class="x_content">
-      <form method="POST"> {% csrf_token %}
-        <div class="col-md-2" style="text-align:right">
-          <label>Alamat</label>
-        </div>
-        <div class="col-md-10">
-          <input></input>
-        </div>
-        <div class="col-md-2" style="text-align:right">
-          <label>Telepon Utama</label>
-        </div>
-        <div class="col-md-10">
-          <input></input>
-        </div>
-        <div class="col-md-2" style="text-align:right">
-          <label>Telepon Bantuan</label>
-        </div>
-        <div class="col-md-10">
-          <input></input>
-        </div>
-        <div class="col-md-2" style="text-align:right">
-          <label>Email</label>
-        </div>
-        <div class="col-md-10">
-          <input></input>
-        </div>
-        <div class="col-md-2"></div>
-        <div class="col-md-10">
-          <button class = "btn btn-primary" type="submit" class="save btn btn-default">Save</button>
-        </div>
+      <form method="POST">
+        {% csrf_token %}
+          {% bootstrap_form form_edit_contact %}
+          <button class = "btn btn-primary" type="submit" class="save btn btn-default">Simpan</button>
       </form>
     </div>
   </div>

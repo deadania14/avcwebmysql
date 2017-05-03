@@ -9,8 +9,9 @@
     user-scalable=no">
 
     <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
     <link href="{% static 'css/public.css' %}" rel="stylesheet">
+    <!-- <link href="{% static 'css/flexslider.css' %}" rel="stylesheet"> -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
     <link href="{% static 'css/font-awesome.css' %}" rel="stylesheet">
     <link href="{% static 'fonts/droidsans.css' %}" rel="stylesheet">
     <link href="{% static 'fonts/opensans.css' %}" rel="stylesheet">
@@ -26,7 +27,7 @@
     <nav class="navbar-new" role="navigation">
         <div class="container">
             <div class="navbar-header">
-                <h1><a	href="/">Alliance Violin Community</a></h1>
+                <h1><a	href="{% url 'public:index' %}">Alliance Violin Community</a></h1>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
@@ -38,11 +39,14 @@
                         <a href="{% url 'public:event_new' %}"><br>Acara</a>
                     </li>
                     <li>
-                        <a href="{% url 'public:about' %}"><br>Tentang AVC</a>
+                        <a href="{% url 'public:about' %}"><br>Tentang</a>
                     </li>
                     <li>
-                        <a href="{% url 'public:contact' %}"><br>Hubungi Kami</a>
+                        <a href="{% url 'public:konser' %}"><br>Konser</a>
                     </li>
+                    <!-- <li>
+                        <a href="#url 'public:contact'"><br>Hubungi Kami</a>
+                    </li> -->
                     <li>
                       {% if user.is_authenticated %}
                       <li>
@@ -79,12 +83,12 @@
     <div class="row">
         <div class="col-sm-6 footer-box wow fadeInUp">
             <!--Post Tag About Us-->
-            <h4>Tentang AVC</h4>
+            <a href="{% url 'public:about' %}"><h4>Tentang AVC</h4></a>
             <div class="footer-box-text">
                 <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et.
+                    Mari mengenal Alliance Violin Community Depok
                 </p>
-                <p><a href="{% url 'public:about' %}">Read more...</a></p>
+                <p><a href="{% url 'public:about' %}">Teruskan membaca...</a></p>
             </div>
         </div>
         <div class="col-sm-6 footer-box wow fadeInDown">
@@ -113,10 +117,10 @@
             <p>Copyright 2017 Indonesia - All rights reserved. Template by <a href="http://azmind.com">Azmind</a>.</p>
         </div>
         <div class="col-sm-5 footer-social wow fadeIn">
-            <a href="https://web.facebook.com/komunitas.biola.depok"><i class="fa fa-facebook"></i></a>
-            <a href="https://twitter.com/avcdepok"><i class="fa fa-twitter"></i></a>
-            <a href="https://www.instagram.com/avcdepok/?hl=id"><i class="fa fa-instagram"></i></a>
-            <a href="https://www.youtube.com/channel/UCSd55y9XuS-4p-XyywUmFKQ"><i class="fa fa-youtube"></i></a>
+          <a href="{% facebook_footer %}"><i class="fa fa-facebook"></i></a>
+          <a href="{% twitter_footer %}"><i class="fa fa-twitter"></i></a>
+          <a href="{% instagram_footer %}"><i class="fa fa-instagram"></i></a>
+          <a href="{% youtube_footer %}"><i class="fa fa-youtube"></i></a>
         </div>
     </div>
 </div>

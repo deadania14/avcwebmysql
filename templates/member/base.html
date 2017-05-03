@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load footer_dynamic %}
 <html>
 
 <head>
@@ -6,15 +7,26 @@
     <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
     <link href="{% static 'css/public.css' %}" rel="stylesheet">
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/font-awesome.css' %}" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <style>
+    .form-group {
+      text-align: left;
+    }
+    .right{
+      text-align: right;
+    }
+    .table {
+      font-size: 14px;
+    }
 
-    <head>
-
+    </style>
+</head>
         <body>
-            <nav class="navbar" role="navigation">
+            <nav class="navbar-new" role="navigation">
                 <div class="container">
                     <div class="navbar-header">
-                        <h1><a	href="">Alliance Violin Community</a></h1>
+                        <h1><a	href="{% url 'public:index' %}">Alliance Violin Community</a></h1>
                     </div>
                     <div class="collapse navbar-collapse" id="top-navbar-1">
                         <ul class="nav navbar-nav navbar-right">
@@ -30,7 +42,7 @@
                             </li>
                             {% endif %}
                             <li>
-                                <a href="{% url 'member:contact-us' %}"><br>Hubungi Kami</a>
+                                <a href="{% url 'member:settings' %}"><br>Pengaturan</a>
                             </li>
                             <li>
                                 {% if user.is_authenticated %}
@@ -43,11 +55,59 @@
                     </div>
                 </div>
             </nav>
+            <!-- Page Title -->
+            <div class="page-title-container">
+                <div class="container">
+                    <div class="row">
+                      {% block page_title %}
+                      {% endblock %}
+                    </div>
+                </div>
+            </div>
             <div class="container">
                 <div class="row">
                     {% block content %} {% endblock %}
                 </div>
             </div>
+            <!-- Footer -->
+              <footer>
+                  <div class="container">
+                      <div class="row">
+                          <div class="col-sm-12 footer-box wow fadeInDown">
+                              <h4>Hubungi Kami</h4>
+                              <div class="footer-box-text footer-box-text-regist">
+                                  <div class= "col-xl-4 col-md-4"><i class="fa fa-map-marker"></i> Alamat: {% address_footer %}</div>
+                                  <div class= "col-xl-4 col-md-4"><i class="fa fa-phone"></i>
+                                    Call: {% call1_footer %}
+                                    {% call2_footer as call2_footer %}
+                                    {% if call2_footer%}
+                                      atau
+                                    {% endif %}
+                                    {% call2_footer %}
+                                  </div>
+                                  <div class= "col-xl-4 col-md-4"><i class="fa fa-envelope"></i> Email: <a href="">{% email_footer %}</a></div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="col-sm-12 wow fadeIn">
+                              <div class="footer-border"></div>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="col-sm-7 footer-copyright wow fadeIn">
+                              <p>Copyright 2017 Indonesia - All rights reserved. Template by <a href="http://azmind.com">Azmind</a>.</p>
+                          </div>
+                          <div class="col-sm-5 footer-social wow fadeIn">
+                              <a href="https://web.facebook.com/komunitas.biola.depok"><i class="fa fa-facebook"></i></a>
+                              <a href="https://twitter.com/avcdepok"><i class="fa fa-twitter"></i></a>
+                              <a href="https://www.instagram.com/avcdepok/?hl=id"><i class="fa fa-instagram"></i></a>
+                              <a href="https://www.youtube.com/channel/UCSd55y9XuS-4p-XyywUmFKQ"><i class="fa fa-youtube"></i></a>
+                          </div>
+                      </div>
+                  </div>
+              </footer>
+
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
             <script src="{% static 'js/bootstrap.js' %}"></script>
         </body>

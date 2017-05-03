@@ -1,4 +1,5 @@
 {% extends 'manajemen/base.html' %}
+{% load footer_dynamic %}
 {% block title%}
   HPD
 {% endblock %}
@@ -62,6 +63,58 @@
         <a class="btn	btn-warning" href="{%	url	'manajemen:edit_contact'	%}"><span	class="glyphicon	glyphicon-pencil"></span></a>
       </div>
       {% endif %}
+      <form>
+        <div class="col-md-2" style="text-align:right">
+          <label><i class="glyphicon glyphicon-map-marker"></i></label>
+        </div>
+        <div class="col-md-10">
+          <p>{% address_footer %}</p>
+        </div>
+        <div class="col-md-2" style="text-align:right">
+          <label><i class="fa fa-phone"></i> Utama </label>
+        </div>
+        <div class="col-md-10">
+          <p>{% call1_footer %}</p>
+        </div>
+        <div class="col-md-2" style="text-align:right">
+          <label><i class="fa fa-phone"></i> Bantuan </label>
+        </div>
+        <div class="col-md-10">
+          <p>{% call2_footer %}</p>
+        </div>
+        <div class="col-md-2" style="text-align:right">
+          <label><i class="fa fa-envelope"></i></label>
+        </div>
+        <div class="col-md-10">
+          <p>{% email_footer %}</p>
+        </div>
+        <div class="col-md-2" style="text-align:right">
+          <label><i class="fa fa-facebook"></i></label>
+        </div>
+        <div class="col-md-10">
+          <p><a href="{% facebook_footer %}">{% facebook_footer %}</a></p>
+        </div>
+        <div class="col-md-2" style="text-align:right">
+          <label><i class="fa fa-twitter"></i></label>
+        </div>
+        <div class="col-md-10">
+          <p><a href="{% twitter_footer %}">{% twitter_footer %}</a></p>
+        </div>
+        <div class="col-md-2" style="text-align:right">
+          <label><i class="fa fa-instagram"></i></label>
+        </div>
+        <div class="col-md-10">
+          <p><a href="{% instagram_footer %}">{% instagram_footer %}</a></p>
+        </div>
+        <div class="col-md-2" style="text-align:right">
+          <label><i class="fa fa-youtube"></i></label>
+        </div>
+        <div class="col-md-10">
+          <p><a href="{% youtube_footer %}">{% youtube_footer %}</a></p>
+        </div>
+        <div class="col-md-2"></div>
+        <div class="clearfix"></div>
+      </form>
     </div>
   </div>
 </div>

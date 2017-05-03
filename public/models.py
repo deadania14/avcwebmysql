@@ -1,8 +1,19 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
-
 from manajemen.models import PracticeAttendance, Kelas
+from .validators import validate_file_extension
+
+class Slider(models.Model):
+    image = models.ImageField(null= True, blank= True, upload_to='images/slider')
+    caption = models.CharField(max_length= 50)
+    publisher = models.CharField(max_length= 40)
+    updated_date = models.DateTimeField(
+        blank = True, null = True
+    )
+    def update(self):
+        self.updated_date = timezone.now()
+        self.save()
 
 class Event(models.Model):
     event_name = models.CharField(max_length=50)
@@ -12,7 +23,7 @@ class Event(models.Model):
     phone = models.CharField(max_length=20)
     email = models.EmailField()
     image = models.ImageField(null=True, blank=True, upload_to='images/events')
-    attachment = models.FileField(blank=True, verbose_name = "proposal atau undangan", upload_to='files/events')
+    attachment = models.FileField(blank=True, verbose_name = "proposal atau undangan", upload_to='files/events', validators=[validate_file_extension])
     event_date = models.DateTimeField( default = timezone.now)
     created_date = models.DateTimeField(
             default=timezone.now)
@@ -59,6 +70,7 @@ class UserProfile(models.Model):
     update_time = models.DateTimeField(
         default=timezone.now)
     is_registration_paid = models.BooleanField(default=False)
+    is_have_kelas = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.username
@@ -85,6 +97,17 @@ class UserProfile(models.Model):
         if schedule_last_three_months == 0:
             return 0.0
         return attend_last_three_months/schedule_last_three_months * 100
+
+    def set_is_have_kelas(self):
+        kelas = self.user.kelas.all()
+        if kelas:
+            self.is_have_kelas = True
+            self.save()
+            return True
+        else:
+            self.is_have_kelas = False
+            self.save()
+            return False
 
 class SettingsVariable (models.Model):
     key = models.CharField(max_length=255, null=True)

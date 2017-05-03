@@ -17,7 +17,6 @@ member_query = UserProfile.objects.get(tipe_user= "member")
   def payments_confirmation(request, payment_id):
       context={}
 
-
   {% for member in members %}
   <table class="table">
     <thead>
@@ -50,3 +49,115 @@ member_query = UserProfile.objects.get(tipe_user= "member")
 
 
 <div class= "col-xl-4 col-md-4"><i class="fa fa-phone"></i> Call: {% call1_footer %} {if call2_footer} atau {% call2_footer %}{% endif %}</div>
+
+
+*****edit contacts******
+<div class="col-md-2" style="text-align:right">
+  <label><i class="glyphicon glyphicon-map-marker"></i></label>
+</div>
+<div class="col-md-10">
+  <input value = "{% address_footer %}"></input>
+</div>
+<div class="col-md-2" style="text-align:right">
+  <label><i class="fa fa-phone"></i> Utama </label>
+</div>
+<div class="col-md-10">
+  <input value = "{% call1_footer %}"></input>
+</div>
+<div class="col-md-2" style="text-align:right">
+  <label><i class="fa fa-phone"></i> Bantuan </label>
+</div>
+<div class="col-md-10">
+  <input value = "{% call2_footer %}"></input>
+</div>
+<div class="col-md-2" style="text-align:right">
+  <label><i class="fa fa-envelope"></i></label>
+</div>
+<div class="col-md-10">
+  <input value = "{% email_footer %}"></input>
+</div>
+<div class="col-md-2" style="text-align:right">
+  <label><i class="fa fa-facebook"></i></label>
+</div>
+<div class="col-md-10">
+  <input value = "{% facebook_footer %}"></input>
+</div>
+<div class="col-md-2" style="text-align:right">
+  <label><i class="fa fa-twitter"></i></label>
+</div>
+<div class="col-md-10">
+  <input value = "{% twitter_footer %}"></input>
+</div>
+<div class="col-md-2" style="text-align:right">
+  <label><i class="fa fa-instagram"></i></label>
+</div>
+<div class="col-md-10">
+  <input value = "{% instagram_footer %}"></input>
+</div>
+<div class="col-md-2" style="text-align:right">
+  <label><i class="fa fa-youtube"></i></label>
+</div>
+<div class="col-md-10">
+  <input value = "{% youtube_footer %}"></input>
+</div>
+/**********base maanajemen*************/
+
+<nav class="navbar-new" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <h1><a	href="{% url 'public:index' %}">Alliance Violin Community</a></h1>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+              <!-- <a class = "btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class= "icon-bar"></span>
+                <span class= "icon-bar"></span>
+                <span class= "icon-bar"></span>
+              </a> -->
+              <!-- <div class = "nav-collapse collapse"> -->
+                <li>
+                    <a href="{% url 'manajemen:index' %}">
+                        <br>Beranda</a>
+                </li>
+                {% if user.profile.tipe_user == "hpd" or user.profile.tipe_user == "ketua/wakil"%}
+                <li>
+                    <a href="{% url 'manajemen:home_hpd' %}"><br>HPD</a>
+                </li>
+                {% endif %}
+                {% if user.profile.tipe_user == "psdm" or user.profile.tipe_user == "ketua/wakil"%}
+                <li>
+                    <a href="{% url 'manajemen:home_psdm' %}"><br>PSDM</a>
+                </li>
+                {% endif %}
+                {% if user.profile.tipe_user == "tutor" or user.profile.tipe_user == "psdm" or user.profile.tipe_user == "ketua/wakil" %}
+                <li>
+                    <a href="{% url 'manajemen:home_tutor' %}"><br>Tutor</a>
+                </li>
+                {% endif %}
+                {% if user.profile.tipe_user == "bendahara" or user.profile.tipe_user == "ketua/wakil"%}
+                <li>
+                    <a href="{% url 'manajemen:home_keuangan' %}"><br>Keuangan</a>
+                </li>
+                {% endif %}
+                {% if user.profile.tipe_user == "program" or user.profile.tipe_user == "ketua/wakil"%}
+                <li>
+                    <a href="{% url 'manajemen:home_acara' %}"><br>Acara</a>
+                </li>
+                {% endif %}
+                {% if user.profile.tipe_user == "inventaris" or user.profile.tipe_user == "ketua/wakil"%}
+                <li>
+                    <a href="{% url 'manajemen:home_inventaris' %}"><br>Inventaris</a>
+                </li>
+                {% endif %}
+                <li>
+                    {% if user.is_authenticated %}
+                    <li>
+                        <a href="{% url 'login:logout' %}"><br>logout</a>
+                    </li>
+                    {% endif %}
+                </li>
+              <!-- </div> -->
+            </ul>
+        </div>
+    </div>
+</nav>

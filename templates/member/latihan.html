@@ -2,12 +2,18 @@
 {% block title%}
 Latihan
 {% endblock %}
-
+{% block page_title %}
+<div class="col-sm-12 wow fadeIn">
+    <i class="fa fa-music"></i>
+    <h1><a href="{% url 'member:latihan' %}">Latihan </a>/</h1>
+    <p> <i> Alliance Violin Community</i></p>
+</div>
+{% endblock %}
 {% block content %}
 <div class="col-md-6 col-sm-12 col-xs-12">
     <div class="x_panel">
         <div class="x_title">
-            <h4>Kelas yang pernah diikuti</h4>
+            <h3>Latihan~</h3>
             <div class="clearfix"></div>
         </div>
         <div class="x_content">

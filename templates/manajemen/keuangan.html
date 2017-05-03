@@ -1,4 +1,5 @@
 {% extends 'manajemen/base.html' %}
+{% load humanize %}
 {% load keuangan_dynamic %}
 {% block title%}
 Keuangan
@@ -23,7 +24,7 @@ Keuangan
       </div>
       <div class="col-md-4">
         <h3 style="text-align: right"><a>
-          Saldo*  Rp.{% saldo %},00</a>
+          Saldo*  Rp {{ saldo|intcomma }},00</a>
         </h3>
       </div>
       <table class="table table-responsive">

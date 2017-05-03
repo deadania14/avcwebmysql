@@ -26,6 +26,6 @@ def pembayaran(request):
     context['adminitrasis']= administrasi_query
     return render(request, 'member/pembayaran.html', context)
 
-def contact(request):
+def settings(request):
     context={}
-    return render(request, 'member/kontak.html', context)
+    return render(request, 'member/pengaturan.html', context)

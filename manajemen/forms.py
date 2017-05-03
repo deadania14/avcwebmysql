@@ -1,8 +1,10 @@
 from django import forms
 from django.utils import timezone
 from django.contrib.auth.models import User
-from .models import Article, Practice, Kelas, PracticeAttendance
+from ajax_select.fields import AutoCompleteSelectField, AutoCompleteSelectMultipleField
+from .models import Article, Practice, Kelas, PracticeAttendance, Inventory
 from public.models import SettingsVariable, Event
+from django.contrib.admin.widgets import AdminTimeWidget, AdminSplitDateTime
 
 class ArticleForm(forms.ModelForm):
     title = forms.CharField(label='Judul', max_length=100, required=True)
@@ -20,7 +22,9 @@ class MainArticleForm(forms.ModelForm):
         'image',)
 
 class SchedulesForm(forms.ModelForm):
-    date = forms.DateTimeField(label='Tanggal Latihan', required=True)
+    # date = forms.DateTimeField(label='Tanggal Latihan', required=True)
+    date = forms.SplitDateTimeField(label='Tanggal Latihan', required=True, widget=AdminSplitDateTime)
+    # time = forms.TimeField(widget=AdminTimeWidget())
     place = forms.CharField(label='Tempat', max_length=100, required=True)
 
     class Meta:
@@ -48,20 +52,29 @@ class AbsensiForm(forms.ModelForm):
         fields = ('is_present', 'tutor_pendamping',)
 
 class AbsensiNewForm(forms.ModelForm):
+    daftar_orang = AutoCompleteSelectMultipleField(
+        'users', required=False, help_text=None
+    )
     class Meta:
         model = PracticeAttendance
-        fields = ('kelas','practice','tutor',)
+        fields = ("daftar_orang",'practice','tutor',)
 
-class AVCContactForm(forms.ModelForm):
+class AVCContactForm(forms.Form):
     address = forms.CharField(label='Alamat', max_length=255, required=True)
     phone1 = forms.CharField(label='Telepon Utama', max_length=20, required=True)
     phone2 = forms.CharField(label='Telepon Bantuan', max_length=20, required=True)
     email = forms.EmailField(label='E-mail', max_length=50, required=True)
-    class Meta:
-        model = SettingsVariable
-        fields = ('value',)
-
+    facebook = forms.CharField(label='Facebook', max_length=100, required=True)
+    twitter = forms.CharField(label='Twitter', max_length=100, required=True)
+    instagram = forms.CharField(label='Instagram', max_length=100, required=True)
+    youtube = forms.CharField(label='Youtube', max_length=100, required=True)
+    
 class NewEventForm(forms.ModelForm):
     class Meta:
         model = Event
-        fields = ['event_name', 'desc', 'image', 'event_date']
+        fields = ['event_name', 'desc', 'image', 'event_date',]
+
+class EditBarangForm(forms.ModelForm):
+    class Meta:
+        model = Inventory
+        exclude = ('created_date','updated_date',)

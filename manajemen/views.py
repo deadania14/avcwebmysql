@@ -4,8 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.models import User
-from .models import Article, Practice, Administrasi, Kelas, PracticeAttendance
-from .forms import ArticleForm, MainArticleForm, SchedulesForm, ClassForm, AbsensiForm, AbsensiNewForm, AVCContactForm, NewEventForm
+from .models import Article, Practice, Administrasi, Kelas, PracticeAttendance, Inventory
+from .forms import ArticleForm, MainArticleForm, SchedulesForm, ClassForm, AbsensiForm, AbsensiNewForm, AVCContactForm, NewEventForm, EditBarangForm
 from public.models import UserProfile, Event, SettingsVariable
 
 @login_required
@@ -55,10 +55,13 @@ def home_keuangan(request):
     context={}
     administrasi_query = Administrasi.objects.all()
     context['adminitrasis']= administrasi_query
+    context['saldo'] = Administrasi.saldo.get_saldo()
     return render(request, 'manajemen/keuangan.html', context)
 
 def home_inventaris(request):
     context={}
+    inventory_query = Inventory.objects.all()
+    context['inventories']= inventory_query
     return render(request, 'manajemen/inventaris.html', context)
 
 def home_acara(request):
@@ -116,19 +119,33 @@ def delete_schedule(request, schedule_id):
     practice_query.delete()
     return HttpResponseRedirect(reverse('manajemen:home_psdm'))
 
-def edit_contact(request):
+def edit_barang(request, barang_id):
     context={}
-    context=["address", "phone1", "phone2", "email",]
-    contacts = get_object_or_404(SettingsVariable, key = "email")
+    barang = get_object_or_404(Inventory, id=barang_id)
     if request.method=="POST":
-        form_edit_contact = AVCContactForm(request.POST, instance = contacts)
+        form_edit_barang = EditBarangForm(request.POST, instance = barang)
+        if form_edit_barang.is_valid():
+            barang = form_edit_barang.save(commit = False)
+            barang.updated_date= timezone.now()
+            barang.save()
+            return HttpResponseRedirect(reverse('manajemen:home_inventaris', ))
+    else :
+        form_edit_barang = EditBarangForm(instance = barang)
+    return render(request, 'manajemen/edit_barang.html', {'form_edit_barang':form_edit_barang})
+
+def edit_contact(request):
+    default_data = {'address':"address_footer", 'phone1': "call1_footer",
+    'phone2':"call2_footer", 'email':"email_footer", 'facebook':"facebook_footer",
+    'instagram':"instagram_footer", 'twitter':"twitter_footer", "youtube":"youtube_footer",}
+    if request.method=="POST":
+        form_edit_contact = AVCContactForm(default_data, request.POST)
         if form_edit_contact.is_valid():
             contacts = form_edit_contact.save(commit = False)
             contacts.updated_date= timezone.now()
             contacts.save()
             return HttpResponseRedirect(reverse('manajemen:home_phd', ))
     else :
-        form_edit_contact = AVCContactForm(instance = contacts)
+        form_edit_contact = AVCContactForm()
     return render(request, 'manajemen/edit_contact.html', {'form_edit_contact':form_edit_contact})
 
 def edit_article(request, article_id):
@@ -211,7 +228,7 @@ def new_event(request):
             nevent.status_choices = "deal"
             nevent.created_date= timezone.now()
             nevent.save()
-            return HttpResponseRedirect(reverse('manajemen:home_acara'))
+            return HttpResponseRedirect(reverse('manajemen:home_acara', ))
     else :
         form_new_event = NewEventForm()
     return render(request, 'manajemen/new_event.html', {'form_new_event':form_new_event}, context)
@@ -246,6 +263,7 @@ def new_article(request):
 def new_schedule(request):
     if request.method=="POST":
         form_edit_schedule = SchedulesForm(request.POST)
+        print(form_edit_schedule)
         if form_edit_schedule.is_valid():
             nschedule = form_edit_schedule.save(commit = False)
             nschedule.created_date= timezone.now()
@@ -265,4 +283,5 @@ def new_kelas(request):
             return HttpResponseRedirect(reverse('manajemen:home_psdm', ))
     else :
         form_new_kelas = ClassForm()
+    form_new_kelas.fields['user'].queryset = User.objects.filter(profile__is_have_kelas=False)
     return render(request, 'manajemen/new_class.html', {'form_new_kelas':form_new_kelas})

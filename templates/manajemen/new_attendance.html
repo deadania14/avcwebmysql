@@ -5,6 +5,7 @@
 Absensi
 {% endblock %}
 {% block page_title %}
+
 <div class="col-sm-12 wow fadeIn">
   <i class="fa fa-plus"></i>
   <h1><a href="{% url 'manajemen:home_psdm' %}">PSDM</a>/</h1>
@@ -20,4 +21,12 @@ Absensi
     <button type="submit" class="save btn btn-primary">Save</button>
   </form>
 </div>
+<script>
+$( function() {
+  $( "#id_daftar_orang_text" ).autocomplete({
+    source: "/ajax_select/ajax_lookup/users"
+  });
+  
+} );
+</script>
 {% endblock %}

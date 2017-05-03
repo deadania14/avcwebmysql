@@ -5,7 +5,7 @@
   <h1>{{eventid.event_name}}</h1>
   <p>{{eventid.desc|linebreaksbr}}</p>
   <br>
-  {% if eventid.image %}<img class="img-circle" src="{{eventid.image.url}}" height='150' width='150'>
+  {% if eventid.image %}<img src="{{eventid.image.url}}" >
   {% endif %}
   <p>{{eventid.created_date}}</p>
   <p>{{eventid.event_status}}</p>

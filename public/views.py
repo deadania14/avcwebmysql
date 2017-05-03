@@ -6,17 +6,18 @@ from django.utils import timezone
 from django.urls import reverse
 from django.core.mail import send_mail
 from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
 from manajemen.models import Article, Administrasi, AdministrationType
 from public.models import SettingsVariable
-from .models import Event
+from .models import Event, Slider
 from .forms import EventForm, UserForm, UserProfileForm, AdministrasiForm
 
 def index(request):
     context={}
-    events_query = Event.objects.all()[:4]
-    context['events'] = events_query
-    articles_query = Article.objects.all()
+    articles_query = Article.objects.all()[:4]
     context['articles'] = articles_query
+    slider_query = Slider.objects.all()[:4]
+    context['sliders'] = slider_query
     return render(request, 'public/index.html', context)
 
 def about(request):
@@ -26,6 +27,14 @@ def about(request):
     companyprofile = Article.objects.get(title = 'Company Profile')
     context['cprofile'] = companyprofile
     return render(request, 'public/about.html', context)
+
+def konser(request):
+    context={}
+    #sejarah = Article.objects.get(title = 'Sejarah AVC')
+    #context['history'] = sejarah
+    #companyprofile = Article.objects.get(title = 'Company Profile')
+    #context['cprofile'] = companyprofile
+    return render(request, 'public/Konser.html', context)
 
 def contact(request):
     context={}
@@ -79,9 +88,11 @@ def event_detail(request, event_id):
     context['eventid'] = eventid_query
     return render(request, 'public/event_detail.html', context)
 
-#def registration(request):
-#    context={}
-#    return render(request, 'public/registration.html', context)
+def article_detail(request, article_id):
+    context={}
+    articleid_query= Article.objects.get(id=article_id)
+    context['articleid'] = articleid_query
+    return render(request, 'public/article_detail.html', context)
 
 def event_new(request):
     context={}
@@ -101,7 +112,7 @@ def event_new(request):
             to_list = [user.email, settings.EMAIL_HOST_USER]
             send_mail(subject, message, from_email, to_list, fail_silently = True)
 
-            return HttpResponseRedirect(reverse('public:event_detail', args=(nevent.id,)))
+            return HttpResponseRedirect(reverse('public:index',))
     else :
         form = EventForm()
     return render(request, 'public/event_new.html', {'form':form}, context)

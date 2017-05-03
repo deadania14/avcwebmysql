@@ -5,6 +5,7 @@ from .models import Event, UserProfile
 from manajemen.models import Administrasi
 
 class EventForm(ModelForm):
+    attachment = forms.FileField(help_text='*harus .pdf', required=False)
     class Meta:
         model = Event
         fields = ['event_name', 'corporate', 'desc', 'sender', 'phone','email',

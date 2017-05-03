@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Sum
 from django.utils import timezone
 from django.contrib.auth.models import User
 
@@ -69,6 +70,7 @@ class Kelas(models.Model):
 class PracticeAttendance(models.Model):
     kelas = models.ForeignKey(Kelas, related_name="practice_attendances", null=True)
     practice = models.ForeignKey(Practice, related_name= "practice_attendances")
+    daftar_orang = models.ManyToManyField(User, related_name= "user_practice_attendances", blank=True) 
     is_present = models.ManyToManyField(User, related_name= "practice_attendances", blank=True)
     tutor = models.ForeignKey(User, related_name= "tutor_practice_attendances", null=True)
     tutor_pendamping = models.ManyToManyField(User, related_name= "tutor_pendamping_practice_attendances", blank=True)
@@ -91,6 +93,11 @@ class AdministrationType(models.Model):
     def __str__(self):
         return self.paymentstype
 
+class AdministrasiManager(models.Manager):
+    def get_saldo(self):
+        saldo = self.filter(status='paid').aggregate(Sum('jenis__nominal'))
+        return saldo['jenis__nominal__sum']
+
 class Administrasi(models.Model):
     method_choices= (
         ('cash','Cash',),
@@ -110,8 +117,26 @@ class Administrasi(models.Model):
     created_date = models.DateTimeField(
         default = timezone.now
     )
+
+    saldo = AdministrasiManager()
+    objects = models.Manager() # The default manager.
     class Meta:
         ordering =['-created_date',]
 
     def __str__(self):
         return self.jenis.paymentstype
+
+class Inventory(models.Model):
+    thingsname = models.CharField(max_length=40)
+    stock = models.IntegerField()
+    detail = models.CharField(max_length=100)
+    note = models.CharField(max_length=200)
+    created_date = models.DateTimeField(
+        default = timezone.now
+    )
+    updated_date = models.DateTimeField(
+        blank = True, null = True
+    )
+    def update(self):
+        self.updated_date = timezone.now()
+        self.save()

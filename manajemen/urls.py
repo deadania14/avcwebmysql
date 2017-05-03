@@ -13,7 +13,7 @@ urlpatterns = [
     url(r'^hpd/article/detail-(?P<article_id>[0-9]+)/$', views.detail_article, name='detail_article'),
     #/article_edit V
     url(r'^hpd/article/detail-(?P<article_id>[0-9]+)/edit/$', views.edit_article, name='edit_article'),
-    url(r'^hpd/article/detail-(?P<article_id>[0-9]+)/edit/$', views.edit_mainarticle, name='edit_mainarticle'),
+    url(r'^hpd/main-article/detail-(?P<article_id>[0-9]+)/edit/$', views.edit_mainarticle, name='edit_mainarticle'),
     #/edit_contact
     url(r'^hpd/contact/edit/$', views.edit_contact, name='edit_contact'),
 
@@ -28,10 +28,16 @@ urlpatterns = [
     url(r'^psdm/kelas/-(?P<kelas_id>[0-9]+)/edit/$', views.edit_kelas, name='edit_kelas'),
     #/new_schedule
     url(r'^psdm/new_schedule/$', views.new_schedule, name='new_schedule'),
-    #/edit_attendance
-    url(r'^psdm/edit_attendance/(?P<attendance_id>[0-9]+)/$', views.edit_attendance, name='edit_attendance'),
     #/new_attendance
     url(r'^psdm/new_attendance/$', views.new_attendance, name='new_attendance'),
+    #/edit_attendance
+    url(r'^psdm/edit_attendance/(?P<attendance_id>[0-9]+)/$', views.edit_attendance, name='edit_attendance'),
+    #/detail_schedule
+    url(r'^psdm/detail_schedule/(?P<schedule_id>[0-9]+)/$', views.detail_schedule, name='detail_schedule'),
+    #/schedule_edit
+    url(r'^psdm/edit_schedule/(?P<schedule_id>[0-9]+)/$', views.edit_schedule, name='edit_schedule'),
+    #/schedule_delete
+    url(r'^psdm/delete_schedule/(?P<schedule_id>[0-9]+)/$', views.delete_schedule, name='delete_schedule'),
 
     #Keuangan
     url(r'^keuangan/$', views.home_keuangan, name='home_keuangan'),
@@ -39,16 +45,6 @@ urlpatterns = [
     url(r'^keuangan/konfirmasi_pembayaran/(?P<payment_id>[0-9]+)/$', views.confirmation_payment, name='confirmation_payment'),
     #Cancel_payments
     url(r'^keuangan/gagalkan_pembayaran/(?P<payment_id>[0-9]+)/$', views.cancel_payment, name='cancel_payment'),
-
-
-    #Inventaris
-    url(r'^inventaris/$', views.home_inventaris, name='home_inventaris'),
-    #/detail_article
-    url(r'^psdm/detail_schedule/(?P<schedule_id>[0-9]+)/$', views.detail_schedule, name='detail_schedule'),
-    #/schedule_edit
-    url(r'^psdm/edit_schedule/(?P<schedule_id>[0-9]+)/$', views.edit_schedule, name='edit_schedule'),
-    #/schedule_delete
-    url(r'^psdm/delete_schedule/(?P<schedule_id>[0-9]+)/$', views.delete_schedule, name='delete_schedule'),
 
     #acara
     url(r'^acara/$', views.home_acara, name='home_acara'),
@@ -59,4 +55,9 @@ urlpatterns = [
     url(r'^acara/konfirmasi_event/(?P<event_id>[0-9]+)/$', views.confirmation_event, name='confirmation_event'),
     #cancel event
     url(r'^acara/tolak_tawaran/(?P<event_id>[0-9]+)/$', views.cancel_event, name='cancel_event'),
+
+    #Inventaris
+    url(r'^inventaris/$', views.home_inventaris, name='home_inventaris'),
+    #/inventaris_edit
+    url(r'^inventaris/edit_barang/(?P<barang_id>[0-9]+)/$', views.edit_barang, name='edit_barang'),
 ]
