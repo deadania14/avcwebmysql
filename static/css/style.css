@@ -135,10 +135,10 @@ ul.navbar-nav {
 	text-transform: uppercase;
 }
 
-ul.navbar-nav li a { padding: 23px 20px; background: #fff; border-top: 5px solid #fff; color: #5d5d5d; }
+ul.navbar-nav li a { padding: 23px 20px 30px; background: #fff; border-top: 5px solid #fff; color: #5d5d5d; }
 ul.navbar-nav li.active a { background: #f8f8f8; border-color: #b71c1c; color: #5d5d5d; }
 
-ul.navbar-nav li a:hover, ul.navbar-nav li a:focus { background: #b71c1c; border-color: #b71c1c; color: #fff; outline: 0; }
+ul.navbar-nav li a:hover, ul.navbar-nav li a:focus { background: #b71c1c; border-color: #b71c1c; color: #fff; outline: 0;}
 
 .nav .open > a { background: #f8f8f8; border-color: #b71c1c; color: #5d5d5d; }
 .nav .open > a:hover, .nav .open > a:focus { background: #b71c1c; border-color: #b71c1c; color: #fff; }
@@ -976,6 +976,7 @@ footer {
     position: relative;
     width: 100%;
     margin-bottom: 10px;
+    border: 1px solid #E6E9ED;
     padding: 10px 17px;
     display: inline-block;
     background: #fff;
@@ -1021,4 +1022,11 @@ footer {
 .x_content h4 {
     font-size: 16px;
     font-weight: 500
+}
+.in_solid {
+  border-top: 1px solid #e5e5e5;
+  color: #fff;
+  background-color: #fff;
+  height: 1px;
+  margin: 20px 0;
 }

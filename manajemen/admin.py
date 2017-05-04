@@ -12,7 +12,10 @@ class PracticeAdmin(admin.ModelAdmin):
     inlines = (PracticeAttendanceInline,)
 admin.site.register(Practice, PracticeAdmin)
 
-admin.site.register(Article)
+class article(admin.ModelAdmin):
+    model = Article
+    list_display = ['title', 'author', 'is_mainarticle',]
+admin.site.register(Article, article)
 
 from ajax_select import make_ajax_form
 class PracticeAttendanceAdmin(admin.ModelAdmin):

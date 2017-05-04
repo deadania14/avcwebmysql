@@ -15,7 +15,7 @@
     <div class="flexslider">
       <ul class="slides">
         {% for slide in sliders %}
-        <li data-thumb="assets/img/slider/1.jpg">
+        <li data-thumb="{{slide.image.url}}">
           {% if slide.image %}
           <img src="{{slide.image.url}}">
           {% endif %}

@@ -10,7 +10,7 @@ from django.core.mail import EmailMultiAlternatives
 from manajemen.models import Article, Administrasi, AdministrationType
 from public.models import SettingsVariable
 from .models import Event, Slider
-from .forms import EventForm, UserForm, UserProfileForm, AdministrasiForm
+from .forms import EventForm, UserForm, UserProfileForm, AdministrasiForm, UserRegister
 
 def index(request):
     context={}
@@ -43,12 +43,17 @@ def contact(request):
     return render(request, 'public/contact_us.html', context)
 
 def register(request):
+    context={}
+    condition_query = Article.objects.get(title="Syarat dan Ketentuan")
+    context['conditions'] = condition_query
     registered = False
     if request.method == 'POST':
+        regis_form = UserRegister(data = request.POST)
         user_form = UserForm(data = request.POST)
         profile_form = UserProfileForm(data = request.POST)
         administrasi_form = AdministrasiForm(data = request.POST)
-        if user_form.is_valid() and profile_form.is_valid:
+        if user_form.is_valid() and profile_form.is_valid and regis_form.is_valid:
+            regis = regis_form.save()
             user = user_form.save()
             user.set_password(user.password)
             user.save()
@@ -72,15 +77,16 @@ def register(request):
             administrasi.save()
 
         else:
-            print (user_form.errors, profile_form.errors)
+            print (user_form.errors, profile_form.errors, regis_form.errors)
     else:
+        regis_form = UserRegister()
         user_form = UserForm()
         profile_form = UserProfileForm()
         administrasi_form = AdministrasiForm()
     return render (request, 'public/register.html',
-                    {'user_form' : user_form, 'profile_form' : profile_form,
+                    {'regis_form' : regis_form, 'user_form' : user_form, 'profile_form' : profile_form,
                     'administrasi_form' : administrasi_form,
-                    'registered' : registered})
+                    'registered' : registered}, context)
 
 def event_detail(request, event_id):
     context={}
@@ -96,7 +102,7 @@ def article_detail(request, article_id):
 
 def event_new(request):
     context={}
-    deal_event= Event.objects.all()
+    deal_event= Event.objects.get(id=1)
     context["devent"] = deal_event
     if request.method=="POST":
         form = EventForm(request.POST, request.FILES)

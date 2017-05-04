@@ -14,32 +14,33 @@
             <div class = "col-md-4">
             <h2>Login Form</h2>
           {% if not logged_in %}
-            Sorry coy ngga bisa
+          <div class="panel panel-danger">
+            <div class="panel-heading">Username dan atau password Anda Salah</div>
+          </div>
           {% endif %}
             {% csrf_token %}
             <div>
-              <input label= 'Username' type="text" class="form-control" name="username" placeholder="Username" required="" maxlength="10"/>
+              <input label= 'Username' type="text" class="form-control" name="username" placeholder="Username" required>
             </div>
             <br>
             <div>
-              <input label= 'Password' type="password" class="form-control" name="password" placeholder="Password" required="" />
+              <input label= 'Password' type="password" class="form-control" name="password" placeholder="Password" required>
             </div>
             <br>
             <div>
-              <input class="btn btn-default submit" type="submit" value="submit" />
-              <a class="reset_pass" href="#">Lost your password?</a>
+              <input class="btn btn-primary submit" type="submit" value="Login" />
             </div>
             <div class="clearfix"></div>
             </div>
               <div class="separator col-md-12">
+                  <br />
                   <p class="change_link">Belum Terdaftar?
                   <a href="{% url 'public:register' %}" class="to_register"> Daftar </a>
                   </p>
                   <div class="clearfix"></div>
                   <br />
-
                   <div>
-                    <h3> Alliance Violin Community - Depok</h3>
+                    <a href="{% url 'public:index' %}"><h3> Alliance Violin Community - Depok</h3></a>
                     <p>Copyright 2017 Indonesia - All rights reserved. Template by <a href="http://azmind.com">Azmind</a>.</p>
                   </div>
               </div>

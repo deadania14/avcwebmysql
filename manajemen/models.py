@@ -8,6 +8,7 @@ class Article(models.Model):
     title = models.CharField(max_length=100)
     text = models.TextField()
     image = models.ImageField(null=True, blank=True, upload_to='images/articles')
+    is_mainarticle = models.BooleanField(default = False)
     created_date = models.DateTimeField(
         default = timezone.now
     )
@@ -70,7 +71,7 @@ class Kelas(models.Model):
 class PracticeAttendance(models.Model):
     kelas = models.ForeignKey(Kelas, related_name="practice_attendances", null=True)
     practice = models.ForeignKey(Practice, related_name= "practice_attendances")
-    daftar_orang = models.ManyToManyField(User, related_name= "user_practice_attendances", blank=True) 
+    daftar_orang = models.ManyToManyField(User, related_name= "user_practice_attendances", blank=True)
     is_present = models.ManyToManyField(User, related_name= "practice_attendances", blank=True)
     tutor = models.ForeignKey(User, related_name= "tutor_practice_attendances", null=True)
     tutor_pendamping = models.ManyToManyField(User, related_name= "tutor_pendamping_practice_attendances", blank=True)

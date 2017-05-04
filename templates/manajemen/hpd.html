@@ -38,7 +38,7 @@
         <td>{{article.updated_date}}</td>
         <td><a class="btn	btn-default" href= "{% url 'manajemen:detail_article' article.id %}">Lihat</a>
           <p></p>
-          {% if article.title == "Sejarah AVC" or article.title == "Company Profile" %}
+          {% if article.is_mainarticle %}
             <a class="btn	btn-info" href="{%	url	'manajemen:edit_mainarticle'	article.id	%}"><span	class="glyphicon	glyphicon-pencil"></span></a>
           {% else %}
             <a class="btn	btn-warning" href="{%	url	'manajemen:edit_article'	article.id	%}"><span	class="glyphicon	glyphicon-pencil"></span></a>

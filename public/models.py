@@ -24,7 +24,7 @@ class Event(models.Model):
     email = models.EmailField()
     image = models.ImageField(null=True, blank=True, upload_to='images/events')
     attachment = models.FileField(blank=True, verbose_name = "proposal atau undangan", upload_to='files/events', validators=[validate_file_extension])
-    event_date = models.DateTimeField( default = timezone.now)
+    event_date = models.DateField( default = timezone.now)
     created_date = models.DateTimeField(
             default=timezone.now)
     published_date = models.DateTimeField(
@@ -66,6 +66,8 @@ class UserProfile(models.Model):
     gender = models.CharField(max_length = 10, default = "pria", choices= gender_choices)
     phone = models.CharField(max_length=20)
     address = models.TextField()
+    pobirth = models.CharField(max_length=40, blank=True, null= True)
+    date_birth = models.DateField(blank = True, null= True)
     photo = models.ImageField(null=True, blank=True, upload_to='images/profile_images')
     update_time = models.DateTimeField(
         default=timezone.now)

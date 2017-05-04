@@ -12,6 +12,7 @@
     <link href="{% static 'css/public.css' %}" rel="stylesheet">
     <!-- <link href="{% static 'css/flexslider.css' %}" rel="stylesheet"> -->
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/media-queries.css' %}" rel="stylesheet">
     <link href="{% static 'css/font-awesome.css' %}" rel="stylesheet">
     <link href="{% static 'fonts/droidsans.css' %}" rel="stylesheet">
     <link href="{% static 'fonts/opensans.css' %}" rel="stylesheet">
@@ -21,47 +22,54 @@
       .form-group {
         text-align: left;
       }
+      .left {
+        text-align: left;
+      }
     </style>
-<head>
+</head>
 <body>
-    <nav class="navbar-new" role="navigation">
-        <div class="container">
-            <div class="navbar-header">
-                <h1><a	href="{% url 'public:index' %}">Alliance Violin Community</a></h1>
-            </div>
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a href="{% url 'public:index' %}">
-                          <br>Beranda</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'public:event_new' %}"><br>Acara</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'public:about' %}"><br>Tentang</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'public:konser' %}"><br>Konser</a>
-                    </li>
-                    <!-- <li>
-                        <a href="#url 'public:contact'"><br>Hubungi Kami</a>
-                    </li> -->
-                    <li>
-                      {% if user.is_authenticated %}
-                      <li>
-                        <a href="{% url 'login:logout' %}"><br>logout</a>
-                      </li>
-                      {% else %}
-                      <a href="{% url 'public:register' %}"><br>Pendaftaran</a>
-                    </li>
-                    <li>
-                      <a href="{% url 'login:login' %}"><br>Login</a>{% endif %}
-                    </li>
-                </ul>
-            </div>
+  <nav class="navbar-new" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#top-navbar-1">
+            <h3><span class="glyphicon glyphicon-menu-hamburger"></span><h3>
+          </button>
+          <h2 class = "left" style = "padding-left:15px"><a	href="{% url 'public:index' %}">Alliance Violin Community</a></h2>
         </div>
-    </nav>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse left" id="top-navbar-1">
+          <ul class="nav navbar-nav navbar-right">
+              <li>
+                  <a href="{% url 'public:index' %}">
+                    <br>Beranda</a>
+              </li>
+              <li>
+                  <a href="{% url 'public:event_new' %}"><br>Acara</a>
+              </li>
+              <li>
+                  <a href="{% url 'public:about' %}"><br>Tentang</a>
+              </li>
+              <li>
+                  <a href="{% url 'public:konser' %}"><br>Konser</a>
+              </li>
+              <!-- <li>
+                  <a href="#url 'public:contact'"><br>Hubungi Kami</a>
+              </li> -->
+              <li>
+                {% if user.is_authenticated %}
+                <li>
+                  <a href="{% url 'login:logout' %}"><br>logout</a>
+                </li>
+                {% else %}
+                <a href="{% url 'public:register' %}"><br>Pendaftaran</a>
+              </li>
+              <li>
+                <a href="{% url 'login:login' %}"><br>Login</a>{% endif %}
+              </li>
+          </ul>
+				</div>
+			</div>
+		</nav>
     <!-- Page Title -->
     <div class="page-title-container">
         <div class="container">
@@ -81,7 +89,7 @@
 <footer>
 <div class="container">
     <div class="row">
-        <div class="col-sm-6 footer-box wow fadeInUp">
+        <div class="col-sm-6 footer-box col-md-6">
             <!--Post Tag About Us-->
             <a href="{% url 'public:about' %}"><h4>Tentang AVC</h4></a>
             <div class="footer-box-text">
@@ -91,7 +99,7 @@
                 <p><a href="{% url 'public:about' %}">Teruskan membaca...</a></p>
             </div>
         </div>
-        <div class="col-sm-6 footer-box wow fadeInDown">
+        <div class="col-sm-6 footer-box col-md-6">
             <h4>Hubungi Kami</h4>
             <div class="footer-box-text footer-box-text-regist">
                 <div class= "col-xl-4 col-md-4"><i class="fa fa-map-marker"></i> Alamat:{% address_footer %}</div>

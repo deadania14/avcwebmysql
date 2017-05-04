@@ -13,6 +13,9 @@
     .form-group {
       text-align: left;
     }
+    .left {
+      text-align: left;
+    }
     .right{
       text-align: right;
     }
@@ -22,94 +25,98 @@
 
     </style>
 </head>
-        <body>
-            <nav class="navbar-new" role="navigation">
-                <div class="container">
-                    <div class="navbar-header">
-                        <h1><a	href="{% url 'public:index' %}">Alliance Violin Community</a></h1>
-                    </div>
-                    <div class="collapse navbar-collapse" id="top-navbar-1">
-                        <ul class="nav navbar-nav navbar-right">
-                            <li>
-                                <a href="{% url 'member:index' %}"><br>Beranda</a>
-                            </li>
-                            {% if request.user.profile.is_registration_paid %}
-                            <li>
-                                <a href="{% url 'member:latihan' %}"><br>Latihan</a>
-                            </li>
-                            <li>
-                                <a href="{% url 'member:pembayaran' %}"><br>Administrasi</a>
-                            </li>
+<body>
+  <nav class="navbar-new" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#top-navbar-1">
+            <h3><span class="glyphicon glyphicon-menu-hamburger"></span><h3>
+          </button>
+          <h2 class = "left" style = "padding-left:15px"><a	href="{% url 'member:index' %}">Alliance Violin Community</a></h2>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse left" id="top-navbar-1">
+          <ul class="nav navbar-nav navbar-right">
+          <li>
+                <a href="{% url 'member:index' %}"><br>Beranda</a>
+            </li>
+            {% if request.user.profile.is_registration_paid %}
+            <li>
+                <a href="{% url 'member:latihan' %}"><br>Latihan</a>
+            </li>
+            <li>
+                <a href="{% url 'member:pembayaran' %}"><br>Administrasi</a>
+            </li>
+            {% endif %}
+            <li>
+                <a href="{% url 'member:settings' %}"><br>Pengaturan</a>
+            </li>
+            <li>
+                {% if user.is_authenticated %}
+                <li>
+                    <a href="{% url 'login:logout' %}"><br>logout</a>
+                </li>
+                {% endif %}
+            </li>
+          </ul>
+				</div>
+			</div>
+		</nav>
+    <!-- Page Title -->
+    <div class="page-title-container">
+        <div class="container">
+            <div class="row">
+              {% block page_title %}
+              {% endblock %}
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            {% block content %} {% endblock %}
+        </div>
+    </div>
+    <!-- Footer -->
+      <footer>
+          <div class="container">
+              <div class="row">
+                  <div class="col-sm-12 footer-box wow fadeInDown">
+                      <h4>Hubungi Kami</h4>
+                      <div class="footer-box-text footer-box-text-regist">
+                          <div class= "col-xl-4 col-md-4"><i class="fa fa-map-marker"></i> Alamat: {% address_footer %}</div>
+                          <div class= "col-xl-4 col-md-4"><i class="fa fa-phone"></i>
+                            Call: {% call1_footer %}
+                            {% call2_footer as call2_footer %}
+                            {% if call2_footer%}
+                              atau
                             {% endif %}
-                            <li>
-                                <a href="{% url 'member:settings' %}"><br>Pengaturan</a>
-                            </li>
-                            <li>
-                                {% if user.is_authenticated %}
-                                <li>
-                                    <a href="{% url 'login:logout' %}"><br>logout</a>
-                                </li>
-                                {% endif %}
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-            <!-- Page Title -->
-            <div class="page-title-container">
-                <div class="container">
-                    <div class="row">
-                      {% block page_title %}
-                      {% endblock %}
-                    </div>
-                </div>
-            </div>
-            <div class="container">
-                <div class="row">
-                    {% block content %} {% endblock %}
-                </div>
-            </div>
-            <!-- Footer -->
-              <footer>
-                  <div class="container">
-                      <div class="row">
-                          <div class="col-sm-12 footer-box wow fadeInDown">
-                              <h4>Hubungi Kami</h4>
-                              <div class="footer-box-text footer-box-text-regist">
-                                  <div class= "col-xl-4 col-md-4"><i class="fa fa-map-marker"></i> Alamat: {% address_footer %}</div>
-                                  <div class= "col-xl-4 col-md-4"><i class="fa fa-phone"></i>
-                                    Call: {% call1_footer %}
-                                    {% call2_footer as call2_footer %}
-                                    {% if call2_footer%}
-                                      atau
-                                    {% endif %}
-                                    {% call2_footer %}
-                                  </div>
-                                  <div class= "col-xl-4 col-md-4"><i class="fa fa-envelope"></i> Email: <a href="">{% email_footer %}</a></div>
-                              </div>
+                            {% call2_footer %}
                           </div>
-                      </div>
-                      <div class="row">
-                          <div class="col-sm-12 wow fadeIn">
-                              <div class="footer-border"></div>
-                          </div>
-                      </div>
-                      <div class="row">
-                          <div class="col-sm-7 footer-copyright wow fadeIn">
-                              <p>Copyright 2017 Indonesia - All rights reserved. Template by <a href="http://azmind.com">Azmind</a>.</p>
-                          </div>
-                          <div class="col-sm-5 footer-social wow fadeIn">
-                              <a href="https://web.facebook.com/komunitas.biola.depok"><i class="fa fa-facebook"></i></a>
-                              <a href="https://twitter.com/avcdepok"><i class="fa fa-twitter"></i></a>
-                              <a href="https://www.instagram.com/avcdepok/?hl=id"><i class="fa fa-instagram"></i></a>
-                              <a href="https://www.youtube.com/channel/UCSd55y9XuS-4p-XyywUmFKQ"><i class="fa fa-youtube"></i></a>
-                          </div>
+                          <div class= "col-xl-4 col-md-4"><i class="fa fa-envelope"></i> Email: <a href="">{% email_footer %}</a></div>
                       </div>
                   </div>
-              </footer>
+              </div>
+              <div class="row">
+                  <div class="col-sm-12 wow fadeIn">
+                      <div class="footer-border"></div>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-7 footer-copyright wow fadeIn">
+                      <p>Copyright 2017 Indonesia - All rights reserved. Template by <a href="http://azmind.com">Azmind</a>.</p>
+                  </div>
+                  <div class="col-sm-5 footer-social wow fadeIn">
+                      <a href="https://web.facebook.com/komunitas.biola.depok"><i class="fa fa-facebook"></i></a>
+                      <a href="https://twitter.com/avcdepok"><i class="fa fa-twitter"></i></a>
+                      <a href="https://www.instagram.com/avcdepok/?hl=id"><i class="fa fa-instagram"></i></a>
+                      <a href="https://www.youtube.com/channel/UCSd55y9XuS-4p-XyywUmFKQ"><i class="fa fa-youtube"></i></a>
+                  </div>
+              </div>
+          </div>
+      </footer>
 
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-            <script src="{% static 'js/bootstrap.js' %}"></script>
-        </body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="{% static 'js/bootstrap.js' %}"></script>
+</body>
 
 </html>
