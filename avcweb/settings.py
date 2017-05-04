@@ -16,6 +16,7 @@ EMAIL_HOST_USER = 'avcdepok@gmail.com'
 EMAIL_HOST_PASSWORD = 'avcdepok123'
 EMAIL_PORT = 587
 
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -32,8 +33,8 @@ SECRET_KEY = 'c6cj$4g8!2uf2y*r4u=r3o6zxei^&$i4b04to9#sick-51l67g'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
-
+#'127.0.0.1',
+ROLEPERMISSIONS_MODULE = 'manajemen.roles'
 # Application definition
 
 INSTALLED_APPS = [
@@ -44,7 +45,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'rolepermissions',
     'ajax_select',
+    'localflavor',
     'public',
     'manajemen',
     'login',

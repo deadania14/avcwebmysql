@@ -43,9 +43,6 @@ def contact(request):
     return render(request, 'public/contact_us.html', context)
 
 def register(request):
-    context={}
-    condition_query = Article.objects.get(title="Syarat dan Ketentuan")
-    context['conditions'] = condition_query
     registered = False
     if request.method == 'POST':
         regis_form = UserRegister(data = request.POST)
@@ -83,10 +80,12 @@ def register(request):
         user_form = UserForm()
         profile_form = UserProfileForm()
         administrasi_form = AdministrasiForm()
-    return render (request, 'public/register.html',
-                    {'regis_form' : regis_form, 'user_form' : user_form, 'profile_form' : profile_form,
-                    'administrasi_form' : administrasi_form,
-                    'registered' : registered}, context)
+    context={'regis_form' : regis_form, 'user_form' : user_form, 'profile_form' : profile_form,
+    'administrasi_form' : administrasi_form,
+    'registered' : registered}
+    condition_query = Article.objects.get(title="Syarat dan Ketentuan")
+    context['conditions'] = condition_query
+    return render (request, 'public/register.html', context)
 
 def event_detail(request, event_id):
     context={}
@@ -101,9 +100,6 @@ def article_detail(request, article_id):
     return render(request, 'public/article_detail.html', context)
 
 def event_new(request):
-    context={}
-    deal_event= Event.objects.get(id=1)
-    context["devent"] = deal_event
     if request.method=="POST":
         form = EventForm(request.POST, request.FILES)
         if form.is_valid():
@@ -111,17 +107,20 @@ def event_new(request):
             nevent.status_choices = "waiting"
             nevent.created_date= timezone.now()
             nevent.save()
-            #email
+            user = nevent.email
             subject = 'Acara'+nevent.event_name+'Akan Dipertimbangkan'
             message = 'Terima kasih telah mengirim ajuan. Acara Anda akan kami pertimbangkan segera.'
             from_email = settings.EMAIL_HOST_USER
-            to_list = [user.email, settings.EMAIL_HOST_USER]
+            to_list = [user, settings.EMAIL_HOST_USER]
             send_mail(subject, message, from_email, to_list, fail_silently = True)
 
             return HttpResponseRedirect(reverse('public:index',))
     else :
         form = EventForm()
-    return render(request, 'public/event_new.html', {'form':form}, context)
+    context={'form':form,}
+    deal_event= Event.objects.filter(event_status='deal')
+    context["devent"] = deal_event
+    return render(request, 'public/event_new.html', context)
 
 def settingsvalue(request):
     context={}

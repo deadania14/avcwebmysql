@@ -2,6 +2,8 @@ from django.db import models
 from django.db.models import Sum
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django.core.validators import MinValueValidator
+
 
 class Article(models.Model):
     author = models.ForeignKey('auth.User')
@@ -129,7 +131,7 @@ class Administrasi(models.Model):
 
 class Inventory(models.Model):
     thingsname = models.CharField(max_length=40)
-    stock = models.IntegerField()
+    stock = models.PositiveIntegerField(validators=[MinValueValidator(1)])
     detail = models.CharField(max_length=100)
     note = models.CharField(max_length=200)
     created_date = models.DateTimeField(

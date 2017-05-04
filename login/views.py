@@ -41,6 +41,18 @@ def some_view(request):
     else:
         return HttpResponse("You are not Logged in.")
 
+def permission_denied(request):
+    return render(request, 'manajemen/403.html', {})
+
+def bad_request(request):
+    return render(request, 'login/400.html', {})
+
+def page_not_found(request):
+    return render(request, 'login/404.html', {})
+
+def server_error(request):
+    return render(request, 'login/500.html', {})
+
 @login_required
 def restricted(request):
     return HttpResponse("since you're logged in, you can see this text!")

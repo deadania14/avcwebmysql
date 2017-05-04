@@ -8,7 +8,10 @@ from .models import Article, Practice, Administrasi, Kelas, PracticeAttendance, 
 from .forms import ArticleForm, MainArticleForm, SchedulesForm, ClassForm, AbsensiForm, AbsensiNewForm, AVCContactForm, NewEventForm, EditBarangForm
 from public.models import UserProfile, Event, SettingsVariable
 
+from rolepermissions.decorators import has_role_decorator
+
 @login_required
+@has_role_decorator('manajemen')
 def index(request):
     if request.user.profile.tipe_user == 'member':
         return HttpResponseRedirect(reverse('member:index'))
@@ -21,6 +24,7 @@ def list_article(request):
     context['articles'] = articles_query
     return render(request, 'manajemen/list_article.html', context)
 
+@has_role_decorator('hpd')
 def home_hpd(request):
     context={}
     articles_query = Article.objects.all()
@@ -104,7 +108,7 @@ def cancel_payment(request, payment_id):
 
 def detail_article(request, article_id):
     context={}
-    articleid_query= Article.objects.get(id=article_id)
+    articleid_query= get_object_or_404(Article, id=article_id)
     context['articleid'] = articleid_query
     return render(request, 'manajemen/detail_article.html', context)
 
@@ -134,18 +138,40 @@ def edit_barang(request, barang_id):
     return render(request, 'manajemen/edit_barang.html', {'form_edit_barang':form_edit_barang})
 
 def edit_contact(request):
-    default_data = {'address':"address_footer", 'phone1': "call1_footer",
-    'phone2':"call2_footer", 'email':"email_footer", 'facebook':"facebook_footer",
-    'instagram':"instagram_footer", 'twitter':"twitter_footer", "youtube":"youtube_footer",}
+    address = SettingsVariable.objects.get(key="address")
+    phone1  = SettingsVariable.objects.get(key="phone1")
+    phone2  = SettingsVariable.objects.get(key="phone2")
+    email  = SettingsVariable.objects.get(key="email")
+    facebook  = SettingsVariable.objects.get(key="facebook")
+    instagram  = SettingsVariable.objects.get(key="instagram")
+    twitter  = SettingsVariable.objects.get(key="twitter")
+    youtube  = SettingsVariable.objects.get(key="youtube")
+    default_data = {'address':address.value, 'phone1': phone1.value,
+    'phone2':phone2.value, 'email':email.value, 'facebook':facebook.value,
+    'instagram':instagram.value, 'twitter':twitter.value, "youtube":youtube.value,}
+
     if request.method=="POST":
-        form_edit_contact = AVCContactForm(default_data, request.POST)
+        form_edit_contact = AVCContactForm(request.POST)
         if form_edit_contact.is_valid():
-            contacts = form_edit_contact.save(commit = False)
-            contacts.updated_date= timezone.now()
-            contacts.save()
-            return HttpResponseRedirect(reverse('manajemen:home_phd', ))
+            address.value = form_edit_contact.cleaned_data.get('address')
+            address.save()
+            phone1.value = form_edit_contact.cleaned_data.get('phone1')
+            phone1.save()
+            phone2.value = form_edit_contact.cleaned_data.get('phone2')
+            phone2.save()
+            email.value = form_edit_contact.cleaned_data.get('email')
+            email.save()
+            facebook.value = form_edit_contact.cleaned_data.get('facebook')
+            facebook.save()
+            twitter.value = form_edit_contact.cleaned_data.get('twitter')
+            twitter.save()
+            instagram.value = form_edit_contact.cleaned_data.get('instagram')
+            instagram.save()
+            youtube.value = form_edit_contact.cleaned_data.get('youtube')
+            youtube.save()
+            return HttpResponseRedirect(reverse('manajemen:home_hpd'))
     else :
-        form_edit_contact = AVCContactForm()
+        form_edit_contact = AVCContactForm(initial = default_data)
     return render(request, 'manajemen/edit_contact.html', {'form_edit_contact':form_edit_contact})
 
 def edit_article(request, article_id):

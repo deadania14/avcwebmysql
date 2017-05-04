@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from manajemen.models import PracticeAttendance, Kelas
 from .validators import validate_file_extension
 
@@ -66,7 +68,7 @@ class UserProfile(models.Model):
     gender = models.CharField(max_length = 10, default = "pria", choices= gender_choices)
     phone = models.CharField(max_length=20)
     address = models.TextField()
-    pobirth = models.CharField(max_length=40, blank=True, null= True)
+    pobirth = models.DateField(max_length=40, blank=True, null= True)
     date_birth = models.DateField(blank = True, null= True)
     photo = models.ImageField(null=True, blank=True, upload_to='images/profile_images')
     update_time = models.DateTimeField(
@@ -110,6 +112,12 @@ class UserProfile(models.Model):
             self.is_have_kelas = False
             self.save()
             return False
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
+
 
 class SettingsVariable (models.Model):
     key = models.CharField(max_length=255, null=True)

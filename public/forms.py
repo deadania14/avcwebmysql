@@ -1,16 +1,50 @@
+import re
 from django.forms import ModelForm
 from django import forms
+from django.utils.translation import ugettext_lazy as _
+from django.core.validators import EMPTY_VALUES
+from django.utils.encoding import force_text
+from django.forms import ValidationError
 from django.forms import Textarea
+from django.forms.fields import Field
 from django.contrib.auth.models import User
+from localflavor.fr.forms import FRPhoneNumberField
+from localflavor.generic.forms import DeprecatedPhoneNumberFormFieldMixin
 from .models import Event, UserProfile
 from manajemen.models import Administrasi
+
+phone_re = re.compile(r'^(\+62|0)[2-9]\d{7,10}$')
+
+class IDPhoneNumberField(Field, DeprecatedPhoneNumberFormFieldMixin):
+    """
+    An Indonesian telephone number field.
+
+    http://id.wikipedia.org/wiki/Daftar_kode_telepon_di_Indonesia
+    """
+
+    default_error_messages = {
+        'invalid': _('Enter a valid phone number'),
+    }
+
+    def clean(self, value):
+        super(IDPhoneNumberField, self).clean(value)
+        if value in EMPTY_VALUES:
+            return ''
+
+        phone_number = re.sub(r'[\-\s\(\)]', '', force_text(value))
+
+        if phone_re.search(phone_number):
+            return force_text(value)
+
+        raise ValidationError(self.error_messages['invalid'])
 
 class EventForm(ModelForm):
     event_name = forms.CharField(label='Nama Acara',max_length=50)
     corporate = forms.CharField(label='Instansi', max_length=50)
-    desc = forms.CharField(label='Deskripsi Singkat')
-    sender = forms.CharField(label='Pengaju',max_length=20)
-    phone = forms.CharField(label='Nomor Handphone',max_length=20)
+    desc = forms.CharField(label='Deskripsi Singkat', widget=forms.Textarea)
+
+    sender = forms.CharField(label='Pengaju',max_length=20,)
+    phone = IDPhoneNumberField()
     email = forms.EmailField(label='E-mail Pengaju',)
     image = forms.ImageField(label='Pamflet atau Poster', required=False,)
     attachment = forms.FileField(label='File Pendukung', help_text='*harus .pdf', required=False)

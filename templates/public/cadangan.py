@@ -7,6 +7,10 @@ msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
 msg.attach_alternative(html_content, "text/html")
 msg.send()
 /**forms.py*/
+
+
+
+
 event_name = forms.CharField(label='Nama Acara',max_length=50)
 corporate = forms.CharField(label='Instansi', max_length=50)
 desc = forms.CharField(label='Deskripsi Singkat')
