@@ -31,6 +31,7 @@ def home_hpd(request):
     context['articles'] = articles_query
     return render(request, 'manajemen/hpd.html', context)
 
+@has_role_decorator('psdm')
 def home_psdm(request):
     context={}
     today = timezone.now().date()
@@ -45,6 +46,7 @@ def home_psdm(request):
     context['now'] = today
     return render(request, 'manajemen/psdm.html', context)
 
+@has_role_decorator('tutor')
 def home_tutor(request):
     context={}
     today = timezone.now().date()
@@ -55,6 +57,7 @@ def home_tutor(request):
     context['now'] = timezone.now().date()
     return render(request, 'manajemen/tutor.html', context)
 
+@has_role_decorator('bendahara')
 def home_keuangan(request):
     context={}
     administrasi_query = Administrasi.objects.all()
@@ -62,12 +65,14 @@ def home_keuangan(request):
     context['saldo'] = Administrasi.saldo.get_saldo()
     return render(request, 'manajemen/keuangan.html', context)
 
+@has_role_decorator('inventaris')
 def home_inventaris(request):
     context={}
     inventory_query = Inventory.objects.all()
     context['inventories']= inventory_query
     return render(request, 'manajemen/inventaris.html', context)
 
+@has_role_decorator('program')
 def home_acara(request):
     context={}
     acara_query = Event.objects.all()

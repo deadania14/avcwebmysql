@@ -29,8 +29,6 @@ admin.site.register(PracticeAttendance, PracticeAttendanceAdmin)
 # @admin.register(Document)
 # class DocumentAdmin(AjaxSelectAdmin):
 
-
-
 class KelasAdmin(admin.ModelAdmin):
     list_display = ['nama_kelas', "updated_date",]
     search_fields = ['nama_kelas']

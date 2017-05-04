@@ -68,7 +68,7 @@ class UserProfile(models.Model):
     gender = models.CharField(max_length = 10, default = "pria", choices= gender_choices)
     phone = models.CharField(max_length=20)
     address = models.TextField()
-    pobirth = models.DateField(max_length=40, blank=True, null= True)
+    plbirth = models.CharField(max_length=40, null=True)
     date_birth = models.DateField(blank = True, null= True)
     photo = models.ImageField(null=True, blank=True, upload_to='images/profile_images')
     update_time = models.DateTimeField(

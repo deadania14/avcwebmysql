@@ -1,8 +1,10 @@
 from django.contrib import admin
 from .models import Event, UserProfile, SettingsVariable, Slider
 
+class userprofile(admin.ModelAdmin):
+    list_display = ['user', 'phone', 'tipe_user',]
+admin.site.register(UserProfile, userprofile)
 
-admin.site.register(UserProfile) 
 class setvar(admin.ModelAdmin):
     list_display = ['key', 'value', 'updated_date',]
 admin.site.register(SettingsVariable, setvar)
