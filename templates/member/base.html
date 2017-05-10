@@ -38,39 +38,26 @@
         <div class="collapse navbar-collapse left" id="top-navbar-1">
           <ul class="nav navbar-nav navbar-right">
           <li>
-                <a href="{% url 'member:index' %}"><br>Beranda</a>
-            </li>
-            {% if request.user.profile.is_registration_paid %}
-            <li>
-                <a href="{% url 'member:latihan' %}"><br>Latihan</a>
-            </li>
-            <li>
-                <a href="{% url 'member:pembayaran' %}"><br>Administrasi</a>
-            </li>
+            {% if user.profile.photo %}
+            <img class="img-circle" src="{{user.profile.photo.url}}" height='150' width='150' alt="Avatar" title="Change the avatar">
             {% endif %}
-            <li>
-                <a href="{% url 'member:settings' %}"><br>Pengaturan</a>
-            </li>
-            <li>
-                {% if user.is_authenticated %}
-                <li>
-                    <a href="{% url 'login:logout' %}"><br>logout</a>
-                </li>
-                {% endif %}
-            </li>
+              <a href= ""><br>Beranda</a>
+          </li>
+          <li>
+              {% if user.is_authenticated %}
+              <li>
+                  <a href="{% url 'login:logout' %}"><br>logout</a>
+              </li>
+              {% endif %}
+          </li>
           </ul>
 				</div>
 			</div>
 		</nav>
-    <!-- Page Title -->
-    <div class="page-title-container">
-        <div class="container">
-            <div class="row">
-              {% block page_title %}
-              {% endblock %}
-            </div>
-        </div>
-    </div>
+
+    {% block page_title %}
+
+    {% endblock %}
     <div class="container">
         <div class="row">
             {% block content %} {% endblock %}

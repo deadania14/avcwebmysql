@@ -1,20 +1,24 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.conf import settings
 from django.core.mail import send_mail, BadHeaderError
+from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
+from django.core.exceptions import PermissionDenied
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.forms.models import inlineformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
 from django.http import HttpResponseRedirect
 from django.utils import timezone
 from django.urls import reverse
-from django.core.mail import send_mail
-from django.conf import settings
-from django.core.mail import EmailMultiAlternatives
-from manajemen.models import Article, Administrasi, AdministrationType
+from manajemen.models import Article, Administrasi, AdministrationType, PracticeAttendance, Kelas
 from public.models import SettingsVariable
-from .models import Event, Slider
-from .forms import EventForm, UserForm, UserProfileForm, AdministrasiForm, UserRegister
+from .models import Event, Slider, UserProfile
+from .forms import EventForm, UserForm, UserProfileForm, UserProfileEditForm, AdministrasiForm, UserRegister
 
 def index(request):
     context={}
-    articles_query = Article.objects.all()[:4]
+    articles_query = Article.objects.filter(is_mainarticle=False)[:4]
     context['articles'] = articles_query
     slider_query = Slider.objects.all()[:4]
     context['sliders'] = slider_query
@@ -30,11 +34,9 @@ def about(request):
 
 def konser(request):
     context={}
-    #sejarah = Article.objects.get(title = 'Sejarah AVC')
-    #context['history'] = sejarah
-    #companyprofile = Article.objects.get(title = 'Company Profile')
-    #context['cprofile'] = companyprofile
-    return render(request, 'public/Konser.html', context)
+    konser = Article.objects.filter(is_concertarticle= True)
+    context['concerts'] = konser
+    return render(request, 'public/konser.html', context)
 
 def contact(request):
     context={}
@@ -49,11 +51,14 @@ def register(request):
         user_form = UserForm(data = request.POST)
         profile_form = UserProfileForm(data = request.POST)
         administrasi_form = AdministrasiForm(data = request.POST)
-        if user_form.is_valid() and profile_form.is_valid and regis_form.is_valid:
-            regis = regis_form.save()
-            user = user_form.save()
+        if user_form.is_valid() and profile_form.is_valid and regis_form.is_valid and administrasi_form.is_valid:
+            user = user_form.save(commit = False)
             user.set_password(user.password)
+            regis = regis_form.save(commit = False)
+            user.first_name= regis.first_name
+            user.last_name = regis.last_name
             user.save()
+
             #email
             subject = 'terima kasih telah mendaftar'
             message = 'Selamat datang, segera lunasi pembayaran anda '
@@ -99,7 +104,7 @@ def article_detail(request, article_id):
     context['articleid'] = articleid_query
     return render(request, 'public/article_detail.html', context)
 
-def event_new(request):
+def events(request):
     if request.method=="POST":
         form = EventForm(request.POST, request.FILES)
         if form.is_valid():
@@ -114,16 +119,60 @@ def event_new(request):
             to_list = [user, settings.EMAIL_HOST_USER]
             send_mail(subject, message, from_email, to_list, fail_silently = True)
 
-            return HttpResponseRedirect(reverse('public:index',))
+            return HttpResponseRedirect(reverse('public:events',))
     else :
         form = EventForm()
     context={'form':form,}
     deal_event= Event.objects.filter(event_status='deal')
     context["devent"] = deal_event
-    return render(request, 'public/event_new.html', context)
+    return render(request, 'public/events.html', context)
 
 def settingsvalue(request):
     context={}
     settingquery = SettingsVariable.objects.all()
     context['setting'] = settingquery
     return render(request, 'member/base.html', context)
+
+@login_required
+def myprofile(request):
+    #if request.user.profile.tipe_user != 'member':
+        #return HttpResponseRedirect(reverse('manajemen:index'))
+    context={}
+    administrasi_query = Administrasi.objects.filter(user = request.user)
+    #add kondisi sesuai dengan username yang aktif
+    context['adminitrasis'] = administrasi_query
+    kelas_query = Kelas.objects.filter(user= request.user)
+    context['kelas'] = kelas_query
+    today = today = timezone.now().date()
+    events_query = Event.objects.filter(event_status="deal").filter(event_date__gte=today)
+    context['events'] = events_query
+    return render(request, 'public/myprofile.html', context)
+
+def edit_user(request, pk):
+    user = User.objects.get(pk=pk)
+    user_form = UserProfileEditForm(instance=user)
+
+    ProfileInlineFormset = inlineformset_factory(User, UserProfile, fields=('phone', 'address', 'photo'))
+    formset = ProfileInlineFormset(instance=user)
+
+    if request.user.is_authenticated() and request.user.id == user.id:
+        if request.method == "POST":
+            user_form = UserProfileEditForm(request.POST, request.FILES, instance=user)
+            formset = ProfileInlineFormset(request.POST, request.FILES, instance=user)
+
+            if user_form.is_valid():
+                created_user = user_form.save(commit=False)
+                formset = ProfileInlineFormset(request.POST, request.FILES, instance=created_user)
+
+                if formset.is_valid():
+                    created_user.save()
+                    formset.save()
+                    return HttpResponseRedirect(reverse('public:myprofile'))
+
+        return render(request, "public/edit_profile.html", {
+            "noodle": pk,
+            "noodle_form": user_form,
+            "formset": formset,
+        })
+    else:
+        raise PermissionDenied

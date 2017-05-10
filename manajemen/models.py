@@ -11,6 +11,7 @@ class Article(models.Model):
     text = models.TextField()
     image = models.ImageField(null=True, blank=True, upload_to='images/articles')
     is_mainarticle = models.BooleanField(default = False)
+    is_concertarticle = models.BooleanField(default= False)
     created_date = models.DateTimeField(
         default = timezone.now
     )

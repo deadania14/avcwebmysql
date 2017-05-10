@@ -1,19 +1,12 @@
-{% extends 'member/base.html' %}
+{% extends 'public/base.html' %}
 {% block title%}
-Home
+Profile
 {% endblock %}
 {% block page_title %}
-<div class="page-title-container">
-    <div class="container">
-        <div class="row">
-          <div class="col-sm-12 wow fadeIn">
-            <h1><a href="{% url 'member:index' %}">Selamat Datang </a>{{ user.first_name }} <a>!</a></h1>
-          </div>
-        </div>
-    </div>
+<div class="col-sm-12 wow fadeIn">
+  <h1><a href="{% url 'member:index' %}">Selamat Datang </a>{{ user.first_name }} <a>!</a></h1>
 </div>
 {% endblock %}
-
 
 {% block content %}
 <br/>
@@ -38,7 +31,7 @@ Home
       </li>
     </ul>
 
-    <a class="btn btn-success" href= "{% url 'member:edit_profile' user.id %}"><i class="fa fa-edit m-right-xs"></i>Ubah Profile</a>
+    <a class="btn btn-success" href= "{% url 'public:edit_profile' user.id %}"><i class="fa fa-edit m-right-xs"></i>Ubah Profile</a>
     <br />
     <br />
   </div>

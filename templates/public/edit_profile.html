@@ -1,0 +1,23 @@
+{% extends 'public/base.html' %}
+{% load bootstrap3 %}
+{% block title %}
+Pengaturan
+{% endblock%}
+{% block page_title %}
+<div class="col-sm-12 wow fadeIn">
+  <i class="fa fa-edit"></i>
+  <h1> <a href ="{% url 'public:myprofile' %}">Profile {{user.username}} /</a> Ubah Profile </h1>
+</div>
+{% endblock %}
+{% block content %}
+
+<div class= "x_content">
+  <form method="POST" class="left">
+    {% csrf_token %} {{ noodle_form.as_p }}
+    <div class="divider"></div>
+    {{ formset.management_form }}
+    {{ formset.as_p }}
+    <button type="submit" >Simpan</button>
+  </form>
+</div>
+{% endblock %}

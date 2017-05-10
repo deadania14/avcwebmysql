@@ -18,12 +18,6 @@ def index(request):
     context={}
     return render(request, 'manajemen/index.html', context)
 
-def list_article(request):
-    context={}
-    articles_query = Article.objects.all()
-    context['articles'] = articles_query
-    return render(request, 'manajemen/list_article.html', context)
-
 @has_role_decorator('hpd')
 def home_hpd(request):
     context={}

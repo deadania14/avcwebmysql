@@ -5,8 +5,6 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     #HPD V
     url(r'^hpd/$', views.home_hpd, name='home_hpd'),
-    #/list_article V
-    url(r'^hpd/articles/$', views.list_article, name='list_article'),
     #/new_article V
     url(r'^hpd/article/new/$', views.new_article, name='new_article'),
     #/article_detail V

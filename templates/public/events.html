@@ -1,0 +1,83 @@
+{% extends 'public/base.html' %}
+{% load bootstrap3 %}
+{% block title%}
+  Acara
+{% endblock %}
+{% block page_title%}
+<div class="col-sm-12 wow fadeIn">
+    <i class="fa fa-key"></i>
+    <h1><a href= "{% url 'public:events' %}">Acara</a> /</h1>
+    <p>Events</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<style>
+  .form-group {
+    text-align: left;
+  }
+</style>
+<div class="col-sm-12 form-group">
+  <br/><br/>
+  <div class="col-sm-12 right">
+    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#penawaran">Buat Penawaran</button>
+    <button type="button" class="circle btn btn-warning" data-toggle="modal" data-target="#helppenawaran"><i class="glyphicon glyphicon-question-sign"></i></button>
+  </div>
+    {% for deals in devent %}
+    <div class="col-md-3">
+      <div class="event-box {{deals.status}}-design">
+      	<div class="event-box-container">
+          {% if deals.image %}
+          <img src="{{deals.image.url}}">
+          {% endif %}
+      		<div class="event-box-text">
+      			<h3>{{deals.event_name}}</h3>
+      			<p>{{deals.desc|safe|linebreaksbr|slice:":100"}}</p>
+            <div class="work-bottom">
+                <a href="{% url 'public:event_detail' deals.id %}">Teruskan membaca...</a>
+            </div>
+      		</div>
+    		</div>
+      </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Modal Penawaran -->
+<div id="penawaran" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Penawaran Acara~</h4>
+            </div>
+            <div class="modal-body">
+              <form method="POST" class= "post-form" enctype="multipart/form-data">{% csrf_token %}
+                {% bootstrap_form form %}
+                <button type="submit" class="save btn btn-primary" value="Submit">Kirim Ajuan</button>
+              </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal help Penawaran -->
+<div id="helppenawaran" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <i class="glyphicon glyphicon-question-sign"></i>
+                <h4 class="modal-title">Penawaran Acara</h4>
+            </div>
+            <div class="modal-body">
+              <p>Halo sobat AVC, mau buat acara dan mau ajak AVC untuk terlibat diacara kamu? Yuk isi formulir "Penawaran Acara".
+                Lengkapi data kamu dan deskripsikan secara singkat tentang Acaramu, Pihak AVC akan segera mempertimbangkan dan menghubungi kamu. Acara sosial, private, nasional, atau internasional AVC akan mengupayakan untuk berpartisipasi.
+              </p>
+              <strong>Salam hangat, salam semangat, salam gesek <h4><i class="glyphicon glyphicon-music"></i></h4></strong>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

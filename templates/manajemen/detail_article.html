@@ -19,7 +19,8 @@
     <p>{{articleid.text|safe|linebreaksbr}}</p>
   </div>
   {% if articleid.image %}
-  <br><img class="img-circle" src="{{articleid.image.url}}" height='150' width='150'>{% endif %}
+  <br><img class="img-circle" src="{{articleid.image.url}}" height='150' width='150'>
+  {% endif %}
   <p>{{articleid.created_date}}</p>
 </div>
 {% endblock %}

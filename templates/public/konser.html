@@ -1,0 +1,35 @@
+{% extends 'public/base.html' %}
+{% block title %}
+Konser
+{% endblock %}
+{% block page_title%}
+<div class="col-sm-12 wow fadeIn">
+    <i class="fa fa-star"></i>
+    <h1><a href ="{% url 'public:konser' %}">Konser </a>/</h1>
+    <p>concerts</p>
+</div>
+{% endblock %}
+{% block content %}
+<div class="col-sm-12 form-group">
+  <br/><br/>
+    {% for konser in concerts %}
+  <div class="col-md-3">
+    <div class="event-box {{deals.status}}-design">
+    	<div class="event-box-container">
+        {% if konser.image %}
+        <img src="{{konser.image.url}}">
+        {% endif %}
+    		<div class="event-box-text">
+    			<h3>{{konser.title}}</h3>
+    			<p>{{konser.text|safe|linebreaksbr|slice:":100"}}</p>
+          <div class="work-bottom">
+              <a href="{% url 'public:article_detail' konser.id %}">Teruskan membaca...</a>
+          </div>
+    		</div>
+  		</div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% endblock %}

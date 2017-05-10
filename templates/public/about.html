@@ -4,9 +4,9 @@ Tentang
 {% endblock %}
 {% block page_title%}
 <div class="col-sm-12 wow fadeIn">
-    <i class="fa fa-star"></i>
-    <h1>Tentang /</h1>
-    <p><i> Alliance Violin Community</i></p>
+    <i class="glyphicon glyphicon-search"></i>
+    <h1><a href= "{% url 'public:about' %}">Tentang</a> /</h1>
+    <p>About</p>
 </div>
 {% endblock %}
 {% block content %}
@@ -16,10 +16,6 @@ Tentang
       <div style="font-size:13px">
         <p>{{history.text|safe}}</p>
       </div>
-    </div>
-    <div>
-      <h1>{{cprofile.title}}</h1>
-      <p>{{cprofile.text}}</p>
     </div>
 </div>
 {% endblock %}

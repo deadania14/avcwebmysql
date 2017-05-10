@@ -1,13 +1,23 @@
 {% extends 'public/base.html' %}
-{% block title %}Event Details{% endblock %}
+{% block title %}
+  Event Details
+{% endblock %}
+{% block page_title%}
+<div class="col-sm-12 wow fadeIn">
+    <i class="fa fa-key"></i>
+    <h1><a href= "{% url 'public:events' %}">Acara</a> /</h1>
+    <p>Detail Acara</p>
+</div>
+{% endblock %}
 {% block content %}
-<div>
+
   <h1>{{eventid.event_name}}</h1>
-  <p>{{eventid.desc|linebreaksbr}}</p>
-  <br>
+
   {% if eventid.image %}<img src="{{eventid.image.url}}" >
   {% endif %}
+  <br /><br />
+<div class ="left">
+  <p>{{eventid.desc|linebreaksbr}}</p>
   <p>{{eventid.created_date}}</p>
-  <p>{{eventid.event_status}}</p>
 </div>
 {% endblock %}

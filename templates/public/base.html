@@ -25,6 +25,9 @@
       .left {
         text-align: left;
       }
+      .right{
+        text-align: right;
+      }
     </style>
 </head>
 <body>
@@ -44,7 +47,7 @@
                     <br>Beranda</a>
               </li>
               <li>
-                  <a href="{% url 'public:event_new' %}"><br>Acara</a>
+                  <a href="{% url 'public:events' %}"><br>Acara</a>
               </li>
               <li>
                   <a href="{% url 'public:about' %}"><br>Tentang</a>
@@ -52,14 +55,20 @@
               <li>
                   <a href="{% url 'public:konser' %}"><br>Konser</a>
               </li>
-              <!-- <li>
-                  <a href="#url 'public:contact'"><br>Hubungi Kami</a>
-              </li> -->
               <li>
                 {% if user.is_authenticated %}
-                <li>
-                  <a href="{% url 'login:logout' %}"><br>logout</a>
-                </li>
+                <li class="dropdown">
+    							<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000">
+    								<br>Hi <strong>{{user.username}}</strong> <span class="caret"></span>
+    							</a>
+    							<ul class="dropdown-menu dropdown-menu-left" role="menu">
+    								<li><a href="{% url 'login:logout' %}"><i class="glyphicon glyphicon-log-out"></i> Keluar </a></li>
+                    <li><a href="{% url 'public:myprofile' %}"><i class="glyphicon glyphicon-user"></i> Profile </a></li>
+                    {% if user.profile.tipe_user != 'member' %}
+                    <li><a href="{% url 'manajemen:index' %}"><i class="fa fa-users"></i> Manajemen</a></li>
+                    {% endif %}
+    							</ul>
+    						</li>
                 {% else %}
                 <a href="{% url 'public:register' %}"><br>Pendaftaran</a>
               </li>
@@ -111,7 +120,7 @@
                   {% endif %}
                   {% call2_footer %}
                 </div>
-                <div class= "col-xl-4 col-md-4"><i class="fa fa-envelope"></i> Email: <a href="">{% email_footer %}</a></div>
+                <div class= "col-xl-4 col-md-4"><i class="fa fa-envelope"></i> {% email_footer %}</div>
             </div>
         </div>
     </div>
@@ -136,5 +145,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="{% static 'js/bootstrap.js' %}"></script>
 </body>
-
+{% block script %}
+{% endblock %}
 </html>

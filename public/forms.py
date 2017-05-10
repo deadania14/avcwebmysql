@@ -59,7 +59,7 @@ class EventForm(ModelForm):
 
 class UserRegister(forms.ModelForm):
     first_name = forms.CharField(label='Nama Depan', help_text='', required=True)
-    last_name = forms.CharField(label='Nama Belakang', help_text='', required=True)
+    last_name = forms.CharField(label='Nama Belakang', help_text='', required=False)
     class Meta:
         model = User
         fields = ('first_name', 'last_name',)
@@ -81,7 +81,7 @@ class UserForm(forms.ModelForm):
 
 class UserProfileForm(forms.ModelForm):
     photo = forms.ImageField(label='Foto Profil', help_text='', required=False)
-    phone = forms.CharField(label='Nomor Handphone', help_text='', required=True)
+    phone = IDPhoneNumberField()
     address = forms.CharField(label='Alamat Domisili', help_text='', required=True)
     class Meta:
         model = UserProfile
@@ -91,3 +91,8 @@ class AdministrasiForm(forms.ModelForm):
     class Meta:
         model = Administrasi
         fields = ('method',)
+
+class UserProfileEditForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['email']

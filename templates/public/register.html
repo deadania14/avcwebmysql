@@ -38,7 +38,7 @@ Pendaftaran
           <div class = "x_content">
               {% bootstrap_form user_form %}
               <label>
-                <input type="checkbox" class = "flat"> setuju dengan <a data-toggle="modal" data-target="#termandcondition">syarat dan ketentuan AVC</a>
+                <input type="checkbox" required=True> setuju dengan <a data-toggle="modal" data-target="#termandcondition">syarat dan ketentuan AVC</a>
               </label>
               <br/><br/>
               <input class ="btn btn-primary" type="submit" name="submit" value="Daftar" />
@@ -55,7 +55,7 @@ Pendaftaran
                   <h4 class="modal-title">{{conditions.title}}</h4>
               </div>
               <div class="modal-body">
-                  {{conditions.text|safe}}liljlono
+                  {{conditions.text|safe}}
               </div>
               <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
