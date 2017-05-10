@@ -4,10 +4,17 @@
 Artikel Baru
 {% endblock %}
 {% block page_title %}
-<div class="col-sm-12 wow fadeIn">
-  <i class="fa fa-adjust"></i>
-  <h1><a href="{% url 'manajemen:home_hpd' %}">HPD</a>/</h1>
-  <p>Artikel Baru <i> Alliance Violin Community</i></p>
+<!-- Page Title -->
+<div class="page-title-container">
+    <div class="container">
+        <div class="row">
+          <div class="col-sm-12 wow fadeIn">
+            <i class="fa fa-adjust"></i>
+            <h1><a href="{% url 'manajemen:home_hpd' %}">HPD</a>/</h1>
+            <p>Artikel Baru <i> Alliance Violin Community</i></p>
+          </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
 {% block content %}

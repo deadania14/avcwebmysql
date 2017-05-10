@@ -1,5 +1,6 @@
 {% load staticfiles %}
 {% load footer_dynamic %}
+
 <html>
 
 <head>
@@ -10,7 +11,6 @@
 
     <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
     <link href="{% static 'css/public.css' %}" rel="stylesheet">
-    <!-- <link href="{% static 'css/flexslider.css' %}" rel="stylesheet"> -->
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
     <link href="{% static 'css/media-queries.css' %}" rel="stylesheet">
     <link href="{% static 'css/font-awesome.css' %}" rel="stylesheet">
@@ -42,22 +42,23 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse left" id="top-navbar-1">
           <ul class="nav navbar-nav navbar-right">
-              <li>
+              <li {% if request.resolver_match.url_name == 'index' %}class="active"{% endif %}>
                   <a href="{% url 'public:index' %}">
                     <br>Beranda</a>
               </li>
-              <li>
-                  <a href="{% url 'public:events' %}"><br>Acara</a>
+              <li {% if request.resolver_match.url_name == 'events' %}class="active"{% endif %}>
+                  <a href="{% url 'public:events' %}">
+                    <br>Acara</a>
               </li>
-              <li>
+              <li {% if request.resolver_match.url_name == 'about' %}class="active"{% endif %}>
                   <a href="{% url 'public:about' %}"><br>Tentang</a>
               </li>
-              <li>
+              <li {% if request.resolver_match.url_name == 'konser' %}class="active"{% endif %}>
                   <a href="{% url 'public:konser' %}"><br>Konser</a>
               </li>
               <li>
                 {% if user.is_authenticated %}
-                <li class="dropdown">
+                <li class="dropdown {% if request.resolver_match.url_name == 'myprofile' %}active{% endif %}" >
     							<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000">
     								<br>Hi <strong>{{user.username}}</strong> <span class="caret"></span>
     							</a>
@@ -142,8 +143,10 @@
     </div>
 </div>
 </footer>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="{% static 'js/bootstrap.js' %}"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="{% static 'js/bootstrap.js' %}"></script>
 </body>
 {% block script %}
 {% endblock %}

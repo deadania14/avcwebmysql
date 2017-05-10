@@ -14,8 +14,10 @@ from rolepermissions.decorators import has_role_decorator
 @has_role_decorator('manajemen')
 def index(request):
     if request.user.profile.tipe_user == 'member':
-        return HttpResponseRedirect(reverse('member:index'))
+        return HttpResponseRedirect(reverse('public:index'))
     context={}
+    manajemen_user_query = UserProfile.objects.exclude(tipe_user='member')
+    context['manajemen_people']=manajemen_user_query
     return render(request, 'manajemen/index.html', context)
 
 @has_role_decorator('hpd')

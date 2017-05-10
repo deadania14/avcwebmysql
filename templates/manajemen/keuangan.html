@@ -5,10 +5,17 @@
 Keuangan
 {% endblock %}
 {% block page_title %}
-<div class="col-sm-12 wow fadeIn">
-    <i class="glyphicon glyphicon-save"></i>
-    <h1><a href="{% url 'manajemen:home_keuangan' %}">Keuangan </a>/</h1>
-    <p> <i> Alliance Violin Community</i></p>
+<!-- Page Title -->
+<div class="page-title-container">
+    <div class="container">
+        <div class="row">
+          <div class="col-sm-12 wow fadeIn">
+            <i class="glyphicon glyphicon-save"></i>
+            <h1><a href="{% url 'manajemen:home_keuangan' %}">Keuangan </a>/</h1>
+            <p> <i> Alliance Violin Community</i></p>
+          </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
 {% block content %}

@@ -61,41 +61,41 @@
 				<!-- Collect the nav links, forms, and other content for toggling -->
 				<div class="collapse navbar-collapse left" id="top-navbar-1">
 					<ul class="nav navbar-nav navbar-right">
-            <li>
+            <li {% if request.resolver_match.url_name == 'index' %}class="active"{% endif %}>
                 <a href="{% url 'manajemen:index' %}">
                     <br>Beranda</a>
             </li>
             {% if user.profile.tipe_user == "hpd" or user.profile.tipe_user == "ketua/wakil"%}
-            <li>
+            <li {% if request.resolver_match.url_name == 'home_hpd' %}class="active"{% endif %}>
                 <a href="{% url 'manajemen:home_hpd' %}"><br>HPD</a>
             </li>
             {% endif %}
             {% if user.profile.tipe_user == "psdm" or user.profile.tipe_user == "ketua/wakil"%}
-            <li>
+            <li {% if request.resolver_match.url_name == 'home_psdm' %}class="active"{% endif %}>
                 <a href="{% url 'manajemen:home_psdm' %}"><br>PSDM</a>
             </li>
             {% endif %}
             {% if user.profile.tipe_user == "tutor" or user.profile.tipe_user == "psdm" or user.profile.tipe_user == "ketua/wakil" %}
-            <li>
+            <li {% if request.resolver_match.url_name == 'home_tutor' %}class="active"{% endif %}>
                 <a href="{% url 'manajemen:home_tutor' %}"><br>Tutor</a>
             </li>
             {% endif %}
             {% if user.profile.tipe_user == "bendahara" or user.profile.tipe_user == "ketua/wakil"%}
-            <li>
+            <li {% if request.resolver_match.url_name == 'home_keuangan' %}class="active"{% endif %}>
                 <a href="{% url 'manajemen:home_keuangan' %}"><br>Keuangan</a>
             </li>
             {% endif %}
             {% if user.profile.tipe_user == "program" or user.profile.tipe_user == "ketua/wakil"%}
-            <li>
+            <li {% if request.resolver_match.url_name == 'home_acara' %}class="active"{% endif %}>
                 <a href="{% url 'manajemen:home_acara' %}"><br>Acara</a>
             </li>
             {% endif %}
             {% if user.profile.tipe_user == "inventaris" or user.profile.tipe_user == "ketua/wakil"%}
-            <li>
+            <li {% if request.resolver_match.url_name == 'home_inventaris' %}class="active"{% endif %}>
                 <a href="{% url 'manajemen:home_inventaris' %}"><br>Inventaris</a>
             </li>
             {% endif %}
-            <li>
+            <li >
                 {% if user.is_authenticated %}
                 <li>
                     <a href="{% url 'login:logout' %}"><br>logout</a>
@@ -106,15 +106,9 @@
 				</div>
 			</div>
 		</nav>
-    <!-- Page Title -->
-    <div class="page-title-container">
-        <div class="container">
-            <div class="row">
-              {% block page_title %}
-              {% endblock %}
-            </div>
-        </div>
-    </div>
+    {% block page_title %}
+    {% endblock %}
+
     <div class="container">
         <div class="row">
             {% block content %} {% endblock %}
