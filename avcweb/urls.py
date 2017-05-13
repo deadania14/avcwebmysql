@@ -30,7 +30,6 @@ urlpatterns = [
     url(r'^ajax_select/', include(ajax_select_urls)),
     url(r'', include('public.urls', namespace='public')),
     url(r'^manajemen/', include('manajemen.urls', namespace='manajemen')),
-    url(r'^member/', include('member.urls', namespace='member')),
     url(r'^login/', include('login.urls', namespace='login')),
     url(r'^password_reset/$', auth_views.password_reset, name='password_reset'),
     url(r'^password_reset/done/$', auth_views.password_reset_done, name='password_reset_done'),

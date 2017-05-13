@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import Event, UserProfile, SettingsVariable, Slider
 
 class userprofile(admin.ModelAdmin):
-    list_display = ['user', 'phone', 'tipe_user',]
+    list_display = ['user', 'phone', 'tipe_user','user_kelas',]
 admin.site.register(UserProfile, userprofile)
 
 class setvar(admin.ModelAdmin):

@@ -51,7 +51,6 @@ INSTALLED_APPS = [
     'public',
     'manajemen',
     'login',
-    'member',
     'bootstrap3'
 ]
 

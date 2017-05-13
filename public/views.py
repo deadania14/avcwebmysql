@@ -142,12 +142,6 @@ def events(request):
     context["devent"] = deal_event
     return render(request, 'public/events.html', context)
 
-def settingsvalue(request):
-    context={}
-    settingquery = SettingsVariable.objects.all()
-    context['setting'] = settingquery
-    return render(request, 'member/base.html', context)
-
 @login_required
 def myprofile(request):
     context={}

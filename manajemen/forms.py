@@ -3,6 +3,7 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.contrib.admin.widgets import AdminTimeWidget, AdminSplitDateTime
 from ajax_select.fields import AutoCompleteSelectField, AutoCompleteSelectMultipleField
+from ajax_select import make_ajax_field
 from .models import Article, Practice, Kelas, PracticeAttendance, Inventory, Meeting
 from public.models import SettingsVariable, Event
 
@@ -32,12 +33,10 @@ class SchedulesForm(forms.ModelForm):
         exclude = ('created_date',)
 
 class ClassForm(forms.ModelForm):
-    user = AutoCompleteSelectMultipleField(
-        'users', required=False, help_text=None
-    )
+
     class Meta:
         model = Kelas
-        fields = ('nama_kelas','user','note',)
+        fields = ('nama_kelas','note',)
 
 class AbsensiForm(forms.ModelForm):
     is_present = forms.ModelMultipleChoiceField(
@@ -49,13 +48,25 @@ class AbsensiForm(forms.ModelForm):
         model = PracticeAttendance
         fields = ('is_present', 'tutor_pendamping',)
 
-class AbsensiNewForm(forms.ModelForm):
-    daftar_orang = AutoCompleteSelectMultipleField(
-        'users', required=False, help_text=None
+class AbsensiPeopleForm(forms.ModelForm):
+    daftar_orang = forms.ModelMultipleChoiceField(
+        queryset=User.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+    tutor_pendamping = forms.ModelMultipleChoiceField(
+        queryset=User.objects.filter(profile__tipe_user='tutor'),
+        widget=forms.CheckboxSelectMultiple,
+        required=False
     )
     class Meta:
         model = PracticeAttendance
-        fields = ("daftar_orang",'practice','tutor',)
+        fields = ('daftar_orang','tutor_pendamping')
+
+class AbsensiKelasForm(forms.ModelForm):
+    class Meta:
+        model = PracticeAttendance
+        fields = ('practice','kelas','tutor')
 
 class AVCContactForm(forms.Form):
     address = forms.CharField(label='Alamat', max_length=255, required=True)

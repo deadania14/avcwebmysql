@@ -46,7 +46,6 @@ class Practice(models.Model):
 
 class Kelas(models.Model):
     nama_kelas = models.CharField(default='', max_length=50)
-    user = models.ManyToManyField(User, related_name="kelas")
     note = models.TextField(null= True)
     updated_date = models.DateField(
         blank = True, null = True

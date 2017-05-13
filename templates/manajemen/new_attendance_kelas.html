@@ -1,0 +1,14 @@
+{% extends 'manajemen/base.html' %}
+{% load admin_static %}
+{% load bootstrap3 %}
+{% block title%}
+Absensi-Kelas
+{% endblock %}
+
+{% block content %}
+<h1>Absensi</h1>
+<form method="POST"> {% csrf_token %}
+  {% bootstrap_form form_absensi_kelas %}
+  <button type="submit" class="save btn btn-default">Save</button>
+</form>
+{% endblock %}

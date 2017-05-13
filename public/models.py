@@ -49,7 +49,7 @@ class Event(models.Model):
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name= "profile")
-    user_kelas = models.OneToOneField(Kelas, related_name="kelas", null=True, blank=True)
+    user_kelas = models.ForeignKey(Kelas, related_name="profiles", null=True, blank=True)
     gender_choices = (
         ('wanita', 'Wanita',),
         ('pria', 'Pria',),
@@ -69,15 +69,17 @@ class UserProfile(models.Model):
     update_time = models.DateTimeField(
         default=timezone.now)
     is_registration_paid = models.BooleanField(default=False)
-    is_have_kelas = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.username
 
     def schedule_last_three_months(self):
-        self_class = Kelas.objects.get(user=self.user)
-        schedule_last_three_months = self_class.schedule_last_three_months()
-        return schedule_last_three_months
+        self_class = self.user_kelas
+        if self_class:
+            schedule_last_three_months = self_class.schedule_last_three_months()
+            return schedule_last_three_months
+        else:
+            return 0.0
 
     def attend_last_three_months(self):
         today = timezone.now()
@@ -91,22 +93,14 @@ class UserProfile(models.Model):
 
     def attend_last_three_months_percent(self):
         attend_last_three_months =  self.attend_last_three_months()
-        self_class = Kelas.objects.get(user=self.user)
-        schedule_last_three_months = self_class.schedule_last_three_months()
-        if schedule_last_three_months == 0:
+        self_class = self.user_kelas
+        if self_class:
+            schedule_last_three_months = self_class.schedule_last_three_months()
+            if schedule_last_three_months == 0:
+                return 0.0
+        else:
             return 0.0
         return attend_last_three_months/schedule_last_three_months * 100
-
-    def set_is_have_kelas(self):
-        kelas = self.user.kelas.all()
-        if kelas:
-            self.is_have_kelas = True
-            self.save()
-            return True
-        else:
-            self.is_have_kelas = False
-            self.save()
-            return False
 
 def create_profile(sender, **kwargs):
     user = kwargs["instance"]

@@ -26,8 +26,10 @@ urlpatterns = [
     url(r'^psdm/kelas/-(?P<kelas_id>[0-9]+)/edit/$', views.edit_kelas, name='edit_kelas'),
     #/new_schedule
     url(r'^psdm/new_schedule/$', views.new_schedule, name='new_schedule'),
-    #/new_attendance
-    url(r'^psdm/new_attendance/$', views.new_attendance, name='new_attendance'),
+    #/new_attendance_people
+    url(r'^psdm/new_attendance_kelas/new_attendance_people/(?P<attendance_id>[0-9]+)$', views.new_attendance_people, name='new_attendance_people'),
+    #/new_attendance_kelas
+    url(r'^psdm/new_attendance_kelas/$', views.new_attendance_kelas, name='new_attendance_kelas'),
     #/edit_attendance
     url(r'^psdm/edit_attendance/(?P<attendance_id>[0-9]+)/$', views.edit_attendance, name='edit_attendance'),
     #/detail_schedule
