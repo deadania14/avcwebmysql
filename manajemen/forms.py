@@ -1,10 +1,10 @@
 from django import forms
 from django.utils import timezone
 from django.contrib.auth.models import User
-from ajax_select.fields import AutoCompleteSelectField, AutoCompleteSelectMultipleField
-from .models import Article, Practice, Kelas, PracticeAttendance, Inventory
-from public.models import SettingsVariable, Event
 from django.contrib.admin.widgets import AdminTimeWidget, AdminSplitDateTime
+from ajax_select.fields import AutoCompleteSelectField, AutoCompleteSelectMultipleField
+from .models import Article, Practice, Kelas, PracticeAttendance, Inventory, Meeting
+from public.models import SettingsVariable, Event
 
 class ArticleForm(forms.ModelForm):
     title = forms.CharField(label='Judul', max_length=100, required=True)
@@ -32,10 +32,8 @@ class SchedulesForm(forms.ModelForm):
         exclude = ('created_date',)
 
 class ClassForm(forms.ModelForm):
-    user = forms.ModelMultipleChoiceField(
-        queryset=User.objects.all(),
-        widget=forms.CheckboxSelectMultiple,
-        required=False
+    user = AutoCompleteSelectMultipleField(
+        'users', required=False, help_text=None
     )
     class Meta:
         model = Kelas
@@ -68,7 +66,7 @@ class AVCContactForm(forms.Form):
     twitter = forms.CharField(label='Twitter', max_length=100, required=True)
     instagram = forms.CharField(label='Instagram', max_length=100, required=True)
     youtube = forms.CharField(label='Youtube', max_length=100, required=True)
-    
+
 class NewEventForm(forms.ModelForm):
     class Meta:
         model = Event
@@ -78,3 +76,16 @@ class EditBarangForm(forms.ModelForm):
     class Meta:
         model = Inventory
         exclude = ('created_date','updated_date',)
+
+class NewNoteMeet(forms.ModelForm):
+    title = forms.CharField(label='Judul', max_length=100, required=True)
+    note = forms.CharField(label='Catatan', required=True)
+    class Meta:
+        model = Meeting
+        exclude =('created_date', 'updated_date',)
+
+class EditNoteMeet(forms.ModelForm):
+
+    class Meta:
+         model = Meeting
+         exclude = ('title',)

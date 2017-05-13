@@ -1,5 +1,6 @@
 {% load staticfiles %}
 {% load footer_dynamic %}
+{% load permission_tags %}
 <html>
 
 <head>
@@ -41,6 +42,9 @@
       .right{
         text-align: right;
       }
+      .jabatan{
+        text-transform: uppercase;
+      }
       .table {
         font-size: 14px;
       }
@@ -65,32 +69,32 @@
                 <a href="{% url 'manajemen:index' %}">
                     <br>Beranda</a>
             </li>
-            {% if user.profile.tipe_user == "hpd" or user.profile.tipe_user == "ketua/wakil"%}
+            {% if user|has_role:'hpd' %}
             <li {% if request.resolver_match.url_name == 'home_hpd' %}class="active"{% endif %}>
                 <a href="{% url 'manajemen:home_hpd' %}"><br>HPD</a>
             </li>
             {% endif %}
-            {% if user.profile.tipe_user == "psdm" or user.profile.tipe_user == "ketua/wakil"%}
+            {% if user|has_role:'psdm' %}
             <li {% if request.resolver_match.url_name == 'home_psdm' %}class="active"{% endif %}>
                 <a href="{% url 'manajemen:home_psdm' %}"><br>PSDM</a>
             </li>
             {% endif %}
-            {% if user.profile.tipe_user == "tutor" or user.profile.tipe_user == "psdm" or user.profile.tipe_user == "ketua/wakil" %}
+            {% if user|has_role:'tutor' %}
             <li {% if request.resolver_match.url_name == 'home_tutor' %}class="active"{% endif %}>
                 <a href="{% url 'manajemen:home_tutor' %}"><br>Tutor</a>
             </li>
             {% endif %}
-            {% if user.profile.tipe_user == "bendahara" or user.profile.tipe_user == "ketua/wakil"%}
+            {% if user|has_role:'bendahara' %}
             <li {% if request.resolver_match.url_name == 'home_keuangan' %}class="active"{% endif %}>
                 <a href="{% url 'manajemen:home_keuangan' %}"><br>Keuangan</a>
             </li>
             {% endif %}
-            {% if user.profile.tipe_user == "program" or user.profile.tipe_user == "ketua/wakil"%}
+            {% if user|has_role:'program' %}
             <li {% if request.resolver_match.url_name == 'home_acara' %}class="active"{% endif %}>
                 <a href="{% url 'manajemen:home_acara' %}"><br>Acara</a>
             </li>
             {% endif %}
-            {% if user.profile.tipe_user == "inventaris" or user.profile.tipe_user == "ketua/wakil"%}
+            {% if user|has_role:'inventaris' %}
             <li {% if request.resolver_match.url_name == 'home_inventaris' %}class="active"{% endif %}>
                 <a href="{% url 'manajemen:home_inventaris' %}"><br>Inventaris</a>
             </li>

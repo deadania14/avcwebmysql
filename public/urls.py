@@ -20,5 +20,5 @@ urlpatterns = [
     #/myprofile
     url(r'^profile/$', views.myprofile, name="myprofile"),
     #/edit profile
-    url(r'^update_profile/(?P<pk>[\-\w]+)/$', views.edit_user, name="edit_profile"),
+    url(r'^update_profile/(?P<pk>[0-9]+)/$', views.edit_user, name="edit_profile"),
 ]

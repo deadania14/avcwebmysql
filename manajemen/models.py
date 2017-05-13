@@ -42,7 +42,7 @@ class Practice(models.Model):
     class Meta:
         ordering =['-date',]
     def __str__(self):
-        return "{}".format(self.date.date())
+        return "{} {}".format(self.date.date(),self.date.time() )
 
 class Kelas(models.Model):
     nama_kelas = models.CharField(default='', max_length=50)
@@ -70,6 +70,15 @@ class Kelas(models.Model):
         )
         return schedule_class_three_months_ago.count()
 
+class LogKelas(models.Model):
+    kelas_current = models.ForeignKey(Kelas, related_name= 'log_kelas_current')
+    user = models.ForeignKey(User, related_name='log_kelas_user')
+    kelas_before = models.ForeignKey(Kelas, related_name='log_kelas_before')
+    joined_date = models.DateTimeField(
+        default = timezone.now
+        )
+    class Meta:
+        ordering =['-joined_date',]
 
 class PracticeAttendance(models.Model):
     kelas = models.ForeignKey(Kelas, related_name="practice_attendances", null=True)
@@ -144,3 +153,13 @@ class Inventory(models.Model):
     def update(self):
         self.updated_date = timezone.now()
         self.save()
+
+class Meeting(models.Model):
+    title = models.CharField(max_length=40)
+    note = models.TextField()
+    created_date = models.DateField(
+        default = timezone.now
+    )
+    updated_date = models.DateField(
+        default = timezone.now
+    )

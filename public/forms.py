@@ -93,6 +93,10 @@ class AdministrasiForm(forms.ModelForm):
         fields = ('method',)
 
 class UserProfileEditForm(forms.ModelForm):
+    photo = forms.ImageField(label='Foto Profil', help_text='', required=False)
+    phone = IDPhoneNumberField()
+    address = forms.CharField(label='Alamat Domisili', help_text='', required=True)
+    about = forms.CharField(label='Tentang Anda', help_text='pekerjaan, atau kesibukan sehari-hari', required=True)
     class Meta:
-        model = User
-        fields = ['email']
+        model = UserProfile
+        fields = ['phone', 'address','photo', 'about']

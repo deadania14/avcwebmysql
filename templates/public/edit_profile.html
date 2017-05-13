@@ -10,14 +10,15 @@ Pengaturan
 </div>
 {% endblock %}
 {% block content %}
-
-<div class= "x_content">
-  <form method="POST" class="left">
-    {% csrf_token %} {{ noodle_form.as_p }}
-    <div class="divider"></div>
-    {{ formset.management_form }}
-    {{ formset.as_p }}
-    <button type="submit" >Simpan</button>
-  </form>
+<div class= "col-md-4"></div>
+<div class= "col-md-4 col-md-12">
+  <div class= "x_content">
+    <form method="POST" class="left" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="divider"></div>
+        {% bootstrap_form form_edit_profile %}
+      <button class = "btn btn-primary" type="submit" >Simpan</button>
+    </form>
+  </div>
 </div>
 {% endblock %}

@@ -16,8 +16,12 @@ def index(request):
     if request.user.profile.tipe_user == 'member':
         return HttpResponseRedirect(reverse('public:index'))
     context={}
-    manajemen_user_query = UserProfile.objects.exclude(tipe_user='member')
-    context['manajemen_people']=manajemen_user_query
+    member_user_query = UserProfile.objects.filter(tipe_user='member').filter(user__is_active=True)
+    context['members'] = member_user_query
+    tutor_user_query = UserProfile.objects.filter(tipe_user='tutor')
+    context['tutors'] = tutor_user_query
+    manajemen_user_query = UserProfile.objects.filter(user__groups__name='manajemen')
+    context['manajemens']=manajemen_user_query
     return render(request, 'manajemen/index.html', context)
 
 @has_role_decorator('hpd')
@@ -221,6 +225,7 @@ def edit_kelas(request, kelas_id):
     if request.method=="POST":
         form_edit_kelas = ClassForm(request.POST, instance = nclass)
         if form_edit_kelas.is_valid():
+            nclass = form_edit_kelas
             nclass.updated_date= timezone.now()
             nclass.save()
             return HttpResponseRedirect(reverse('manajemen:home_psdm',))

@@ -13,8 +13,8 @@ from django.utils import timezone
 from django.urls import reverse
 from manajemen.models import Article, Administrasi, AdministrationType, PracticeAttendance, Kelas
 from public.models import SettingsVariable
-from .models import Event, Slider, UserProfile
-from .forms import EventForm, UserForm, UserProfileForm, UserProfileEditForm, AdministrasiForm, UserRegister
+from .models import Event, Slider, UserProfile, Kelas
+from .forms import EventForm, UserForm, UserProfileForm,  UserProfileEditForm, AdministrasiForm, UserRegister
 
 def index(request):
     context={}
@@ -45,19 +45,32 @@ def contact(request):
     return render(request, 'public/contact_us.html', context)
 
 def register(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('public:index',))
     registered = False
     if request.method == 'POST':
         regis_form = UserRegister(data = request.POST)
         user_form = UserForm(data = request.POST)
         profile_form = UserProfileForm(data = request.POST)
         administrasi_form = AdministrasiForm(data = request.POST)
+
         if user_form.is_valid() and profile_form.is_valid and regis_form.is_valid and administrasi_form.is_valid:
             user = user_form.save(commit = False)
+            if user_form.cleaned_data['password1'] != user_form.cleaned_data['password2']:
+                user_form.add_error('password1', u"Password tidak sama")
+                context={'regis_form' : regis_form, 'user_form' : user_form, 'profile_form' : profile_form,
+                'administrasi_form' : administrasi_form,
+                'registered' : registered}
+                condition_query = Article.objects.get(title="Syarat dan Ketentuan")
+                context['conditions'] = condition_query
+                return render (request, 'public/register.html', context)
+
+
+
             user.set_password(user.password)
             regis = regis_form.save(commit = False)
             user.first_name= regis.first_name
             user.last_name = regis.last_name
-            user.save()
 
             #email
             subject = 'terima kasih telah mendaftar'
@@ -65,17 +78,19 @@ def register(request):
             from_email = settings.EMAIL_HOST_USER
             to_list = [user.email, settings.EMAIL_HOST_USER]
             send_mail(subject, message, from_email, to_list, fail_silently = True)
-
+            kelas= Kelas.objects.get(nama_kelas='Basic')
             profile = profile_form.save(commit = False)
+            profile.user_kelas = kelas
+            user.save()
             profile.user = user
             if 'photo' in request.FILES :
                 profile.photo = request.FILES['photo']
-            profile.save()
             registered = True
             administrasi = administrasi_form.save(commit = False)
             regis_pay = AdministrationType.objects.get(paymentstype="Registration and First Dues")
             administrasi.jenis = regis_pay
             administrasi.user = user
+            profile.save()
             administrasi.save()
 
         else:
@@ -135,11 +150,8 @@ def settingsvalue(request):
 
 @login_required
 def myprofile(request):
-    #if request.user.profile.tipe_user != 'member':
-        #return HttpResponseRedirect(reverse('manajemen:index'))
     context={}
     administrasi_query = Administrasi.objects.filter(user = request.user)
-    #add kondisi sesuai dengan username yang aktif
     context['adminitrasis'] = administrasi_query
     kelas_query = Kelas.objects.filter(user= request.user)
     context['kelas'] = kelas_query
@@ -149,30 +161,14 @@ def myprofile(request):
     return render(request, 'public/myprofile.html', context)
 
 def edit_user(request, pk):
-    user = User.objects.get(pk=pk)
-    user_form = UserProfileEditForm(instance=user)
-
-    ProfileInlineFormset = inlineformset_factory(User, UserProfile, fields=('phone', 'address', 'photo'))
-    formset = ProfileInlineFormset(instance=user)
-
-    if request.user.is_authenticated() and request.user.id == user.id:
-        if request.method == "POST":
-            user_form = UserProfileEditForm(request.POST, request.FILES, instance=user)
-            formset = ProfileInlineFormset(request.POST, request.FILES, instance=user)
-
-            if user_form.is_valid():
-                created_user = user_form.save(commit=False)
-                formset = ProfileInlineFormset(request.POST, request.FILES, instance=created_user)
-
-                if formset.is_valid():
-                    created_user.save()
-                    formset.save()
-                    return HttpResponseRedirect(reverse('public:myprofile'))
-
-        return render(request, "public/edit_profile.html", {
-            "noodle": pk,
-            "noodle_form": user_form,
-            "formset": formset,
-        })
+    user = get_object_or_404(UserProfile, pk=pk)
+    if request.method == "POST":
+        form_edit_profile = UserProfileEditForm(request.POST, instance = user)
+        if form_edit_profile.is_valid():
+            userprofile = form_edit_profile.save(commit=False)
+            userprofile.updated_date= timezone.now()
+            userprofile.save()
+            return HttpResponseRedirect(reverse('public:myprofile'))
     else:
-        raise PermissionDenied
+        form_edit_profile = UserProfileEditForm(instance = user)
+        return render(request, "public/edit_profile.html", {'form_edit_profile':form_edit_profile})

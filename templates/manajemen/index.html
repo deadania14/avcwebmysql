@@ -4,10 +4,124 @@ Beranda - Manajemen
 {% endblock %}
 
 {% block content %}
-<p>ini homenya manajemen</p>
+<div class="col-md-12 col-sm-12 col-xs-12">
+  <div class="" role="tabpanel" data-example-id="togglable-tabs">
+    <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+      <li role="presentation" class="active"><a href="#tab_content1" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Pengurus</a>
+      </li>
+      <li role="presentation" class=""><a href="#tab_content2" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">Anggota</a>
+      </li>
+      <li role="presentation" class=""><a href="#tab_content3" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">Rapat</a>
+      </li>
+    </ul>
+    <div id="myTabContent" class="tab-content">
+      <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="x_content">
+              <div class="row">
+                <div class="clearfix"></div>
+                {% for manjs in manajemens %}
+                <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
+                  <div class="profile_view">
+                    <div class="col-sm-12">
+                      <p class="left jabatan"><i>{% for group in manjs.user.groups.all %}
+                        {{group}} {% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                      </i></p>
+                      {% if manjs.photo %}
+                      <img class="img-circle img-responsive" src="{{manjs.photo.url}}" height='150' width='150' alt="Avatar" title="Change the avatar">
+                      {% endif %}
+                      <h2>{{manjs.user}}</h2>
+                      <p><strong>About: </strong>
+                          {{manjs.about}}
+                      </p>
+                      <ul class="list-unstyled">
+                        <li><i class="fa fa-home"></i> Address: {{manjs.address}}</li>
+                        <li><i class="fa fa-phone"></i> Phone #: {{manjs.phone}}</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                {% if forloop.counter|divisibleby:3 %}
+                <div class="clearfix"></div>
+                {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="profile-tab">
+        <div class="col-md-6 col-xs-12">
+          <div class="x_title">
+            Daftar Anggota Aktif
+          </div>
+        <!-- start user projects -->
+        <table class="data table table-striped table-responsive no-margin">
+          <thead>
+            <tr>
+              <th>Nama</th>
+              <th>Gender</th>
+              <th>Kelas</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          {% for member in members %}
+          <tr>
+            <td>{{member.user}}</td>
+            <td>{{member.gender}}</td>
+            <td>{{member.user_kelas}}</td>
+            <td>{{member.profile.is_active}}</td>
+          </tr>
+          {% endfor %}
+          <tbody>
 
-<div class= "col-md-3">
+          </tbody>
+        </table>
+        <!-- end user projects -->
+        </div>
+        <!-- start user projects -->
+        <table class="data table table-striped table-responsive no-margin">
+          <thead>
+            <tr>
+              <th>Nama</th>
+              <th>Gender</th>
+              <th>Kelas</th>
+            </tr>
+          </thead>
+          {% for member in members %}
+          <tr>
+            <td>{{member.user}}</td>
+            <td>{{member.gender}}</td>
+            <td>{{member.user_kelas}}</td>
+          </tr>
+          {% endfor %}
+          <tbody>
 
+          </tbody>
+        </table>
+        <!-- end user projects -->
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="tab_content3" aria-labelledby="profile-tab">
+        <!-- start user projects -->
+        <table class="data table table-striped table-responsive no-margin">
+          <thead>
+            <tr>
+              <th>Tanggal</th>
+              <th>Aksi</th>
+              <th>Tanggal</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+
+          </tbody>
+        </table>
+        <!-- end user projects -->
+      </div>
+    </div>
+  </div>
 </div>
-{{request.resolver_match.url_name}}
 {% endblock %}

@@ -49,6 +49,7 @@ class Event(models.Model):
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name= "profile")
+    user_kelas = models.OneToOneField(Kelas, related_name="kelas", null=True, blank=True)
     gender_choices = (
         ('wanita', 'Wanita',),
         ('pria', 'Pria',),
@@ -56,19 +57,13 @@ class UserProfile(models.Model):
     tipe_user_choices = (
         ('member', 'Member',),
         ('tutor', 'Tutor',),
-        ('ketua/wakil', 'Ketua/Wakil',),
-        ('sekretaris', 'Sekretaris',),
-        ('bendahara', 'Bendahara',),
-        ('hpd', 'HPD'),
-        ('psdm', 'PSDM'),
-        ('inventaris', 'Inventaris',),
-        ('program','Program',),
     )
     tipe_user = models.CharField(max_length = 20, default = "member", choices=tipe_user_choices)
     gender = models.CharField(max_length = 10, default = "pria", choices= gender_choices)
     phone = models.CharField(max_length=20)
     address = models.TextField()
-    plbirth = models.CharField(max_length=40, null=True)
+    about = models.TextField(null=True, blank=True)
+    plbirth = models.CharField(max_length=40, null=True, blank = True)
     date_birth = models.DateField(blank = True, null= True)
     photo = models.ImageField(null=True, blank=True, upload_to='images/profile_images')
     update_time = models.DateTimeField(
