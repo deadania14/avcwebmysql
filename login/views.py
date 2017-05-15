@@ -10,10 +10,8 @@ from django.urls import reverse
 def user_login(request):
     logged_in = True
     if request.user.is_authenticated():
-        if request.user.profile.tipe_user == 'member':
-            return HttpResponseRedirect(reverse('member:index'))
-        else:
-            return HttpResponseRedirect(reverse('manajemen:index'))
+        return HttpResponseRedirect(reverse('public:index'))
+
 
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -24,7 +22,7 @@ def user_login(request):
             if user.is_active:
                 login(request, user)
                 if user.profile.tipe_user == 'member':
-                    return HttpResponseRedirect(reverse('member:index'))
+                    return HttpResponseRedirect(reverse('public:index'))
                 else:
                     return HttpResponseRedirect(reverse('manajemen:index'))
 
@@ -45,7 +43,7 @@ def some_view(request):
         return HttpResponse("You are not Logged in.")
 
 def permission_denied(request):
-    return render(request, 'manajemen/403.html', {})
+    return render(request, 'login/403.html', {})
 
 def bad_request(request):
     return render(request, 'login/400.html', {})
@@ -80,3 +78,15 @@ def change_password(request):
     return render(request, 'login/change_password.html', {
         'form': form
     })
+
+def permission_denied(request):
+    return render(request, 'login/403.html', {})
+
+def bad_request(request):
+    return render(request, 'login/400.html', {})
+
+def page_not_found(request):
+    return render(request, 'login/404.html', {})
+
+def server_error(request):
+    return render(request, 'login/500.html', {})

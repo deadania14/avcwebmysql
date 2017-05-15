@@ -26,7 +26,7 @@ class MainArticleForm(forms.ModelForm):
 
 class SchedulesForm(forms.ModelForm):
     date = forms.SplitDateTimeField(label='Tanggal Latihan', required=True, widget=AdminSplitDateTime)
-    place = forms.CharField(label='Tempat', max_length=100, required=True)
+    place = forms.CharField(label='Tempat', required=True)
 
     class Meta:
         model = Practice
@@ -135,18 +135,24 @@ class EditEventForm(forms.ModelForm):
 
 class NewBarangForm(forms.ModelForm):
     thingsname = forms.CharField(label='Nama Barang', required=True)
-    detail = forms.CharField(label='Keterangan', required=True)
-    note = forms.CharField(label='Catatan', required=True)
+    detail = forms.CharField(label='Keterangan', widget=forms.Textarea, required=True)
+    note = forms.CharField(label='Catatan', widget=forms.Textarea, required=True)
     class Meta:
         model = Inventory
         exclude = ('created_date','updated_date',)
+        widget = {
+             'note': Textarea(attrs={'cols': 80, 'rows': 20}),
+        }
 
 class EditBarangForm(forms.ModelForm):
-    detail = forms.CharField(label='Keterangan', required=True)
-    note = forms.CharField(label='Catatan', required=True)
+    detail = forms.CharField(label='Keterangan', widget=forms.Textarea, required=True)
+    note = forms.CharField(label='Catatan', widget=forms.Textarea, required=True)
     class Meta:
         model = Inventory
         exclude = ('thingsname','created_date','updated_date',)
+        widget = {
+             'note': Textarea(attrs={'cols': 80, 'rows': 20}),
+        }
 
 
 class NewMeetingForm(forms.ModelForm):

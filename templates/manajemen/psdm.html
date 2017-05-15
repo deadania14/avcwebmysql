@@ -46,7 +46,7 @@
                           {{user_profile.user.date_joined.date}}
                         {% endif %}
                       </td>
-                      <td><a class="btn	btn-warning" href="{%	url	'manajemen:move_class' user_profile.id %}"><span	class="glyphicon	glyphicon-pencil"></span></a></td>
+                      <td><a class="btn	btn-warning btn-sm" href="{%	url	'manajemen:move_class' user_profile.id %}"><span	class="glyphicon	glyphicon-pencil"></span> Ubah</a></td>
                   </tr>
                   {% endfor %}
               </tbody>
@@ -75,7 +75,7 @@
                     <tr>
                         <td>{{kelas.nama_kelas}}</td>
                         <td><strong>{{kelas.updated_date}}</strong></td>
-                        <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal{{kelas.id}}">Lihat</button></td>
+                        <td><button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal{{kelas.id}}"><span	class="fa fa-folder"></span> Lihat</button></td>
                     </tr>
                     <!-- Modal -->
                     <div id="myModal{{kelas.id}}" class="modal fade" role="dialog">
@@ -117,19 +117,19 @@
                     <tr>
                         <th>Kelas</th>
                         <th>Tanggal</th>
-                        <th>Actions</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for presenting in presents %}
                     <tr>
                         <td>{{presenting.kelas}}</td>
-                        <td>{{presenting.practice}}</td>
+                        <td>{{presenting.practice.date.date}}</td>
                         <td>
+                          <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModalAttendanceDetails{{presenting.id}}"><span	class="fa fa-folder"> </span> Lihat</button>
                           {% if now <= presenting.practice.date.date %}
-                            <a class="btn	btn-warning" href="{%	url	'manajemen:edit_attendance'	presenting.id %}"><span	class="glyphicon	glyphicon-pencil"></span></a>
+                            <a class="btn	btn-warning btn-sm" href="{%	url	'manajemen:edit_attendance'	presenting.id %}"><span	class="glyphicon	glyphicon-pencil"></span> Ubah</a>
                           {% endif %}
-                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModalAttendanceDetails{{presenting.id}}">Lihat</button>
                         <td>
                     </tr>
                     <!-- Modal -->
@@ -142,9 +142,32 @@
                                     <h4 class="modal-title">Absensi - {{presenting.kelas}} - {{presenting.practice.date}} -  {{presenting.practice.place}}</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <h4>Member yang hadir: </h4>
-                                    <!-- member yang hadir dan tutor yang hadir -->
-                                    {% for user in presenting.is_present.all %} <ul>{{user}}</ul> {% endfor %}
+                                  <div class = "col-md-4">
+                                    <b>Tutor</b>
+                                  </div>
+                                  <div class = "col-md-8">
+                                    {{presenting.tutor}}
+                                  </div>
+                                  {% if presenting.tutor_pendamping %}
+                                  <div class = "col-md-4">
+                                    <b>Tutor Pendamping</b>
+                                  </div>
+                                  <div class = "col-md-8">
+                                    {{presenting.tutor_pendamping}}
+                                  </div>
+                                  <div class = "clearfix"></div>
+                                  {% endif %}
+                                  <br/>
+                                  <div class = "col-md-4">
+                                    <b>Member yang hadir</b>
+                                  </div>
+                                  <div class = "col-md-8">
+                                    {% for user in presenting.is_present.all %}
+                                    <ul>{{user}}</ul>
+                                    {% endfor %}
+                                  </div>
+                                  <div class = "clearfix"></div>
+                                  <br/>
                                 </div>
                                 <div class="modal-footer">
                                       <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
@@ -178,10 +201,10 @@
                     <tr>
                         <td>{{practice.date}}</td>
                         <td>{{practice.place}}</td>
-                        <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModalDetails{{practice.id}}">Lihat</button>
+                        <td><button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModalDetails{{practice.id}}"><span	class="fa fa-folder"></span> Lihat</button>
                             {% if now <= practice.date.date %}
-                            <a class="btn	btn-warning" href="{%	url	'manajemen:edit_schedule'	practice.id	%}"><span	class="glyphicon	glyphicon-pencil"></span></a>
-                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModalHapus{{practice.id}}"><span	class="glyphicon	glyphicon-trash"></span></button>
+                            <a class="btn	btn-warning btn-sm" href="{%	url	'manajemen:edit_schedule'	practice.id	%}"><span	class="glyphicon	glyphicon-pencil"></span> Ubah</a>
+                            <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModalHapus{{practice.id}}"><span	class="glyphicon	glyphicon-trash"></span> Hapus</button>
                             {% endif %}
                         </td>
                     </tr>
@@ -201,8 +224,8 @@
                                         <small>{{practice.place}}</small></p>
                                 </div>
                                 <div class="modal-footer">
-                                    <a href="{% url 'manajemen:delete_schedule' practice.id %}"><button type="button" class="btn btn-danger">Delete</button></a>
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <a href="{% url 'manajemen:delete_schedule' practice.id %}"><button type="button" class="btn btn-danger">Hapus</button></a>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
                                 </div>
                             </div>
                         </div>

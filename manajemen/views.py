@@ -54,6 +54,7 @@ def new_meeting(request):
         if form_new_meeting.is_valid():
             nmeeting = form_new_meeting.save(commit=False)
             nmeeting.created_date= timezone.now()
+            form_new_meeting.save_m2m()
             cek_practice_date = Meeting.objects.filter(date_meet=nmeeting.date_meet)
             if cek_practice_date:
                 form_new_meeting.add_error('date_meet', u"Catatan Sudah Ada")
@@ -72,6 +73,7 @@ def edit_meeting(request, meeting_id):
         if form_edit_meeting.is_valid():
             meeting = form_edit_meeting.save(commit = False)
             meeting.updated_date= timezone.now()
+            form_edit_meeting.save_m2m()
             meeting.save()
             return HttpResponseRedirect(reverse('manajemen:home_sekretaris', ))
     else :
@@ -248,7 +250,6 @@ def edit_attendance(request, attendance_id):
     form_edit_absensi.fields['is_present'].queryset = npresent.daftar_orang.all()
     form_edit_absensi.fields['tutor_pendamping'].queryset = User.objects.filter(profile__tipe_user='tutor').exclude(id=npresent.tutor.id)
     return render(request, 'manajemen/edit_attendance.html', {'form_edit_absensi':form_edit_absensi})
-
 
 def new_attendance_kelas(request):
     if request.method=="POST":
@@ -458,6 +459,11 @@ def edit_mainarticle(request, article_id):
         form_edit_article = MainArticleForm(instance = narticle)
     return render(request, 'manajemen/edit_article.html', {'form_edit_article':form_edit_article})
 
+def delete_article(request, article_id):
+    article_query = Article.objects.get(id=article_id)
+    article_query.delete()
+    return HttpResponseRedirect(reverse('manajemen:home_hpd'))
+
 def detail_article(request, article_id):
     context={}
     articleid_query= get_object_or_404(Article, id=article_id)
@@ -501,19 +507,14 @@ def edit_contact(request):
         form_edit_contact = AVCContactForm(initial = default_data)
     return render(request, 'manajemen/edit_contact.html', {'form_edit_contact':form_edit_contact})
 
-def edit_user(request, user_id):
-    context={}
-    return render(request, 'manajemen/edit_user.html', {})
+def permission_denied(request):
+    return render(request, 'login/403.html', {})
 
-# def edit_kelas(request, kelas_id):
-#     nclass = get_object_or_404(Kelas, id=kelas_id)
-#     if request.method=="POST":
-#         form_edit_kelas = ClassForm(request.POST, instance = nclass)
-#         if form_edit_kelas.is_valid():
-#             nclass = form_edit_kelas
-#             nclass.updated_date= timezone.now()
-#             nclass.save()
-#             return HttpResponseRedirect(reverse('manajemen:home_psdm',))
-#     else :
-#         form_edit_kelas = ClassForm(instance = nclass)
-#     return render(request, 'manajemen/edit_class.html', {'form_edit_kelas':form_edit_kelas})
+def bad_request(request):
+    return render(request, 'login/400.html', {})
+
+def page_not_found(request):
+    return render(request, 'login/404.html', {})
+
+def server_error(request):
+    return render(request, 'login/500.html', {})

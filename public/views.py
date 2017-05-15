@@ -169,3 +169,15 @@ def edit_user(request, pk):
     else:
         form_edit_profile = UserProfileEditForm(instance = user)
         return render(request, "public/edit_profile.html", {'form_edit_profile':form_edit_profile})
+
+def permission_denied(request):
+    return render(request, 'login/403.html', {})
+
+def bad_request(request):
+    return render(request, 'login/400.html', {})
+
+def page_not_found(request):
+    return render(request, 'login/404.html', {})
+
+def server_error(request):
+    return render(request, 'login/500.html', {})

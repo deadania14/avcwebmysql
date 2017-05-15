@@ -33,7 +33,7 @@ Acara
                   <th>Perusahaan</th>
                   <th>Tanggal Acara</th>
                   <th>Status</th>
-                  <th>Action</th>
+                  <th>Aksi</th>
               </tr>
           </thead>
           <tbody>
@@ -44,15 +44,15 @@ Acara
                   <td>{{event.event_date}}</td>
                   <th>{{event.event_status}}</th>
                   <td>
+                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModalDetail{{event.id}}"><span	class="fa fa-folder"></span> Lihat</button>
                     {% if event.event_status == "waiting" %}
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalConfirm{{event.id}}">Confirm</button>
-                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModalCancelled{{event.id}}">Cancelled</button>
+                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModalConfirm{{event.id}}"><i class="fa fa-check"></i> Konfirmasi</button>
+                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModalCancelled{{event.id}}"><i class="fa fa-times"></i> Batalkan</button>
                     {% elif event.event_status == "deal"  %}
-                    <a class="btn	btn-warning" href="{%	url	'manajemen:edit_event'	event.id	%}"><span	class="glyphicon	glyphicon-pencil"></span></a>
+                    <a class="btn	btn-warning btn-sm" href="{%	url	'manajemen:edit_event'	event.id	%}"><span	class="glyphicon	glyphicon-pencil"></span> Ubah</a>
                     {% else %}
-                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModalHapusEvent{{event.id}}"><span	class="glyphicon	glyphicon-trash"></span></button>
+                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModalHapusEvent{{event.id}}"><span	class="glyphicon	glyphicon-trash"></span> Hapus</button>
                     {% endif %}
-                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModalDetail{{event.id}}">Details</button>
                   </td>
               </tr>
               <!-- Modal Confirm-->
@@ -62,15 +62,15 @@ Acara
                   <div class="modal-content">
                     <div class="modal-header">
                       <button type="button" class="close" data-dismiss="modal">&times;</button>
-                      <h4 class="modal-title">Konfirmasi Penerimaan Kerja Sama Acara</h4>
+                      <h4 class="modal-title">Konfirmasi "{{event.event_name}}" oleh-"{{event.sender}}"</h4>
                     </div>
-                    <div class="modal-body">
-                      <p>Apakah Anda yakin telah menerima penawaran<h3>{{event.event_name}}</h3> oleh saudara
-                      <h4>{{event.sender}}</h4> ? </p>
+                    <div class="modal-body center">
+                      <p>Apakah Anda yakin untuk menerima penawaran<h3>{{event.event_name}}</h3> oleh saudara
+                      <h4>{{event.sender}} ? </h4></p>
                     </div>
                     <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
                       <a href="{% url 'manajemen:confirmation_event' event.id %}"><button type="button" class="btn btn-primary">Ya</button></a>
-                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
                   </div>
                 </div>
@@ -89,8 +89,8 @@ Acara
                       <h4>{{event.sender}}</h4> ? </p>
                     </div>
                     <div class="modal-footer">
-                      <a href="{% url 'manajemen:cancel_event' event.id %}"><button type="button" class="btn btn-primary">Ya</button></a>
-                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                      <a href="{% url 'manajemen:cancel_event' event.id %}"><button type="button" class="btn btn-danger">Ya</button></a>
                     </div>
                   </div>
                 </div>
@@ -102,19 +102,54 @@ Acara
                   <div class="modal-content">
                     <div class="modal-header">
                       <button type="button" class="close" data-dismiss="modal">&times;</button>
-                      <h4 class="modal-title">{{event.event_name}}</h4>
+                      <h4 class="modal-title">Detail Acara -"{{event.event_name}}"</h4>
                     </div>
                     <div class="modal-body">
-                      <h3>{{event.corporate}}</h3>
-                      <p>{{event.desc}}</p>
-                      <p>tanggal pelaksanaan : <h4>{{event.event_date}}</h4></p>
-                      <p>{{event.attachment }}</p>
-                      <p>
-                        {% if event.image %}
-                          <img src="{{event.image.url}}" height='150' width='150'>
+                      <div class = "col-md-4">
+                        <b>Perusahaan Pengirim</b>
+                      </div>
+                      <div class = "col-md-8">{{event.corporate}}</div>
+                      <div class = "clearfix"></div>
+                      <br/>
+                      <div class = "col-md-12">
+                      {% if event.image %}
+                        <img src="{{event.image.url}}">
+                      {% endif %}
+                      </div>
+                      <br/>
+                      <div class = "col-md-12">
+                        <b>Deskripsi</b>
+                      </div>
+                      <br/>
+                      <div class = "col-md-12">
+                        {{event.desc}}
+                      </div>
+                      <div class = "clearfix"></div>
+                      <br/>
+                      <div class = "col-md-4">
+                        <b>Tautan</b>
+                      </div>
+                      <div class = "col-md-8">
+                        {% if event.attachment %}
+                        {{event.attachment}}
+                        {% else %}
+                        -Tidak ada Tautan-
                         {% endif %}
-                      </p>
-                      <p>Dikirim oleh {{event.sender}} - {{event.phone}} - <strong>{{event.event_status}}</strong></p>
+                      </div>
+                      <div class = "clearfix"></div>
+                      <br/>
+                      <div class = "col-md-4">
+                        <b>Tanggal Acara</b>
+                      </div>
+                      <div class = "col-md-8">{{event.event_date}}</div>
+                      <div class = "clearfix"></div>
+                      <br/>
+                      <div class = "col-md-12">
+                        <p>Oleh {{event.sender}} - {{event.phone}}</p>
+                      </div>
+                      <div class = "col-md-12 center">
+                        <h3>{{event.event_status}}</h3></div>
+                      <div class = "clearfix"></div>
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -132,7 +167,7 @@ Acara
                               <h4 class="modal-title">Hapus Acara - {{event.event_name}}</h4>
                           </div>
                           <div class="modal-body">
-                              <p>Apakah Anda yakin untuk menghapus Acara <b>{{event.event_name}}</p>
+                              <p>Apakah Anda yakin untuk menghapus Acara <b>{{event.event_name}}</b></p>
                                   <h3>{{event.event_date}} </h3>
                                   <small>oleh <b>{{event.corporate}}</small></b></p>
                           </div>

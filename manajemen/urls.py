@@ -3,18 +3,18 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
-    #edit_user
-    url(r'^edit_user/(?P<user_id>[0-9]+)/$', views.edit_user, name='edit_user'),
-
-    #HPD V
+    
+    #HPD
     url(r'^hpd/$', views.home_hpd, name='home_hpd'),
-    #/new_article V
+    #/new_article
     url(r'^hpd/article/new/$', views.new_article, name='new_article'),
-    #/article_detail V
+    #/article_detail
     url(r'^hpd/article/detail-(?P<article_id>[0-9]+)/$', views.detail_article, name='detail_article'),
-    #/article_edit V
+    #/article_edit
     url(r'^hpd/article/detail-(?P<article_id>[0-9]+)/edit/$', views.edit_article, name='edit_article'),
     url(r'^hpd/main-article/detail-(?P<article_id>[0-9]+)/edit/$', views.edit_mainarticle, name='edit_mainarticle'),
+    #/article_delete
+    url(r'^hpd/delete_schedule/(?P<article_id>[0-9]+)/$', views.delete_article, name='delete_article'),
     #/edit_contact
     url(r'^hpd/contact/edit/$', views.edit_contact, name='edit_contact'),
 
