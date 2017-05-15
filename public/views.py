@@ -3,9 +3,12 @@ from django.conf import settings
 from django.core.mail import send_mail, BadHeaderError
 from django.core.mail import send_mail
 from django.core.mail import EmailMultiAlternatives
-from django.core.exceptions import PermissionDenied
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core.exceptions import PermissionDenied
 from django.forms.models import inlineformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
 from django.http import HttpResponseRedirect

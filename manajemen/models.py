@@ -87,17 +87,23 @@ class PracticeAttendance(models.Model):
 
 class AdministrationType(models.Model):
     paymentstype = models.CharField(max_length = 50 )
-    nominal = models.IntegerField()
+    nominal = models.PositiveIntegerField()
     created_date = models.DateTimeField(
         default = timezone.now
     )
+    updated_date = models.DateField(
+    blank = True, null = True
+    )
     def __str__(self):
         return self.paymentstype
+    def update(self):
+        self.updated_date = timezone.now()
+        self.save()
 
 class AdministrasiManager(models.Manager):
     def get_saldo(self):
-        saldo = self.filter(status='paid').aggregate(Sum('jenis__nominal'))
-        return saldo['jenis__nominal__sum']
+        saldo = self.filter(status='paid').aggregate(Sum('nominal'))
+        return saldo['nominal__sum']
 
 class Administrasi(models.Model):
     method_choices= (
@@ -111,6 +117,7 @@ class Administrasi(models.Model):
     )
     user = models.ForeignKey(User, related_name="administrasi", null = True)
     jenis = models.ForeignKey(AdministrationType,related_name= "administrasi_jenis", null = True)
+    nominal = models.PositiveIntegerField(null=True)
     method = models.CharField(max_length=20, choices = method_choices, default= 'cash')
     image = models.ImageField(null=True, blank=True, upload_to='images/bukti_payments')
     status = models.CharField(max_length=20, choices = status_choices, default= 'pending')

@@ -19,7 +19,8 @@ Jadwal Latihan
 
 
 <script type="text/javascript" src="/static/admin/js/calendar.js"></script>
-<script type="text/javascript" src="/static/admin/js/admin/DateTimeShortcuts.js"></script>
+
+
 {% endblock %}
 {% block page_title %}
 <!-- Page Title -->
@@ -51,9 +52,14 @@ Jadwal Latihan
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
 var $j= jQuery.noConflict();
+
 $( document ).ready(function() {
   // $j( "#id_date" ).datepicker({dateFormat: 'yy-mm-dd'});
   // alert($j(".datetimeshortcuts").html());
+
+  $(".datetimeshortcuts").first().remove();
+
+
 
 } );
 

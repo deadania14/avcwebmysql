@@ -1,0 +1,29 @@
+{% extends 'manajemen/base.html' %}
+{% load footer_dynamic %}
+{% load bootstrap3 %}
+{% block title%}
+Pembayaran Baru
+{% endblock %}
+{% block page_title %}
+<!-- Page Title -->
+<div class="page-title-container">
+    <div class="container">
+        <div class="row">
+          <div class="col-sm-12 wow fadeIn">
+            <i class="fa fa-pencil-square"></i>
+            <h1><a href="{% url 'manajemen:home_keuangan' %}">Sekretaris</a> /</h1>
+            <p>Tipe Pembayaran Baru </p>
+          </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block content %}
+<div class ="col-md-8">
+  <br>
+  <form method="POST"> {% csrf_token %}
+    {% bootstrap_form form_new_payment_type %}
+    <button type="submit" class="save btn btn-primary">Simpan</button>
+  </form>
+</div>
+{% endblock %}

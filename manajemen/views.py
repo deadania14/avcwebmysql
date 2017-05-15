@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.models import User
 from .models import Article, Practice, Administrasi, Kelas, PracticeAttendance, Inventory, Meeting, AdministrationType, LogKelas
-from .forms import ArticleForm, MainArticleForm, SchedulesForm, EditUserClassForm, AbsensiForm, AbsensiPeopleForm, AVCContactForm, NewEventForm, EditBarangForm, AbsensiKelasForm, EditUser, NewMeetingForm, EditMeetingForm, NewBarangForm, EditEventForm, NewPaymentForm, EditPaymentForm, NewClassForm
+from .forms import ArticleForm, MainArticleForm, SchedulesForm, EditUserClassForm, AbsensiForm, AbsensiPeopleForm, AVCContactForm, NewEventForm, EditBarangForm, AbsensiKelasForm, EditUser, NewMeetingForm, EditMeetingForm, NewBarangForm, EditEventForm, NewPaymentForm, EditPaymentForm, NewClassForm, NewPaymentTypeForm, EditPaymentTypeForm
 from public.models import UserProfile, Event, SettingsVariable
 
 from rolepermissions.decorators import has_role_decorator
@@ -93,11 +93,37 @@ def home_bendahara(request):
     context['saldo'] = Administrasi.saldo.get_saldo()
     return render(request, 'manajemen/keuangan.html', context)
 
+def new_administration_type(request):
+    if request.method=="POST":
+        form_new_payment_type = NewPaymentTypeForm(request.POST)
+        if form_new_payment_type.is_valid():
+            npaymentipe = form_new_payment_type.save(commit = False)
+            npaymentipe.created_date= timezone.now()
+            npaymentipe.save()
+            return HttpResponseRedirect(reverse('manajemen:home_keuangan', ))
+    else :
+        form_new_payment_type = NewPaymentTypeForm()
+    return render(request, 'manajemen/new_payment_type.html', {'form_new_payment_type':form_new_payment_type})
+
+def edit_administration_type(request, payment_type_id):
+    edpaymentipe = get_object_or_404(AdministrationType, id=payment_type_id)
+    if request.method=="POST":
+        form_edit_payment_type= EditPaymentTypeForm(request.POST, instance = edpaymentipe)
+        if form_edit_payment_type.is_valid():
+            edpaymentipe = form_edit_payment_type.save(commit = False)
+            edpaymentipe.updated_date= timezone.now()
+            edpaymentipe.save()
+            return HttpResponseRedirect(reverse('manajemen:home_keuangan', ))
+    else :
+        form_edit_payment_type = EditPaymentTypeForm(instance = edpaymentipe)
+    return render(request, 'manajemen/edit_payment_type.html', {'form_edit_payment_type':form_edit_payment_type})
+
 def new_pembayaran(request):
     if request.method=="POST":
         form_new_payment = NewPaymentForm(request.POST)
         if form_new_payment.is_valid():
             npayment = form_new_payment.save(commit = False)
+            npayment.nominal = npayment.jenis.nominal
             npayment.created_date= timezone.now()
             npayment.save()
             return HttpResponseRedirect(reverse('manajemen:home_keuangan', ))
@@ -144,6 +170,22 @@ def home_psdm(request):
     context['now'] = today
     return render(request, 'manajemen/psdm.html', context)
 
+def move_class(request, user_id):
+    user = get_object_or_404(UserProfile, id=user_id)
+    today = timezone.now().date()
+    kelasbefore = user.user_kelas
+    if request.method=="POST":
+        form_move_user = EditUserClassForm(request.POST, instance=user)
+        if form_move_user.is_valid():
+            moveuser = form_move_user.save(commit = False)
+            logkelas = LogKelas.objects.create(kelas_current=moveuser.user_kelas, user=moveuser.user,
+                kelas_before=kelasbefore, joined_date= today)
+            moveuser.save()
+            return HttpResponseRedirect(reverse('manajemen:home_psdm', ))
+    else :
+        form_move_user = EditUserClassForm(instance=user)
+    return render(request, 'manajemen/move_user_class.html', {'form_move_user':form_move_user})
+
 def new_kelas(request):
     if request.method=="POST":
         form_new_kelas = NewClassForm(request.POST)
@@ -162,39 +204,12 @@ def new_schedule(request):
         print(form_edit_schedule)
         if form_edit_schedule.is_valid():
             nschedule = form_edit_schedule.save(commit = False)
-            nschedule.created_date= timezone.now()
+            nschedule.created_date = timezone.now()
             nschedule.save()
             return HttpResponseRedirect(reverse('manajemen:home_psdm', ))
     else :
         form_edit_schedule = SchedulesForm()
     return render(request, 'manajemen/edit_schedule.html', {'form_edit_schedule':form_edit_schedule})
-
-def move_class(request, user_id):
-    user = get_object_or_404(UserProfile, id=user_id)
-    today = timezone.now().date()
-    kelasbefore = user.user_kelas
-    if request.method=="POST":
-        form_move_user = EditUserClassForm(request.POST, instance=user)
-        if form_move_user.is_valid():
-            moveuser = form_move_user.save(commit = False)
-            logkelas = LogKelas.objects.create(kelas_current=moveuser.user_kelas, user=moveuser.user,
-                kelas_before=kelasbefore, joined_date= today)
-            moveuser.save()
-            return HttpResponseRedirect(reverse('manajemen:home_psdm', ))
-    else :
-        form_move_user = EditUserClassForm(instance=user)
-    return render(request, 'manajemen/move_user_class.html', {'form_move_user':form_move_user})
-
-def detail_schedule(request, schedule_id):
-    context={}
-    schedule_query= Practice.objects.get(id=schedule_id)
-    context['scheduleid'] = schedule_query
-    return render(request, 'manajemen/detail_schedule.html', context)
-
-def delete_schedule(request, schedule_id):
-    practice_query = Practice.objects.get(id=schedule_id)
-    practice_query.delete()
-    return HttpResponseRedirect(reverse('manajemen:home_psdm'))
 
 def edit_schedule(request, schedule_id):
     nschedule = get_object_or_404(Practice, id=schedule_id)
@@ -208,6 +223,17 @@ def edit_schedule(request, schedule_id):
     else :
         form_edit_schedule = SchedulesForm(instance = nschedule)
     return render(request, 'manajemen/edit_schedule.html', {'form_edit_schedule':form_edit_schedule})
+
+def detail_schedule(request, schedule_id):
+    context={}
+    schedule_query= Practice.objects.get(id=schedule_id)
+    context['scheduleid'] = schedule_query
+    return render(request, 'manajemen/detail_schedule.html', context)
+
+def delete_schedule(request, schedule_id):
+    practice_query = Practice.objects.get(id=schedule_id)
+    practice_query.delete()
+    return HttpResponseRedirect(reverse('manajemen:home_psdm'))
 
 def edit_attendance(request, attendance_id):
     npresent = get_object_or_404(PracticeAttendance, id=attendance_id)

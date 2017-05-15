@@ -21,6 +21,40 @@ Keuangan
 <br />
 <div class="col-md-12 col-sm-12 col-xs-12">
   <div class="x_panel">
+      <div class="x_title">
+        <h3>Jenis Pembayaran{% if user.is_authenticated %} ~<small>
+            <a href="{% url 'manajemen:new_administration_type' %}"> Tambah Baru</a>
+        </small>{% endif %}</h3>
+          <div class="clearfix"></div>
+      </div>
+      <div class="x_content">
+          <table class="table table-responsive">
+              <thead>
+                  <tr>
+                      <th>Tipe Administrasi </th>
+                      <th>Nominal Pembayaran</th>
+                      <th>Tanggal <i>Update</i></th>
+                      <th>Aksi</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {% for administrasi_type in adminitrasi_tipe %}
+                  <tr>
+                      <td>{{administrasi_type.paymentstype}}</td>
+                      <td>{{administrasi_type.nominal}}</td>
+                      <td>{{administrasi_type.updated_date}}</td>
+                      <td>
+                        <a class="btn	btn-warning" href="{%	url	'manajemen:edit_administration_type' administrasi_type.id %}"><span	class="glyphicon	glyphicon-pencil"></span></a>
+                      </td>
+                  </tr>
+                  {% endfor %}
+              </tbody>
+          </table>
+      </div>
+  </div>
+</div>
+<div class="col-md-12 col-sm-12 col-xs-12">
+  <div class="x_panel">
     <div class="x_title">
       <h3>Pembayaran{% if user.is_authenticated %} ~<small>
           <a href="{% url 'manajemen:new_pembayaran' %}"> Tambah Baru</a>
@@ -41,6 +75,7 @@ Keuangan
               <tr>
                   <th>Username</th>
                   <th>Jenis Pembayaran</th>
+                  <th>Nominal</th>
                   <th>Metode Pembayaran</th>
                   <th>Tanggal</th>
                   <th>Status</th>
@@ -52,6 +87,7 @@ Keuangan
               <tr>
                   <td>{{admn.user}}</td>
                   <td>{{admn.jenis.paymentstype}}</td>
+                  <td>{{admn.nominal}}</td>
                   <td>{{admn.method}}</td>
                   <td>{{admn.created_date}}</td>
                   <th>{{admn.status}}</th>

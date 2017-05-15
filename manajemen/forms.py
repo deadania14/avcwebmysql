@@ -25,9 +25,7 @@ class MainArticleForm(forms.ModelForm):
         'image',)
 
 class SchedulesForm(forms.ModelForm):
-    # date = forms.DateTimeField(label='Tanggal Latihan', required=True)
     date = forms.SplitDateTimeField(label='Tanggal Latihan', required=True, widget=AdminSplitDateTime)
-    # time = forms.TimeField(widget=AdminTimeWidget())
     place = forms.CharField(label='Tempat', max_length=100, required=True)
 
     class Meta:
@@ -197,9 +195,19 @@ class EditUser(forms.ModelForm):
 class NewPaymentForm(forms.ModelForm):
     class Meta:
         model = Administrasi
-        exclude = ['created_date', 'image',]
+        exclude = ['created_date', 'image','nominal',]
 
 class EditPaymentForm(forms.ModelForm):
     class Meta:
         model = Administrasi
         exclude = ['created_date', 'image',]
+
+class NewPaymentTypeForm(forms.ModelForm):
+    class Meta:
+        model = AdministrationType
+        exclude = ['created_date', 'updated_date',]
+
+class EditPaymentTypeForm(forms.ModelForm):
+    class Meta:
+        model = AdministrationType
+        exclude = ['paymentstype', 'created_date', 'updated_date',]
