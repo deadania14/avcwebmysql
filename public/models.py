@@ -45,8 +45,10 @@ class Event(models.Model):
 
     def __str__(self):
         return self.event_name
+    class Meta:
+        ordering =['-event_date',]
 
-
+BATAS_KELUAR = 60
 class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name= "profile")
     user_kelas = models.ForeignKey(Kelas, related_name="profiles", null=True, blank=True)
@@ -73,17 +75,21 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.username
 
+
+
     def schedule_last_three_months(self):
-        self_class = self.user_kelas
-        if self_class:
-            schedule_last_three_months = self_class.schedule_last_three_months()
-            return schedule_last_three_months
-        else:
-            return 0.0
+        today = timezone.now()
+        three_months_ago = today + timezone.timedelta(days=-BATAS_KELUAR)
+        attend_class = PracticeAttendance.objects.filter(daftar_orang=self.user)
+        attend_class_three_months_ago = attend_class.filter(
+            practice__date__gte=three_months_ago,
+            practice__date__lte=today
+        )
+        return attend_class_three_months_ago.count()
 
     def attend_last_three_months(self):
         today = timezone.now()
-        three_months_ago = today + timezone.timedelta(days=-130)
+        three_months_ago = today + timezone.timedelta(days=-BATAS_KELUAR)
         attend_class = PracticeAttendance.objects.filter(is_present=self.user)
         attend_class_three_months_ago = attend_class.filter(
             practice__date__gte=three_months_ago,
@@ -93,14 +99,12 @@ class UserProfile(models.Model):
 
     def attend_last_three_months_percent(self):
         attend_last_three_months =  self.attend_last_three_months()
-        self_class = self.user_kelas
-        if self_class:
-            schedule_last_three_months = self_class.schedule_last_three_months()
-            if schedule_last_three_months == 0:
-                return 0.0
+        schedule_last_three_months = self.schedule_last_three_months()
+        if schedule_last_three_months != 0:
+            return attend_last_three_months/schedule_last_three_months * 100
         else:
             return 0.0
-        return attend_last_three_months/schedule_last_three_months * 100
+
 
 def create_profile(sender, **kwargs):
     user = kwargs["instance"]

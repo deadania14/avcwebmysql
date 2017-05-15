@@ -1,0 +1,33 @@
+{% extends 'manajemen/base.html' %}
+{% load humanize %}
+{% load keuangan_dynamic %}
+{% load bootstrap3 %}
+{% block title%}
+Keuangan
+{% endblock %}
+{% block page_title %}
+<!-- Page Title -->
+<div class="page-title-container">
+    <div class="container">
+        <div class="row">
+          <div class="col-sm-12 wow fadeIn">
+            <i class="glyphicon glyphicon-save"></i>
+            <h1><a href="{% url 'manajemen:home_keuangan' %}">Keuangan </a>/ Hallo {{request.user.username}} !</h1>
+          </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block content %}
+<br />
+<div class="col-md-12 col-sm-12 col-xs-12">
+  <div class="x_content">
+    <form method="POST" class= "post-form" enctype="multipart/form-data">{% csrf_token %}
+      {% bootstrap_form form_new_payment %}
+      <button type="submit" class="save btn btn-primary" value="Submit">Simpan</button>
+    </form>
+  </div>
+</div>
+
+
+{% endblock %}

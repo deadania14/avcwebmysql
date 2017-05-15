@@ -11,18 +11,20 @@ Keuangan
         <div class="row">
           <div class="col-sm-12 wow fadeIn">
             <i class="glyphicon glyphicon-save"></i>
-            <h1><a href="{% url 'manajemen:home_keuangan' %}">Keuangan </a>/</h1>
-            <p> <i> Alliance Violin Community</i></p>
+            <h1><a href="{% url 'manajemen:home_keuangan' %}">Keuangan </a>/ Hallo {{request.user.username}} !</h1>
           </div>
         </div>
     </div>
 </div>
 {% endblock %}
 {% block content %}
+<br />
 <div class="col-md-12 col-sm-12 col-xs-12">
   <div class="x_panel">
     <div class="x_title">
-      <h3>Pembayaran~</h3>
+      <h3>Pembayaran{% if user.is_authenticated %} ~<small>
+          <a href="{% url 'manajemen:new_pembayaran' %}"> Tambah Baru</a>
+      </small>{% endif %}</h3>
       <div class="clearfix"></div>
     </div>
     <div class="x_content">
@@ -57,6 +59,8 @@ Keuangan
                     {% if admn.status == "pending" %}
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalConfirm{{admn.id}}">Confirm</button>
                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModalCancelled{{admn.id}}">Cancelled</button>
+                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModalHapusPayment{{admn.id}}">Hapus</button>
+
                     {% else %}
                     <p> - </p>
                     {% endif %}
@@ -101,6 +105,27 @@ Keuangan
                     </div>
                   </div>
                 </div>
+              </div>
+              <!-- Modal Hapus-->
+              <div id="myModalHapusPayment{{admn.id}}" class="modal fade" role="dialog">
+                  <div class="modal-dialog">
+                      <!-- Modal content-->
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal">&times;</button>
+                              <h4 class="modal-title">Hapus Acara - </h4>
+                          </div>
+                          <div class="modal-body">
+                              <p>Apakah Anda yakin untuk menghapus Acara <b></p>
+                                  <h3></h3>
+                                  <small>oleh <b></small></b></p>
+                          </div>
+                          <div class="modal-footer">
+                              <a href=""><button type="button" class="btn btn-danger">Delete</button></a>
+                              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                          </div>
+                      </div>
+                  </div>
               </div>
               {% endfor %}
           </tbody>

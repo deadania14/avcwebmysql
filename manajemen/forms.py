@@ -6,7 +6,7 @@ from django.forms.extras.widgets import SelectDateWidget
 from django.contrib.admin.widgets import AdminTimeWidget, AdminSplitDateTime
 from ajax_select.fields import AutoCompleteSelectField, AutoCompleteSelectMultipleField
 from ajax_select import make_ajax_field
-from .models import Article, Practice, Kelas, PracticeAttendance, Inventory, Meeting
+from .models import Article, Practice, Kelas, PracticeAttendance, Inventory, Meeting, Administrasi, AdministrationType
 from public.models import SettingsVariable, Event, UserProfile
 
 class ArticleForm(forms.ModelForm):
@@ -42,6 +42,13 @@ class ClassForm(forms.ModelForm):
 
 class AbsensiForm(forms.ModelForm):
     is_present = forms.ModelMultipleChoiceField(
+        label='Daftar Kehadiran',
+        queryset=User.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+    tutor_pendamping = forms.ModelMultipleChoiceField(
+        label='Asisten Tutor',
         queryset=User.objects.all(),
         widget=forms.CheckboxSelectMultiple,
         required=False
@@ -81,9 +88,37 @@ class AVCContactForm(forms.Form):
     youtube = forms.CharField(label='Youtube', required=True)
 
 class NewEventForm(forms.ModelForm):
+    event_name = forms.CharField(label='Nama Acara',  required=True)
+    desc = forms.CharField(label='Deskripsi', widget=forms.Textarea, required=True)
+    image = forms.ImageField(label = 'Gambar', required=False)
+    event_date = forms.DateField(
+        widget=SelectDateWidget(
+            empty_label=("Choose Year", "Choose Month", "Choose Day"),
+        )
+    )
     class Meta:
         model = Event
         fields = ['event_name', 'desc', 'image', 'event_date',]
+        widget = {
+             'note': Textarea(attrs={'cols': 80, 'rows': 20}),
+        }
+
+class EditEventForm(forms.ModelForm):
+    event_name = forms.CharField(label='Nama Acara',  required=True)
+    desc = forms.CharField(label='Deskripsi', widget=forms.Textarea, required=True)
+    image = forms.ImageField(label = 'Gambar', required=False)
+    event_date = forms.DateField(
+        widget=SelectDateWidget(
+            empty_label=("Choose Year", "Choose Month", "Choose Day"),
+        )
+    )
+    class Meta:
+        model = Event
+        exclude = ('email','corporate', 'phone', 'created_date','published_date','event_status',)
+        widget = {
+             'note': Textarea(attrs={'cols': 80, 'rows': 20}),
+        }
+
 
 class NewBarangForm(forms.ModelForm):
     thingsname = forms.CharField(label='Nama Barang', required=True)
@@ -120,7 +155,7 @@ class NewMeetingForm(forms.ModelForm):
         model = Meeting
         exclude = ('created_date', 'updated_date',)
         widget = {
-             'desc': Textarea(attrs={'cols': 80, 'rows': 20}),
+             'note': Textarea(attrs={'cols': 80, 'rows': 20}),
         }
 
 class EditMeetingForm(forms.ModelForm):
@@ -138,8 +173,18 @@ class EditMeetingForm(forms.ModelForm):
 
 class EditUser(forms.ModelForm):
     class Meta:
-        model = UserProfile,
+        model = UserProfile
         fields = ('user_kelas',)
     class Meta:
         model = User
         fields = ('is_active',)
+
+class NewPaymentForm(forms.ModelForm):
+    class Meta:
+        model = Administrasi
+        exclude = ['created_date', 'image',]
+
+class EditPaymentForm(forms.ModelForm):
+    class Meta:
+        model = Administrasi
+        exclude = ['created_date', 'image',]

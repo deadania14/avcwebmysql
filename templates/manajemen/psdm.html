@@ -17,6 +17,7 @@
 </div>
 {% endblock %}
 {% block content %}
+<br />
 <div class="col-md-12 col-sm-12 col-xs-12">
     <div class="x_panel">
         <div class="x_title">
@@ -107,7 +108,7 @@
                                 <div class="modal-body">
                                     <h4>Member yang hadir: </h4>
                                     <!-- member yang hadir dan tutor yang hadir -->
-                                    {% for user in kelas.user.all %} <ul>{{user}}</ul> {% endfor %}
+                                    {% for user in presenting.is_present.all %} <ul>{{user}}</ul> {% endfor %}
                                 </div>
                                 <div class="modal-footer">
                                       <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
@@ -115,44 +116,6 @@
                             </div>
                         </div>
                     </div>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="x_panel">
-        <div class="x_title">
-            <h2>Pengguna</h2>
-            <div class="clearfix"></div>
-        </div>
-        <div class="x_content">
-            <table class="table table-responsive">
-                <thead>
-                    <tr>
-                        <th>Username</th>
-                        <th>Tipe Pengguna</th>
-                        <th>Kehadiran<br>(3 bulan terakhir)</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for profile in userprofiles %}
-                    <tr>
-                        <td>{{profile.user}}</td>
-                        <td>{{profile.tipe_user}}</td>
-                        <td>
-                            {{profile.attend_last_three_months_percent}}
-                            ({{profile.attend_last_three_months}}/{{profile.schedule_last_three_months}})
-
-                        </td>
-                        <td>
-                          {% if profile.user.is_active %}
-                          Aktif
-                          {% else %}
-                          Non Aktif
-                          {% endif %}
-                        </td>
-                    </tr>
                     {% endfor %}
                 </tbody>
             </table>

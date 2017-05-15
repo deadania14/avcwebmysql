@@ -43,17 +43,24 @@ urlpatterns = [
     url(r'^psdm/delete_schedule/(?P<schedule_id>[0-9]+)/$', views.delete_schedule, name='delete_schedule'),
 
     #Keuangan
-    url(r'^keuangan/$', views.home_keuangan, name='home_keuangan'),
+    url(r'^keuangan/$', views.home_bendahara, name='home_keuangan'),
+    #keuangan_new_pembayaran
+    url(r'^acara/new_pembayaran/$', views.new_pembayaran, name='new_pembayaran'),
     #confirmation_payments
     url(r'^keuangan/konfirmasi_pembayaran/(?P<payment_id>[0-9]+)/$', views.confirmation_payment, name='confirmation_payment'),
     #Cancel_payments
     url(r'^keuangan/gagalkan_pembayaran/(?P<payment_id>[0-9]+)/$', views.cancel_payment, name='cancel_payment'),
+    #keuangan_delete_payment
+    url(r'^keuangan/delete_(?P<payment_id>[0-9]+)/$', views.delete_payment, name='delete_payment'),
 
     #acara
-    url(r'^acara/$', views.home_acara, name='home_acara'),
-    #/new_event
-    url(r'^acara/new_event$', views.new_event, name='new_event'),
-
+    url(r'^acara/$', views.home_program, name='home_acara'),
+    #acara_new_event
+    url(r'^acara/new_event/$', views.new_event, name='new_event'),
+    #acara_edit_event
+    url(r'^acara/edit_event/(?P<event_id>[0-9]+)/$', views.edit_event, name='edit_event'),
+    #acara_delete_event
+    url(r'^acara/delete_(?P<event_id>[0-9]+)/$', views.delete_event, name='delete_event'),
     #confirmation_event
     url(r'^acara/konfirmasi_event/(?P<event_id>[0-9]+)/$', views.confirmation_event, name='confirmation_event'),
     #cancel event

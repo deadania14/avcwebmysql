@@ -17,7 +17,6 @@ Sekretaris
 {% endblock %}
 {% block content %}
 <div class="col-md-12 col-sm-12 col-xs-12">
-
     <div class="x_title left">
       <h3>Notulensi{% if user.is_authenticated %} ~<small>
           <a href="{% url 'manajemen:new_meeting_note' %}"> Tambah Baru</span></a>
@@ -91,6 +90,43 @@ Sekretaris
     </tbody>
     </table>
     </div>
+</div>
+<div class="col-md-12 col-sm-12 col-xs-12">
+  <div class="x_title">
+      <h2>Pengguna</h2>
+      <div class="clearfix"></div>
+  </div>
+  <div class="x_content">
+      <table class="table table-responsive">
+          <thead>
+              <tr>
+                  <th>Username</th>
+                  <th>Tipe Pengguna</th>
+                  <th>Kehadiran<br>(2 bulan terakhir)</th>
+                  <th>Status</th>
+              </tr>
+          </thead>
+          <tbody>
+              {% for profile in userprofiles %}
+              <tr>
+                  <td>{{profile.user}}</td>
+                  <td>{{profile.tipe_user}}</td>
+                  <td>
+                      {{profile.attend_last_three_months_percent}}
+                      ({{profile.attend_last_three_months}}/{{profile.schedule_last_three_months}})
 
+                  </td>
+                  <td>
+                    {% if profile.user.is_active %}
+                    Aktif
+                    {% else %}
+                    Non Aktif
+                    {% endif %}
+                  </td>
+              </tr>
+              {% endfor %}
+          </tbody>
+      </table>
+  </div>
 </div>
 {% endblock %}

@@ -4,8 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.models import User
-from .models import Article, Practice, Administrasi, Kelas, PracticeAttendance, Inventory, Meeting
-from .forms import ArticleForm, MainArticleForm, SchedulesForm, ClassForm, AbsensiForm, AbsensiPeopleForm, AVCContactForm, NewEventForm, EditBarangForm, AbsensiKelasForm, EditUser, NewMeetingForm, EditMeetingForm, NewBarangForm
+from .models import Article, Practice, Administrasi, Kelas, PracticeAttendance, Inventory, Meeting, AdministrationType
+from .forms import ArticleForm, MainArticleForm, SchedulesForm, ClassForm, AbsensiForm, AbsensiPeopleForm, AVCContactForm, NewEventForm, EditBarangForm, AbsensiKelasForm, EditUser, NewMeetingForm, EditMeetingForm, NewBarangForm, EditEventForm, NewPaymentForm, EditPaymentForm
 from public.models import UserProfile, Event, SettingsVariable
 
 from rolepermissions.decorators import has_role_decorator
@@ -27,6 +27,8 @@ def index(request):
 @has_role_decorator('sekretaris')
 def home_sekretaris(request):
     context={}
+    user_profile = UserProfile.objects.all()
+    context['userprofiles']= user_profile
     meeting_query = Meeting.objects.all()
     context['meetings']= meeting_query
     return render(request, 'manajemen/sekretaris.html', context)
@@ -68,12 +70,26 @@ def delete_meeting(request, meeting_id):
     return HttpResponseRedirect(reverse('manajemen:home_sekretaris'))
 
 @has_role_decorator('bendahara')
-def home_keuangan(request):
+def home_bendahara(request):
     context={}
+    administrasi_type_query = AdministrationType.objects.all()
+    context['adminitrasi_tipe']= administrasi_type_query
     administrasi_query = Administrasi.objects.all()
     context['adminitrasis']= administrasi_query
     context['saldo'] = Administrasi.saldo.get_saldo()
     return render(request, 'manajemen/keuangan.html', context)
+
+def new_pembayaran(request):
+    if request.method=="POST":
+        form_new_payment = NewPaymentForm(request.POST)
+        if form_new_payment.is_valid():
+            npayment = form_new_payment.save(commit = False)
+            npayment.created_date= timezone.now()
+            npayment.save()
+            return HttpResponseRedirect(reverse('manajemen:home_keuangan', ))
+    else :
+        form_new_payment = NewPaymentForm()
+    return render(request, 'manajemen/new_payment.html', {'form_new_payment':form_new_payment})
 
 def confirmation_payment(request, payment_id):
     payment = Administrasi.objects.get(id=payment_id)
@@ -92,6 +108,11 @@ def cancel_payment(request, payment_id):
     if payment.jenis.paymentstype == 'Registration and First Dues':
         payment.user.is_active = False
         payment.user.save()
+    return HttpResponseRedirect(reverse('manajemen:home_keuangan'))
+
+def delete_payment(request, payment_id):
+    payment_query = Practice.objects.get(id=payment_id)
+    payment_query.delete()
     return HttpResponseRedirect(reverse('manajemen:home_keuangan'))
 
 @has_role_decorator('psdm')
@@ -158,16 +179,28 @@ def delete_schedule(request, schedule_id):
     return HttpResponseRedirect(reverse('manajemen:home_psdm'))
 
 @has_role_decorator('program')
-def home_acara(request):
+def home_program(request):
+    check_event_expired()
+    check_event_finish()
     context={}
     acara_query = Event.objects.all()
     context['acaras']= acara_query
     today = timezone.now().date()
-
-    #if acara_query.event_status == 'waiting' and acara_query.event_date < today :
-    #    acara_query.event_status = 'cencelled'
-
     return render(request, 'manajemen/acara.html', context)
+
+def check_event_expired():
+    today = timezone.now().date()
+    acara_query= Event.objects.filter(event_status="waiting", event_date__lt= today)
+    for acara in acara_query:
+       acara.event_status = 'cencelled'
+       acara.save()
+
+def check_event_finish():
+    today = timezone.now().date()
+    acara_query= Event.objects.filter(event_status="deal", event_date__lt= today)
+    for acara in acara_query:
+       acara.event_status = 'done'
+       acara.save()
 
 def new_event(request):
     context={}
@@ -179,7 +212,7 @@ def new_event(request):
             nevent = form_new_event.save(commit = False)
             nevent.corporate = "AVC"
             nevent.sender = request.user
-            nevent.status_choices = "deal"
+            nevent.event_status = "deal"
             nevent.created_date= timezone.now()
             nevent.save()
             return HttpResponseRedirect(reverse('manajemen:home_acara', ))
@@ -187,16 +220,35 @@ def new_event(request):
         form_new_event = NewEventForm()
     return render(request, 'manajemen/new_event.html', {'form_new_event':form_new_event}, context)
 
+def edit_event(request, event_id):
+    context={}
+    edevent = get_object_or_404(Event, id=event_id)
+    if request.method=="POST":
+        form_edit_event = EditEventForm(request.POST, instance = edevent)
+        if form_edit_event.is_valid():
+            edevent = form_edit_event.save(commit = False)
+            edevent.updated_date= timezone.now()
+            edevent.save()
+            return HttpResponseRedirect(reverse('manajemen:home_acara', ))
+    else :
+        form_edit_event = EditEventForm(instance = edevent)
+    return render(request, 'manajemen/edit_event.html', {'form_edit_event':form_edit_event})
+
 def confirmation_event(request, event_id):
     eventconf = Event.objects.get(id=event_id)
-    eventconf.status = "deal"
+    eventconf.event_status = "deal"
     eventconf.save()
     return HttpResponseRedirect(reverse('manajemen:home_acara'))
 
 def cancel_event(request, event_id):
     eventconf = Event.objects.get(id=event_id)
-    eventconf.status = "cancelled"
+    eventconf.event_status = "cancelled"
     eventconf.save()
+    return HttpResponseRedirect(reverse('manajemen:home_acara'))
+
+def delete_event(request, event_id):
+    event_query = Inventory.objects.get(id=event_id)
+    event_query.delete()
     return HttpResponseRedirect(reverse('manajemen:home_acara'))
 
 @has_role_decorator('inventaris')
@@ -382,7 +434,8 @@ def new_attendance_people(request,attendance_id):
         form_absensi_people = AbsensiPeopleForm(request.POST , instance=practice_attendance)
         print(request.POST.getlist('daftar_orang'))
         if form_absensi_people.is_valid():
-            npresent = form_absensi_people.save()
+            npresent = form_absensi_people.save(commit=False)
+            form_absensi_people.save_m2m()
             npresent.updated_date= timezone.now()
             npresent.save()
             return HttpResponseRedirect(reverse('manajemen:home_psdm', ))

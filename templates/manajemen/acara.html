@@ -21,7 +21,7 @@ Acara
   <div class="x_panel">
     <div class="x_title">
       <h3>Daftar Acara{% if user.is_authenticated %} ~<small>
-          <a href="{%	url	'manajemen:new_event'	%}"> Tambah Baru</span></a>
+          <a href="{%	url	'manajemen:new_event'	%}"> Tambah Baru</a>
       </small>{% endif %}</h3>
       <div class="clearfix"></div>
     </div>
@@ -47,10 +47,12 @@ Acara
                     {% if event.event_status == "waiting" %}
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalConfirm{{event.id}}">Confirm</button>
                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModalCancelled{{event.id}}">Cancelled</button>
-                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModalDetail{{event.id}}">Details</button>
+                    {% elif event.event_status == "deal"  %}
+                    <a class="btn	btn-warning" href="{%	url	'manajemen:edit_event'	event.id	%}"><span	class="glyphicon	glyphicon-pencil"></span></a>
                     {% else %}
-                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModalDetail{{event.id}}">Details</button>
+                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModalHapusEvent{{event.id}}"><span	class="glyphicon	glyphicon-trash"></span></button>
                     {% endif %}
+                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModalDetail{{event.id}}">Details</button>
                   </td>
               </tr>
               <!-- Modal Confirm-->
@@ -119,6 +121,27 @@ Acara
                     </div>
                   </div>
                 </div>
+              </div>
+              <!-- Modal Hapus-->
+              <div id="myModalHapusEvent{{event.id}}" class="modal fade" role="dialog">
+                  <div class="modal-dialog">
+                      <!-- Modal content-->
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal">&times;</button>
+                              <h4 class="modal-title">Hapus Acara - {{event.event_name}}</h4>
+                          </div>
+                          <div class="modal-body">
+                              <p>Apakah Anda yakin untuk menghapus Acara <b>{{event.event_name}}</p>
+                                  <h3>{{event.event_date}} </h3>
+                                  <small>oleh <b>{{event.corporate}}</small></b></p>
+                          </div>
+                          <div class="modal-footer">
+                              <a href="{% url 'manajemen:delete_event' event.id %}"><button type="button" class="btn btn-danger">Delete</button></a>
+                              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                          </div>
+                      </div>
+                  </div>
               </div>
               {% endfor %}
           </tbody>

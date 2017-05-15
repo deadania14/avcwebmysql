@@ -1,0 +1,36 @@
+{% extends 'manajemen/base.html' %}
+{% load bootstrap3 %}
+{% block title%}
+Ubah Acara
+{% endblock %}
+{% block page_title %}
+<!-- Page Title -->
+<div class="page-title-container">
+    <div class="container">
+        <div class="row">
+          <div class="col-sm-12 wow fadeIn">
+            <i class="glyphicon glyphicon-sunglasses"></i>
+            <h1><a href="{% url 'manajemen:home_acara' %}">Acara </a>/</h1>
+            <p>Ubah Acara</p>
+          </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<style>
+  .form-group {
+    text-align: left;
+  }
+</style>
+<br />
+<div class="col-md-12 col-sm-12 col-xs-12">
+  <div class="x_content">
+    <form method="POST" class= "post-form" enctype="multipart/form-data">{% csrf_token %}
+      {% bootstrap_form form_edit_event %}
+      <button type="submit" class="save btn btn-primary" value="Submit">Simpan</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

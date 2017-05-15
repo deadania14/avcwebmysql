@@ -71,7 +71,7 @@
             </li>
             {% if user|has_role:'bendahara' %}
             <li {% if request.resolver_match.url_name == 'home_keuangan' %}class="active"{% endif %}>
-                <a href="{% url 'manajemen:home_keuangan' %}"><br>Keuangan</a>
+                <a href="{% url 'manajemen:home_keuangan' %}"><br>Bendahara</a>
             </li>
             {% endif %}
             {% if user|has_role:'sekretaris' %}
@@ -91,7 +91,7 @@
             {% endif %}
             {% if user|has_role:'program' %}
             <li {% if request.resolver_match.url_name == 'home_acara' %}class="active"{% endif %}>
-                <a href="{% url 'manajemen:home_acara' %}"><br>Acara</a>
+                <a href="{% url 'manajemen:home_acara' %}"><br>Program</a>
             </li>
             {% endif %}
             {% if user|has_role:'inventaris' %}
