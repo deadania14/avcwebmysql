@@ -21,12 +21,10 @@ urlpatterns = [
 
     #psdm V
     url(r'^psdm/$', views.home_psdm, name='home_psdm'),
-    #tutor
-    url(r'^tutor/$', views.home_tutor, name='home_tutor'),
+    #psdm V
+    url(r'^psdm/user_move_kelas/(?P<user_id>[0-9]+)/$', views.move_class, name='move_class'),
     #/new_kelas
     url(r'^psdm/new_kelas/$', views.new_kelas, name='new_kelas'),
-    #/edit_kelas
-    #url(r'^psdm/kelas/-(?P<kelas_id>[0-9]+)/edit/$', views.edit_kelas, name='edit_kelas'),
     #/new_schedule
     url(r'^psdm/new_schedule/$', views.new_schedule, name='new_schedule'),
     #/new_attendance_people
@@ -41,6 +39,10 @@ urlpatterns = [
     url(r'^psdm/edit_schedule/(?P<schedule_id>[0-9]+)/$', views.edit_schedule, name='edit_schedule'),
     #/schedule_delete
     url(r'^psdm/delete_schedule/(?P<schedule_id>[0-9]+)/$', views.delete_schedule, name='delete_schedule'),
+
+
+    #tutor
+    url(r'^tutor/$', views.home_tutor, name='home_tutor'),
 
     #Keuangan
     url(r'^keuangan/$', views.home_bendahara, name='home_keuangan'),
@@ -83,5 +85,9 @@ urlpatterns = [
     url(r'^sekretaris/edit_(?P<meeting_id>[0-9]+)/$', views.edit_meeting, name='edit_meeting'),
     #sekretaris-delete meeting
     url(r'^sekretaris/delete_(?P<meeting_id>[0-9]+)/$', views.delete_meeting, name='delete_meeting'),
+    #sekretaris-deactivate_user
+    url(r'^sekretaris/deactivate_(?P<user_id>[0-9]+)/$', views.deactivate_user, name='deactivate_user'),
+    #sekretaris-activate_user
+    url(r'^sekretaris/activate_(?P<user_id>[0-9]+)/$', views.activate_user, name='activate_user'),
 
 ]

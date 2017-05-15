@@ -10,7 +10,7 @@ from .models import Article, Practice, Kelas, PracticeAttendance, Inventory, Mee
 from public.models import SettingsVariable, Event, UserProfile
 
 class ArticleForm(forms.ModelForm):
-    title = forms.CharField(label='Judul', max_length=100, required=True)
+    title = forms.CharField(label='Judul',required=True)
     image = forms.ImageField(label = 'Gambar', required=False)
     class Meta:
         model = Article
@@ -34,11 +34,26 @@ class SchedulesForm(forms.ModelForm):
         model = Practice
         exclude = ('created_date',)
 
-class ClassForm(forms.ModelForm):
-
+class NewClassForm(forms.ModelForm):
+    nama_kelas = forms.CharField(label='Nama Kelas', max_length=100, required=True)
+    note = forms.CharField(label='Deskripsi Kelas', widget=forms.Textarea, required=True)
     class Meta:
         model = Kelas
-        fields = ('nama_kelas','note',)
+        exclude = ('updated_date',)
+        widget = {
+             'note': Textarea(attrs={'cols': 80, 'rows': 20}),
+        }
+
+class EditUserClassForm(forms.ModelForm):
+    # user_kelas = forms.ModelMultipleChoiceField(
+    #     label='Pilih Kelas',
+    #     queryset=Kelas.objects.all(),
+    #     widget=forms.CheckboxSelectMultiple,
+    #     required=False
+    # )
+    class Meta:
+        model = UserProfile
+        fields = ('user_kelas',)
 
 class AbsensiForm(forms.ModelForm):
     is_present = forms.ModelMultipleChoiceField(

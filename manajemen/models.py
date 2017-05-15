@@ -58,16 +58,6 @@ class Kelas(models.Model):
     def __str__(self):
         return self.nama_kelas
 
-    def schedule_last_three_months(self):
-        today = timezone.now()
-        three_months_ago = today + timezone.timedelta(days=-130)
-        schedule_class = PracticeAttendance.objects.filter(kelas=self)
-        schedule_class_three_months_ago = schedule_class.filter(
-            practice__date__gte=three_months_ago,
-            practice__date__lte=today
-        )
-        return schedule_class_three_months_ago.count()
-
 class LogKelas(models.Model):
     kelas_current = models.ForeignKey(Kelas, related_name= 'log_kelas_current')
     user = models.ForeignKey(User, related_name='log_kelas_user')

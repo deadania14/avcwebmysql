@@ -104,6 +104,7 @@ Sekretaris
                   <th>Tipe Pengguna</th>
                   <th>Kehadiran<br>(2 bulan terakhir)</th>
                   <th>Status</th>
+                  <th>Aksi</th>
               </tr>
           </thead>
           <tbody>
@@ -123,7 +124,54 @@ Sekretaris
                     Non Aktif
                     {% endif %}
                   </td>
+                  <td>
+                    {% if profile.user.is_active %}
+                      <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModalNonAktif{{profile.id}}">NonAktifkan</button>
+                    {% else %}
+                      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalAktif{{profile.id}}">Aktifkan</button>
+                    {% endif %}
+                  </td>
               </tr>
+              <!-- Modal Non Aktifkan User-->
+              <div id="myModalNonAktif{{profile.id}}" class="modal fade" role="dialog">
+                  <div class="modal-dialog">
+                      <!-- Modal content-->
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal">&times;</button>
+                          </div>
+                          <div class="modal-body">
+                              <h1>
+                                Non Aktifkan Akun - {{profile.user}} ?
+                              </h1>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Tidak</button>
+                            <a href="{% url 'manajemen:deactivate_user' profile.id %}"><button type="button" class="btn btn-primary">Ya</button></a>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <!-- Modal Aktifkan User-->
+              <div id="myModalAktif{{profile.id}}" class="modal fade" role="dialog">
+                  <div class="modal-dialog">
+                      <!-- Modal content-->
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal">&times;</button>
+                          </div>
+                          <div class="modal-body">
+                              <h1>
+                                Aktifkan Akun - {{profile.user}} ?
+                              </h1>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Tidak</button>
+                            <a href="{% url 'manajemen:activate_user' profile.id %}"><button type="button" class="btn btn-primary">Ya</button></a>
+                          </div>
+                      </div>
+                  </div>
+              </div>
               {% endfor %}
           </tbody>
       </table>

@@ -4,8 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.models import User
-from .models import Article, Practice, Administrasi, Kelas, PracticeAttendance, Inventory, Meeting, AdministrationType
-from .forms import ArticleForm, MainArticleForm, SchedulesForm, ClassForm, AbsensiForm, AbsensiPeopleForm, AVCContactForm, NewEventForm, EditBarangForm, AbsensiKelasForm, EditUser, NewMeetingForm, EditMeetingForm, NewBarangForm, EditEventForm, NewPaymentForm, EditPaymentForm
+from .models import Article, Practice, Administrasi, Kelas, PracticeAttendance, Inventory, Meeting, AdministrationType, LogKelas
+from .forms import ArticleForm, MainArticleForm, SchedulesForm, EditUserClassForm, AbsensiForm, AbsensiPeopleForm, AVCContactForm, NewEventForm, EditBarangForm, AbsensiKelasForm, EditUser, NewMeetingForm, EditMeetingForm, NewBarangForm, EditEventForm, NewPaymentForm, EditPaymentForm, NewClassForm
 from public.models import UserProfile, Event, SettingsVariable
 
 from rolepermissions.decorators import has_role_decorator
@@ -22,6 +22,8 @@ def index(request):
     context['tutors'] = tutor_user_query
     manajemen_user_query = UserProfile.objects.filter(user__groups__name='manajemen')
     context['manajemens']=manajemen_user_query
+    rapat_query = Meeting.objects.all()
+    context['meetings'] = rapat_query
     return render(request, 'manajemen/index.html', context)
 
 @has_role_decorator('sekretaris')
@@ -32,6 +34,18 @@ def home_sekretaris(request):
     meeting_query = Meeting.objects.all()
     context['meetings']= meeting_query
     return render(request, 'manajemen/sekretaris.html', context)
+
+def deactivate_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    user.is_active = False
+    user.save()
+    return HttpResponseRedirect(reverse('manajemen:home_sekretaris'))
+
+def activate_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    user.is_active = True
+    user.save()
+    return HttpResponseRedirect(reverse('manajemen:home_sekretaris'))
 
 def new_meeting(request):
     if request.method=="POST":
@@ -132,15 +146,14 @@ def home_psdm(request):
 
 def new_kelas(request):
     if request.method=="POST":
-        form_new_kelas = ClassForm(request.POST)
+        form_new_kelas = NewClassForm(request.POST)
         if form_new_kelas.is_valid():
             nclass = form_new_kelas.save(commit = False)
             nclass.updated_date= timezone.now()
             nclass.save()
             return HttpResponseRedirect(reverse('manajemen:home_psdm', ))
     else :
-        form_new_kelas = ClassForm()
-
+        form_new_kelas = NewClassForm()
     return render(request, 'manajemen/new_class.html', {'form_new_kelas':form_new_kelas})
 
 def new_schedule(request):
@@ -156,16 +169,21 @@ def new_schedule(request):
         form_edit_schedule = SchedulesForm()
     return render(request, 'manajemen/edit_schedule.html', {'form_edit_schedule':form_edit_schedule})
 
-@has_role_decorator('tutor')
-def home_tutor(request):
-    context={}
+def move_class(request, user_id):
+    user = get_object_or_404(UserProfile, id=user_id)
     today = timezone.now().date()
-    practice_query = Practice.objects.filter(date__gte=today)
-    context['practices'] = practice_query
-    present_query = PracticeAttendance.objects.filter(practice__date__gte=today)
-    context['presents'] = present_query
-    context['now'] = timezone.now().date()
-    return render(request, 'manajemen/tutor.html', context)
+    kelasbefore = user.user_kelas
+    if request.method=="POST":
+        form_move_user = EditUserClassForm(request.POST, instance=user)
+        if form_move_user.is_valid():
+            moveuser = form_move_user.save(commit = False)
+            logkelas = LogKelas.objects.create(kelas_current=moveuser.user_kelas, user=moveuser.user,
+                kelas_before=kelasbefore, joined_date= today)
+            moveuser.save()
+            return HttpResponseRedirect(reverse('manajemen:home_psdm', ))
+    else :
+        form_move_user = EditUserClassForm(instance=user)
+    return render(request, 'manajemen/move_user_class.html', {'form_move_user':form_move_user})
 
 def detail_schedule(request, schedule_id):
     context={}
@@ -177,6 +195,83 @@ def delete_schedule(request, schedule_id):
     practice_query = Practice.objects.get(id=schedule_id)
     practice_query.delete()
     return HttpResponseRedirect(reverse('manajemen:home_psdm'))
+
+def edit_schedule(request, schedule_id):
+    nschedule = get_object_or_404(Practice, id=schedule_id)
+    if request.method=="POST":
+        form_edit_schedule = SchedulesForm(request.POST, instance = nschedule)
+        if form_edit_schedule.is_valid():
+            nschedule = form_edit_schedule.save(commit = False)
+            nschedule.created_date= timezone.now()
+            nschedule.save()
+            return HttpResponseRedirect(reverse('manajemen:home_psdm', ))
+    else :
+        form_edit_schedule = SchedulesForm(instance = nschedule)
+    return render(request, 'manajemen/edit_schedule.html', {'form_edit_schedule':form_edit_schedule})
+
+def edit_attendance(request, attendance_id):
+    npresent = get_object_or_404(PracticeAttendance, id=attendance_id)
+    if request.method=="POST":
+        form_edit_absensi = AbsensiForm(request.POST, instance = npresent)
+
+        if form_edit_absensi.is_valid():
+            form_edit_absensi.save()
+            return HttpResponseRedirect(reverse('manajemen:home_psdm', ))
+    else :
+        form_edit_absensi = AbsensiForm(instance = npresent)
+    form_edit_absensi.fields['is_present'].queryset = npresent.daftar_orang.all()
+    form_edit_absensi.fields['tutor_pendamping'].queryset = User.objects.filter(profile__tipe_user='tutor').exclude(id=npresent.tutor.id)
+    return render(request, 'manajemen/edit_attendance.html', {'form_edit_absensi':form_edit_absensi})
+
+
+def new_attendance_kelas(request):
+    if request.method=="POST":
+        form_absensi_kelas = AbsensiKelasForm(request.POST)
+        print(request.POST.getlist('daftar_orang'))
+        if form_absensi_kelas.is_valid():
+            npresent = form_absensi_kelas.save(commit=False)
+            npresent.updated_date= timezone.now()
+            cek_practice_date = PracticeAttendance.objects.filter(practice__date=npresent.practice.date)
+            cek_kelas = PracticeAttendance.objects.filter(kelas__nama_kelas= npresent.kelas)
+            if cek_practice_date and cek_kelas:
+                form_absensi_kelas.add_error('kelas', u"Absensi sudah ada")
+                return render(request, 'manajemen/new_attendance_kelas.html', {'form_absensi_kelas':form_absensi_kelas})
+            npresent.save()
+            return HttpResponseRedirect(reverse('manajemen:new_attendance_people', kwargs={'attendance_id':npresent.id}))
+    else :
+        form_absensi_kelas = AbsensiKelasForm()
+    form_absensi_kelas.fields['practice'].queryset = Practice.objects.filter(date__gte=timezone.now().date())
+    form_absensi_kelas.fields['tutor'].queryset = User.objects.filter(profile__tipe_user='tutor')
+    return render(request, 'manajemen/new_attendance_kelas.html', {'form_absensi_kelas':form_absensi_kelas})
+
+def new_attendance_people(request,attendance_id):
+    practice_attendance = get_object_or_404(PracticeAttendance, id=attendance_id)
+    if request.method=="POST":
+        form_absensi_people = AbsensiPeopleForm(request.POST , instance=practice_attendance)
+        print(request.POST.getlist('daftar_orang'))
+        if form_absensi_people.is_valid():
+            npresent = form_absensi_people.save(commit=False)
+            form_absensi_people.save_m2m()
+            npresent.updated_date= timezone.now()
+            npresent.save()
+            return HttpResponseRedirect(reverse('manajemen:home_psdm', ))
+    else :
+        form_absensi_people = AbsensiPeopleForm(instance=practice_attendance)
+    form_absensi_people.fields['daftar_orang'].queryset = UserProfile.objects.filter(user_kelas=practice_attendance.kelas)
+    form_absensi_people.fields['tutor_pendamping'].queryset = User.objects.filter(
+        profile__tipe_user='tutor').exclude(id=practice_attendance.tutor.id).exclude(profile__user_kelas=practice_attendance.kelas)
+    return render(request, 'manajemen/new_attendance_people.html', {'form_absensi_people':form_absensi_people, 'tutor': practice_attendance.tutor})
+
+@has_role_decorator('tutor')
+def home_tutor(request):
+    context={}
+    today = timezone.now().date()
+    practice_query = Practice.objects.filter(date__gte=today)
+    context['practices'] = practice_query
+    present_query = PracticeAttendance.objects.filter(practice__date__gte=today)
+    context['presents'] = present_query
+    context['now'] = timezone.now().date()
+    return render(request, 'manajemen/tutor.html', context)
 
 @has_role_decorator('program')
 def home_program(request):
@@ -379,74 +474,6 @@ def edit_contact(request):
     else :
         form_edit_contact = AVCContactForm(initial = default_data)
     return render(request, 'manajemen/edit_contact.html', {'form_edit_contact':form_edit_contact})
-
-def edit_schedule(request, schedule_id):
-    nschedule = get_object_or_404(Practice, id=schedule_id)
-    if request.method=="POST":
-        form_edit_schedule = SchedulesForm(request.POST, instance = nschedule)
-        if form_edit_schedule.is_valid():
-            nschedule = form_edit_schedule.save(commit = False)
-            nschedule.created_date= timezone.now()
-            nschedule.save()
-            return HttpResponseRedirect(reverse('manajemen:home_psdm', ))
-    else :
-        form_edit_schedule = SchedulesForm(instance = nschedule)
-    return render(request, 'manajemen/edit_schedule.html', {'form_edit_schedule':form_edit_schedule})
-
-def edit_attendance(request, attendance_id):
-    npresent = get_object_or_404(PracticeAttendance, id=attendance_id)
-    if request.method=="POST":
-        form_edit_absensi = AbsensiForm(request.POST, instance = npresent)
-
-        if form_edit_absensi.is_valid():
-            form_edit_absensi.save()
-            return HttpResponseRedirect(reverse('manajemen:home_psdm', ))
-    else :
-        form_edit_absensi = AbsensiForm(instance = npresent)
-    form_edit_absensi.fields['is_present'].queryset = npresent.daftar_orang.all()
-    form_edit_absensi.fields['tutor_pendamping'].queryset = User.objects.filter(profile__tipe_user='tutor').exclude(id=npresent.tutor.id)
-    return render(request, 'manajemen/edit_attendance.html', {'form_edit_absensi':form_edit_absensi})
-
-
-def new_attendance_kelas(request):
-    if request.method=="POST":
-        form_absensi_kelas = AbsensiKelasForm(request.POST)
-        print(request.POST.getlist('daftar_orang'))
-        if form_absensi_kelas.is_valid():
-            npresent = form_absensi_kelas.save(commit=False)
-            npresent.updated_date= timezone.now()
-            cek_practice_date = PracticeAttendance.objects.filter(practice__date=npresent.practice.date)
-            cek_kelas = PracticeAttendance.objects.filter(kelas__nama_kelas= npresent.kelas)
-            if cek_practice_date and cek_kelas:
-                form_absensi_kelas.add_error('kelas', u"Absensi sudah ada")
-                return render(request, 'manajemen/new_attendance_kelas.html', {'form_absensi_kelas':form_absensi_kelas})
-            npresent.save()
-            return HttpResponseRedirect(reverse('manajemen:new_attendance_people', kwargs={'attendance_id':npresent.id}))
-    else :
-        form_absensi_kelas = AbsensiKelasForm()
-    form_absensi_kelas.fields['practice'].queryset = Practice.objects.filter(date__gte=timezone.now().date())
-    form_absensi_kelas.fields['tutor'].queryset = User.objects.filter(profile__tipe_user='tutor')
-    return render(request, 'manajemen/new_attendance_kelas.html', {'form_absensi_kelas':form_absensi_kelas})
-
-def new_attendance_people(request,attendance_id):
-    practice_attendance = get_object_or_404(PracticeAttendance, id=attendance_id)
-    if request.method=="POST":
-        form_absensi_people = AbsensiPeopleForm(request.POST , instance=practice_attendance)
-        print(request.POST.getlist('daftar_orang'))
-        if form_absensi_people.is_valid():
-            npresent = form_absensi_people.save(commit=False)
-            form_absensi_people.save_m2m()
-            npresent.updated_date= timezone.now()
-            npresent.save()
-            return HttpResponseRedirect(reverse('manajemen:home_psdm', ))
-    else :
-        form_absensi_people = AbsensiPeopleForm(instance=practice_attendance)
-    form_absensi_people.fields['daftar_orang'].queryset = UserProfile.objects.filter(user_kelas=practice_attendance.kelas)
-    # form_absensi_people.fields['tutor'].widget.attrs['disabled'] = 'disabled'
-
-    form_absensi_people.fields['tutor_pendamping'].queryset = User.objects.filter(
-        profile__tipe_user='tutor').exclude(id=practice_attendance.tutor.id).exclude(profile__user_kelas=practice_attendance.kelas)
-    return render(request, 'manajemen/new_attendance_people.html', {'form_absensi_people':form_absensi_people, 'tutor': practice_attendance.tutor})
 
 def edit_user(request, user_id):
     context={}

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Article, Practice, PracticeAttendance, Kelas, Administrasi, AdministrationType, Inventory
+from .models import Article, Practice, PracticeAttendance, Kelas, Administrasi, AdministrationType, Inventory, LogKelas
 
 class PracticeAttendanceInline(admin.TabularInline):
     model = PracticeAttendance
@@ -11,6 +11,11 @@ class PracticeAdmin(admin.ModelAdmin):
     list_display = ['date', 'place', 'created_date',]
     inlines = (PracticeAttendanceInline,)
 admin.site.register(Practice, PracticeAdmin)
+
+class logkelas(admin.ModelAdmin):
+    model = LogKelas
+    list_display = ['kelas_current', 'user', 'kelas_before','joined_date',]
+admin.site.register(LogKelas, logkelas)
 
 class article(admin.ModelAdmin):
     model = Article

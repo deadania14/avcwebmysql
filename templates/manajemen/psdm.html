@@ -1,4 +1,5 @@
 {% extends 'manajemen/base.html' %}
+{% load bootstrap3 %}
 {% block title%}
   PSDM
 {% endblock %}
@@ -9,8 +10,7 @@
         <div class="row">
           <div class="col-sm-12 wow fadeIn">
             <i class="fa fa-users"></i>
-            <h1><a href="{% url 'manajemen:home_psdm' %}">PSDM </a>/</h1>
-            <p>Pengelola Sumber Daya Manusia /<i> Alliance Violin Community</i></p>
+            <h1><a href="{% url 'manajemen:home_psdm' %}">PSDM </a>/ Hallo {{request.user.username}} !</h1>
           </div>
         </div>
     </div>
@@ -19,9 +19,45 @@
 {% block content %}
 <br />
 <div class="col-md-12 col-sm-12 col-xs-12">
+  <div class="x_panel">
+      <div class="x_title">
+          <h3>Member</h3>
+          <div class="clearfix"></div>
+      </div>
+      <div class="x_content">
+          <table class="table table-responsive">
+              <thead>
+                  <tr>
+                      <th>Nama </th>
+                      <th>Kelas</th>
+                      <th>Tanggal Masuk</th>
+                      <th>Aksi</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {% for user_profile in userprofiles %}
+                  <tr>
+                      <td>{{user_profile.user}}</td>
+                      <td><strong>{{user_profile.user_kelas}}</strong></td>
+                      <td>
+                        {% if user_profile.user.log_kelas_user.first %}
+                          {{user_profile.user.log_kelas_user.first.joined_date.date}}
+                        {% else %}
+                          {{user_profile.user.date_joined.date}}
+                        {% endif %}
+                      </td>
+                      <td><a class="btn	btn-warning" href="{%	url	'manajemen:move_class' user_profile.id %}"><span	class="glyphicon	glyphicon-pencil"></span></a></td>
+                  </tr>
+                  {% endfor %}
+              </tbody>
+          </table>
+      </div>
+  </div>
+</div>
+<div class="col-md-12 col-sm-12 col-xs-12">
     <div class="x_panel">
         <div class="x_title">
-            <h3>Kelas<small>
+            <h3>Kelas~<small>
             <a href="{%	url	'manajemen:new_kelas'	%}"> Tambah - Baru</a></small></h3>
             <div class="clearfix"></div>
         </div>
@@ -39,7 +75,7 @@
                     <tr>
                         <td>{{kelas.nama_kelas}}</td>
                         <td><strong>{{kelas.updated_date}}</strong></td>
-                        <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal{{kelas.id}}">Lihat</button>
+                        <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal{{kelas.id}}">Lihat</button></td>
                     </tr>
                     <!-- Modal -->
                     <div id="myModal{{kelas.id}}" class="modal fade" role="dialog">
@@ -70,7 +106,7 @@
     </div>
     <div class="x_panel">
         <div class="x_title">
-          <h3>Absensi
+          <h3>Absensi~
             <small>
             <a href="{%	url	'manajemen:new_attendance_kelas' %}"> Tambah - Baru</a></small></h3>
             <div class="clearfix"></div>
@@ -123,7 +159,7 @@
     </div>
     <div class="x_panel">
         <div class="x_title">
-            <h3>Jadwal Latihan{% if user.is_authenticated %}<small>
+            <h3>Jadwal Latihan~{% if user.is_authenticated %}<small>
             <a href="{%	url	'manajemen:new_schedule'	%}"> Tambah - Baru</span></a>
         </small>{% endif %}</h3>
             <div class="clearfix"></div>
