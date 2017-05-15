@@ -147,8 +147,8 @@ def myprofile(request):
     context={}
     administrasi_query = Administrasi.objects.filter(user = request.user)
     context['adminitrasis'] = administrasi_query
-    kelas_query = Kelas.objects.filter(user= request.user)
-    context['kelas'] = kelas_query
+    #kelas_query = Kelas.objects.filter(user= request.user)
+    #context['kelas'] = kelas_query
     today = today = timezone.now().date()
     events_query = Event.objects.filter(event_status="deal").filter(event_date__gte=today)
     context['events'] = events_query

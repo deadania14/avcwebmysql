@@ -1,0 +1,96 @@
+{% extends 'manajemen/base.html' %}
+{% block title%}
+Sekretaris
+{% endblock %}
+{% block page_title %}
+<!-- Page Title -->
+<div class="page-title-container">
+    <div class="container">
+        <div class="row">
+          <div class="col-sm-12 wow fadeIn">
+            <i class="fa fa-pencil-square"></i>
+            <h1><a href="{% url 'manajemen:home_sekretaris' %}">Sekretaris </a>/ Hallo {{request.user.username}} !</h1>
+          </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block content %}
+<div class="col-md-12 col-sm-12 col-xs-12">
+
+    <div class="x_title left">
+      <h3>Notulensi{% if user.is_authenticated %} ~<small>
+          <a href="{% url 'manajemen:new_meeting_note' %}"> Tambah Baru</span></a>
+      </small>{% endif %}</h3>
+      <div class="clearfix"></div>
+    </div>
+    <div class="x_content">
+    <table id="datatable-buttons" class="font-13 table table-responsive">
+    <thead>
+      <tr>
+        <th>Judul</th>
+        <th>Tanggal</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for meeting in meetings %}
+      <tr>
+        <td>{{meeting.title}}</td>
+        <td>{{meeting.date_meet}}</td>
+        <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModalDetailRapat{{meeting.id}}">Lihat</button>
+          <a class="btn	btn-warning" href="{%	url	'manajemen:edit_meeting'	meeting.id	%}"><span	class="glyphicon	glyphicon-pencil"></span></a>
+          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModalHapusRapat{{meeting.id}}"><span	class="glyphicon	glyphicon-trash"></span></button>
+        </td>
+      </tr>
+      <!-- Modal Rapat-->
+      <div id="myModalDetailRapat{{meeting.id}}" class="modal fade" role="dialog">
+          <div class="modal-dialog">
+              <!-- Modal content-->
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">Detail "{{meeting.title}}" - {{meeting.date_meet}} - {{meeting.place}}</h4>
+                  </div>
+                  <div class="modal-body left">
+                      <p>{{meeting.note}}</p>
+                  </div>
+                  {% for user in meeting.user.all %} <p>{{user}}</p> {% endfor %}
+                  <div style= "text-align:right;padding-right:15px">
+                    <p>Dibuat pada <strong>{{meeting.created_date}} </strong></p>
+                    <p>Diperbaharui pada  <strong>{{meeting.updated_date}}</strong></p>
+                  </div>
+                  <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <!-- Modal Delete Catatan-->
+      <div id="myModalHapusRapat{{meeting.id}}" class="modal fade" role="dialog">
+          <div class="modal-dialog">
+              <!-- Modal content-->
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">Hapus Catatan Rapat</h4>
+                  </div>
+                  <div class="modal-body">
+                      <p>Apakah Anda yakin untuk menghapus Catatan Rapat pada
+                          <h3>{{meeting.date_meet}} </h3>
+                          <small>{{meeting.place}}</small></p>
+                  </div>
+                  <div class="modal-footer">
+                      <a href="{% url 'manajemen:delete_meeting' meeting.id %}"><button type="button" class="btn btn-danger">Hapus</button></a>
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+      {% endfor %}
+    </tbody>
+    </table>
+    </div>
+
+</div>
+{% endblock %}

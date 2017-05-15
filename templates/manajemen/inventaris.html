@@ -9,19 +9,19 @@ Inventaris
         <div class="row">
           <div class="col-sm-12 wow fadeIn">
             <i class="fa fa-dropbox"></i>
-            <h1><a href="{% url 'manajemen:home_inventaris' %}">Inventaris </a>/</h1>
-            <p> <i> Alliance Violin Community</i></p>
+            <h1><a href="{% url 'manajemen:home_inventaris' %}">Inventaris </a>/ Hallo {{request.user.username}} !</h1>
           </div>
         </div>
     </div>
 </div>
 {% endblock %}
 {% block content %}
+<br/>
 <div class="col-md-12 col-sm-12 col-xs-12">
   <div class="x_panel">
     <div class="x_title">
       <h3>Daftar Barang{% if user.is_authenticated %} ~<small>
-          <a href=""> Tambah Baru</span></a>
+          <a href="{% url 'manajemen:new_barang' %}"> Tambah Baru</span></a>
       </small>{% endif %}</h3>
       <div class="clearfix"></div>
     </div>
@@ -41,8 +41,10 @@ Inventaris
         <td>{{barang.stock}}</td>
         <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModalDetailInventory{{barang.id}}">Lihat</button>
           <a class="btn	btn-warning" href="{%	url	'manajemen:edit_barang'	barang.id	%}"><span	class="glyphicon	glyphicon-pencil"></span></a>
+          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModalHapusInventory{{barang.id}}"><span	class="glyphicon	glyphicon-trash"></span></button>
         </td>
       </tr>
+
       <!-- Modal -->
       <div id="myModalDetailInventory{{barang.id}}" class="modal fade" role="dialog">
           <div class="modal-dialog">
@@ -53,13 +55,87 @@ Inventaris
                       <h4 class="modal-title">Detail Barang - {{barang.thingsname}}</h4>
                   </div>
                   <div class="modal-body">
-                      <p>Nama barang : {{barang.thingsname}}</p>
-                      <p>Stok        : {{barang.stock}}</p>
-                      <p>Keterangan  : {{barang.details}}</p>
-                      <p>Catatan     : {{barang.note}}</p>
+                      <div class = "col-md-4">
+                        <b>Nama barang</b>
+                      </div>
+                      <div class = "col-md-8">{{barang.thingsname}}</div>
+                      <div class = "clearfix"></div>
+                      <br/>
+                      <div class = "col-md-4">
+                        <b>Jumlah</b>
+                      </div>
+                      <div class = "col-md-8">{{barang.stock}}</div>
+                      <div class = "clearfix"></div>
+                      <br/>
+                      <div class = "col-md-4">
+                        <b>Detail</b>
+                      </div>
+                      <div class = "col-md-8">
+                        {% if barang.detail %} {{barang.detail}}
+                        {% else %}
+                        ---
+                        {% endif %}
+                      </div>
+                      <div class = "clearfix"></div>
+                      <br/>
+                      <div class = "col-md-4">
+                        <b>Catatan</b>
+                      </div>
+                      <div class = "col-md-8">{{barang.note}}</div>
+                      <div class = "clearfix"></div>
+                      <br/>
                   </div>
                   <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <!-- Modal -->
+      <div id="myModalHapusInventory{{barang.id}}" class="modal fade" role="dialog">
+          <div class="modal-dialog">
+              <!-- Modal content-->
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">Hapus Data Barang ?</h4>
+                  </div>
+                  <div class="modal-body">
+                      <p>Apakah Anda yakin untuk menghapus Data Barang :</p>
+
+                          <div class = "col-md-4">
+                            <b>Nama barang</b>
+                          </div>
+                          <div class = "col-md-8">{{barang.thingsname}}</div>
+                          <div class = "clearfix"></div>
+                          <br/>
+                          <div class = "col-md-4">
+                            <b>Jumlah</b>
+                          </div>
+                          <div class = "col-md-8">{{barang.stock}}</div>
+                          <div class = "clearfix"></div>
+                          <br/>
+                          <div class = "col-md-4">
+                            <b>Detail</b>
+                          </div>
+                          <div class = "col-md-8">
+                            {% if barang.detail %} {{barang.detail}}
+                            {% else %}
+                            ---
+                            {% endif %}
+                          </div>
+                          <div class = "clearfix"></div>
+                          <br/>
+                          <div class = "col-md-4">
+                            <b>Catatan</b>
+                          </div>
+                          <div class = "col-md-8">{{barang.note}}</div>
+                          <div class = "clearfix"></div>
+                          <br/>
+                  </div>
+                  <div class="modal-footer">
+                      <a href="{% url 'manajemen:delete_barang' barang.id %}"><button type="button" class="btn btn-danger">Hapus</button></a>
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
                   </div>
               </div>
           </div>
@@ -70,4 +146,5 @@ Inventaris
     </div>
   </div>
 </div>
+<br/><br/>
 {% endblock %}

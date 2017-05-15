@@ -4,7 +4,6 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
 
-
 class Article(models.Model):
     author = models.ForeignKey('auth.User')
     title = models.CharField(max_length=100)
@@ -155,6 +154,9 @@ class Inventory(models.Model):
 
 class Meeting(models.Model):
     title = models.CharField(max_length=40)
+    place = models.CharField(max_length=100, null=True, blank=True)
+    date_meet = models.DateField(blank=True, null=True)
+    user = models.ManyToManyField(User, related_name= "user_meeting_attendances", blank=True)
     note = models.TextField()
     created_date = models.DateField(
         default = timezone.now

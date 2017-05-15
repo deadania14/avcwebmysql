@@ -69,9 +69,14 @@
                 <a href="{% url 'manajemen:index' %}">
                     <br>Beranda</a>
             </li>
-            {% if user|has_role:'hpd' %}
-            <li {% if request.resolver_match.url_name == 'home_hpd' %}class="active"{% endif %}>
-                <a href="{% url 'manajemen:home_hpd' %}"><br>HPD</a>
+            {% if user|has_role:'bendahara' %}
+            <li {% if request.resolver_match.url_name == 'home_keuangan' %}class="active"{% endif %}>
+                <a href="{% url 'manajemen:home_keuangan' %}"><br>Keuangan</a>
+            </li>
+            {% endif %}
+            {% if user|has_role:'sekretaris' %}
+            <li {% if request.resolver_match.url_name == 'home_sekretaris' %}class="active"{% endif %}>
+                <a href="{% url 'manajemen:home_sekretaris' %}"><br>Sekretaris</a>
             </li>
             {% endif %}
             {% if user|has_role:'psdm' %}
@@ -84,11 +89,6 @@
                 <a href="{% url 'manajemen:home_tutor' %}"><br>Tutor</a>
             </li>
             {% endif %}
-            {% if user|has_role:'bendahara' %}
-            <li {% if request.resolver_match.url_name == 'home_keuangan' %}class="active"{% endif %}>
-                <a href="{% url 'manajemen:home_keuangan' %}"><br>Keuangan</a>
-            </li>
-            {% endif %}
             {% if user|has_role:'program' %}
             <li {% if request.resolver_match.url_name == 'home_acara' %}class="active"{% endif %}>
                 <a href="{% url 'manajemen:home_acara' %}"><br>Acara</a>
@@ -97,6 +97,11 @@
             {% if user|has_role:'inventaris' %}
             <li {% if request.resolver_match.url_name == 'home_inventaris' %}class="active"{% endif %}>
                 <a href="{% url 'manajemen:home_inventaris' %}"><br>Inventaris</a>
+            </li>
+            {% endif %}
+            {% if user|has_role:'hpd' %}
+            <li {% if request.resolver_match.url_name == 'home_hpd' %}class="active"{% endif %}>
+                <a href="{% url 'manajemen:home_hpd' %}"><br>HPD</a>
             </li>
             {% endif %}
             <li >

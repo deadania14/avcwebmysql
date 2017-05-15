@@ -1,11 +1,13 @@
 from django import forms
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django.forms import Textarea
+from django.forms.extras.widgets import SelectDateWidget
 from django.contrib.admin.widgets import AdminTimeWidget, AdminSplitDateTime
 from ajax_select.fields import AutoCompleteSelectField, AutoCompleteSelectMultipleField
 from ajax_select import make_ajax_field
 from .models import Article, Practice, Kelas, PracticeAttendance, Inventory, Meeting
-from public.models import SettingsVariable, Event
+from public.models import SettingsVariable, Event, UserProfile
 
 class ArticleForm(forms.ModelForm):
     title = forms.CharField(label='Judul', max_length=100, required=True)
@@ -69,34 +71,75 @@ class AbsensiKelasForm(forms.ModelForm):
         fields = ('practice','kelas','tutor')
 
 class AVCContactForm(forms.Form):
-    address = forms.CharField(label='Alamat', max_length=255, required=True)
-    phone1 = forms.CharField(label='Telepon Utama', max_length=20, required=True)
-    phone2 = forms.CharField(label='Telepon Bantuan', max_length=20, required=True)
-    email = forms.EmailField(label='E-mail', max_length=50, required=True)
-    facebook = forms.CharField(label='Facebook', max_length=100, required=True)
-    twitter = forms.CharField(label='Twitter', max_length=100, required=True)
-    instagram = forms.CharField(label='Instagram', max_length=100, required=True)
-    youtube = forms.CharField(label='Youtube', max_length=100, required=True)
+    address = forms.CharField(label='Alamat',  required=True)
+    phone1 = forms.CharField(label='Telepon Utama',  required=True)
+    phone2 = forms.CharField(label='Telepon Bantuan', required=True)
+    email = forms.EmailField(label='E-mail',  required=True)
+    facebook = forms.CharField(label='Facebook',  required=True)
+    twitter = forms.CharField(label='Twitter',  required=True)
+    instagram = forms.CharField(label='Instagram', required=True)
+    youtube = forms.CharField(label='Youtube', required=True)
 
 class NewEventForm(forms.ModelForm):
     class Meta:
         model = Event
         fields = ['event_name', 'desc', 'image', 'event_date',]
 
-class EditBarangForm(forms.ModelForm):
+class NewBarangForm(forms.ModelForm):
+    thingsname = forms.CharField(label='Nama Barang', required=True)
+    detail = forms.CharField(label='Keterangan', required=True)
+    note = forms.CharField(label='Catatan', required=True)
     class Meta:
         model = Inventory
         exclude = ('created_date','updated_date',)
 
-class NewNoteMeet(forms.ModelForm):
-    title = forms.CharField(label='Judul', max_length=100, required=True)
+class EditBarangForm(forms.ModelForm):
+    detail = forms.CharField(label='Keterangan', required=True)
     note = forms.CharField(label='Catatan', required=True)
     class Meta:
-        model = Meeting
-        exclude =('created_date', 'updated_date',)
+        model = Inventory
+        exclude = ('thingsname','created_date','updated_date',)
 
-class EditNoteMeet(forms.ModelForm):
 
+class NewMeetingForm(forms.ModelForm):
+    title = forms.CharField(label='Judul', required=True)
+    place = forms.CharField(label='Tempat', required=True)
+    user = forms.ModelMultipleChoiceField(
+        label='Daftar Hadir',
+        queryset=User.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+    note = forms.CharField(label='Catatan', widget=forms.Textarea, required=True)
+    date_meet = forms.DateField(
+        widget=SelectDateWidget(
+            empty_label=("Choose Year", "Choose Month", "Choose Day"),
+        )
+    )
     class Meta:
-         model = Meeting
-         exclude = ('title',)
+        model = Meeting
+        exclude = ('created_date', 'updated_date',)
+        widget = {
+             'desc': Textarea(attrs={'cols': 80, 'rows': 20}),
+        }
+
+class EditMeetingForm(forms.ModelForm):
+    user = forms.ModelMultipleChoiceField(
+        label='Daftar Hadir',
+        queryset=User.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+    note = forms.CharField(label='Catatan', required=True)
+    place = forms.CharField(label='Tempat', required=True)
+    class Meta:
+        model = Meeting
+        fields = ('place', 'user', 'note',)
+
+class EditUser(forms.ModelForm):
+    class Meta:
+        model = UserProfile,
+        fields = ('user_kelas',)
+    class Meta:
+        model = User
+        fields = ('is_active',)

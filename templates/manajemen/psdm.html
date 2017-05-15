@@ -39,7 +39,6 @@
                         <td>{{kelas.nama_kelas}}</td>
                         <td><strong>{{kelas.updated_date}}</strong></td>
                         <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal{{kelas.id}}">Lihat</button>
-                          <a class="btn	btn-warning" href="{%	url	'manajemen:edit_kelas'	kelas.id	%}"><span	class="glyphicon	glyphicon-pencil"></span></a><td>
                     </tr>
                     <!-- Modal -->
                     <div id="myModal{{kelas.id}}" class="modal fade" role="dialog">
@@ -92,9 +91,8 @@
                         <td>
                           {% if now <= presenting.practice.date.date %}
                             <a class="btn	btn-warning" href="{%	url	'manajemen:edit_attendance'	presenting.id %}"><span	class="glyphicon	glyphicon-pencil"></span></a>
-                          {% else %}
-                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModalAttendanceDetails{{presenting.id}}">Lihat</button>
                           {% endif %}
+                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModalAttendanceDetails{{presenting.id}}">Lihat</button>
                         <td>
                     </tr>
                     <!-- Modal -->
@@ -187,7 +185,6 @@
                             <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModalHapus{{practice.id}}"><span	class="glyphicon	glyphicon-trash"></span></button>
                             {% endif %}
                         </td>
-
                     </tr>
 
                     <!-- Modal -->

@@ -42,7 +42,6 @@ class EventForm(ModelForm):
     event_name = forms.CharField(label='Nama Acara',max_length=50)
     corporate = forms.CharField(label='Instansi', max_length=50)
     desc = forms.CharField(label='Deskripsi Singkat', widget=forms.Textarea)
-
     sender = forms.CharField(label='Pengaju',max_length=20,)
     phone = IDPhoneNumberField()
     email = forms.EmailField(label='E-mail Pengaju',)

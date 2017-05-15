@@ -3,6 +3,9 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
+    #edit_user
+    url(r'^edit_user/(?P<user_id>[0-9]+)/$', views.edit_user, name='edit_user'),
+
     #HPD V
     url(r'^hpd/$', views.home_hpd, name='home_hpd'),
     #/new_article V
@@ -23,7 +26,7 @@ urlpatterns = [
     #/new_kelas
     url(r'^psdm/new_kelas/$', views.new_kelas, name='new_kelas'),
     #/edit_kelas
-    url(r'^psdm/kelas/-(?P<kelas_id>[0-9]+)/edit/$', views.edit_kelas, name='edit_kelas'),
+    #url(r'^psdm/kelas/-(?P<kelas_id>[0-9]+)/edit/$', views.edit_kelas, name='edit_kelas'),
     #/new_schedule
     url(r'^psdm/new_schedule/$', views.new_schedule, name='new_schedule'),
     #/new_attendance_people
@@ -58,6 +61,20 @@ urlpatterns = [
 
     #Inventaris
     url(r'^inventaris/$', views.home_inventaris, name='home_inventaris'),
-    #/inventaris_edit
+    #Inventaris_new_barang
+    url(r'^inventaris/new_barang/$', views.new_barang, name='new_barang'),
+    #inventaris_edit_barang
     url(r'^inventaris/edit_barang/(?P<barang_id>[0-9]+)/$', views.edit_barang, name='edit_barang'),
+    #inventaris_delete_barang
+    url(r'^inventaris/delete_(?P<barang_id>[0-9]+)/$', views.delete_barang, name='delete_barang'),
+
+    #sekretaris
+    url(r'^sekretaris/$', views.home_sekretaris, name='home_sekretaris'),
+    #sekretaris-new meeting
+    url(r'^sekretaris/new-meeting/$', views.new_meeting, name='new_meeting_note'),
+    #sekretaris-edit meeting
+    url(r'^sekretaris/edit_(?P<meeting_id>[0-9]+)/$', views.edit_meeting, name='edit_meeting'),
+    #sekretaris-delete meeting
+    url(r'^sekretaris/delete_(?P<meeting_id>[0-9]+)/$', views.delete_meeting, name='delete_meeting'),
+
 ]

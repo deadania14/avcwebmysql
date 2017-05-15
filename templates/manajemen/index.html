@@ -1,5 +1,6 @@
 {% extends 'manajemen/base.html' %}
 {% block title%}
+{% load permission_tags %}
 Beranda - Manajemen
 {% endblock %}
 
@@ -64,62 +65,54 @@ Beranda - Manajemen
               <th>Nama</th>
               <th>Gender</th>
               <th>Kelas</th>
-              <th>Status</th>
+              {% if user|has_role:'sekretaris' %}<th>Aksi</th>
+              {% endif %}
             </tr>
           </thead>
           {% for member in members %}
-          <tr>
-            <td>{{member.user}}</td>
-            <td>{{member.gender}}</td>
-            <td>{{member.user_kelas}}</td>
-            <td>{{member.profile.is_active}}</td>
-          </tr>
-          {% endfor %}
           <tbody>
+            <tr>
+              <td>{{member.user}}</td>
+              <td>{{member.gender}}</td>
+              <td>{{member.user_kelas}}</td>
+              {% if user|has_role:'sekretaris' %}
+              <td>
+                <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#myModal{{member.id}}">Lihat</button>
+              </td>
+              {% endif %}
+            </tr>
+            <!-- Modal Edit User-->
+            <div id="myModal{{member.id}}" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">User Status</h4>
+                        </div>
+                        <div class="modal-body">
+
+                            test
+                            <div style= "text-align:center">
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                              <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          {% endfor %}
 
           </tbody>
         </table>
         <!-- end user projects -->
         </div>
-        <!-- start user projects -->
-        <table class="data table table-striped table-responsive no-margin">
-          <thead>
-            <tr>
-              <th>Nama</th>
-              <th>Gender</th>
-              <th>Kelas</th>
-            </tr>
-          </thead>
-          {% for member in members %}
-          <tr>
-            <td>{{member.user}}</td>
-            <td>{{member.gender}}</td>
-            <td>{{member.user_kelas}}</td>
-          </tr>
-          {% endfor %}
-          <tbody>
-
-          </tbody>
-        </table>
-        <!-- end user projects -->
         </div>
       </div>
       <div role="tabpanel" class="tab-pane fade" id="tab_content3" aria-labelledby="profile-tab">
-        <!-- start user projects -->
-        <table class="data table table-striped table-responsive no-margin">
-          <thead>
-            <tr>
-              <th>Tanggal</th>
-              <th>Aksi</th>
-              <th>Tanggal</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
 
-          </tbody>
-        </table>
-        <!-- end user projects -->
       </div>
     </div>
   </div>
