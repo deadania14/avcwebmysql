@@ -21,4 +21,7 @@ urlpatterns = [
     url(r'^profile/$', views.myprofile, name="myprofile"),
     #/edit profile
     url(r'^update_profile/(?P<pk>[0-9]+)/$', views.edit_user, name="edit_profile"),
+
+    #tutor
+    url(r'^tutor/$', views.home_tutor, name='home_tutor'),
 ]

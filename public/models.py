@@ -25,7 +25,7 @@ class Event(models.Model):
     phone = models.CharField(max_length=20)
     email = models.EmailField()
     image = models.ImageField(null=True, blank=True, upload_to='images/events')
-    attachment = models.FileField(blank=True, verbose_name = "proposal atau undangan", upload_to='files/events', validators=[validate_file_extension])
+    attachment = models.FileField(verbose_name = "proposal atau undangan", upload_to='files/events', validators=[validate_file_extension], blank=True)
     event_date = models.DateField( default = timezone.now)
     created_date = models.DateTimeField(
             default=timezone.now)

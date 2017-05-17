@@ -119,7 +119,7 @@ class Administrasi(models.Model):
     jenis = models.ForeignKey(AdministrationType,related_name= "administrasi_jenis", null = True)
     nominal = models.PositiveIntegerField(null=True)
     method = models.CharField(max_length=20, choices = method_choices, default= 'cash')
-    image = models.ImageField(null=True, blank=True, upload_to='images/bukti_payments')
+    image = models.ImageField(null=True, upload_to='images/bukti_payments')
     status = models.CharField(max_length=20, choices = status_choices, default= 'pending')
     note = models.TextField(blank = True)
     created_date = models.DateTimeField(

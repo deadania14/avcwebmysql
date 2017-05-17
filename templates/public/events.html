@@ -19,10 +19,12 @@
 </style>
 <div class="col-sm-12 form-group">
   <br/><br/>
+  {% if not user.is_authenticated %}
   <div class="col-sm-12 right">
     <button type="button" class="btn btn-info" data-toggle="modal" data-target="#penawaran">Buat Penawaran</button>
     <button type="button" class="circle btn btn-warning" data-toggle="modal" data-target="#helppenawaran"><i class="glyphicon glyphicon-question-sign"></i></button>
   </div>
+  {% endif %}
     {% for deals in devent %}
     <div class="col-md-3">
       <div class="event-box {{deals.status}}-design">

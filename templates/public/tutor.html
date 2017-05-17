@@ -1,0 +1,111 @@
+{% extends 'public/base.html' %}
+{% block title%}
+  Tutor
+{% endblock %}
+{% block page_title %}
+<div class="col-sm-12 wow fadeIn">
+  <i class="glyphicon glyphicon-list-alt"></i>
+  <h1><a href="{% url 'public:home_tutor' %}">Tutor </a>/ Hallo {{request.user.username}} !</h1>
+</div>
+{% endblock %}
+{% block content %}
+<br/>
+<div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+        <div class="x_title">
+          <h2>Absensi~ <small><a>Terbaru</a></small></h2>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <table class="table table-responsive">
+                <thead>
+                    <tr>
+                        <th>Kelas</th>
+                        <th>Tanggal</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for presenting in presents %}
+                    <tr>
+                        <td>{{presenting.kelas}}</td>
+                        <td>{{presenting.practice.date.date}}</td>
+                        <td>
+                          {% if now == presenting.practice.date.date %}
+                            Ubah
+                          {% else %}
+                          -
+                          {% endif %}
+                        <td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>Jadwal Latihan~ <small><a>Terbaru</a></h2>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <table class="table table-responsive">
+                <thead>
+                    <tr>
+                        <th>Tanggal</th>
+                        <th>Tempat</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for practice in practices %}
+                    <tr>
+                        <td>{{practice.date}}</td>
+                        <td>{{practice.place}}</td>
+                        <td><button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal{{practice.id}}"><span class="fa fa-folder"></span> Lihat</button>
+                        </td>
+                    </tr>
+                    <!-- Modal -->
+                    <div id="myModal{{practice.id}}" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Detail Jadwal Latihan</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class = "col-md-4">
+                                      <b>Tanggal</b>
+                                    </div>
+                                    <div class = "col-md-8">{{practice.date.date}}</div>
+                                    <div class = "clearfix"></div>
+                                    <br/>
+                                    <div class = "col-md-4">
+                                      <b>Tempat</b>
+                                    </div>
+                                    <div class = "col-md-8">{{practice.place}}</div>
+                                    <div class = "clearfix"></div>
+                                    <br/>
+                                    <div class = "col-md-4">
+                                      <b>Catatan</b>
+                                    </div>
+                                    <div class = "col-md-8">
+                                      {{practice.note}}
+                                    </div>
+                                    <div class = "clearfix"></div>
+                                    <br/>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

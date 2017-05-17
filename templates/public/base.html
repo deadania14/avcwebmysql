@@ -56,8 +56,13 @@
               <li {% if request.resolver_match.url_name == 'konser' %}class="active"{% endif %}>
                   <a href="{% url 'public:konser' %}"><br>Konser</a>
               </li>
+              {% if user.is_authenticated %}
+                {% if user|has_role:'manajemen' %}
+                  <li {% if request.resolver_match.url_name == 'home_tutor' %}class="active"{% endif %}>
+                      <a href="{% url 'public:home_tutor' %}"><br>Tutor</a>
+                  </li>
+                {% endif %}
               <li>
-                {% if user.is_authenticated %}
                 <li class="dropdown {% if request.resolver_match.url_name == 'myprofile' %}active{% endif %}" >
     							<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000">
     								<br>Hi <strong>{{user.username}}</strong> <span class="caret"></span>

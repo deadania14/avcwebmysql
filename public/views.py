@@ -17,7 +17,10 @@ from django.urls import reverse
 from manajemen.models import Article, Administrasi, AdministrationType, PracticeAttendance, Kelas
 from public.models import SettingsVariable
 from .models import Event, Slider, UserProfile, Kelas
-from .forms import EventForm, UserForm, UserProfileForm,  UserProfileEditForm, AdministrasiForm, UserRegister
+from .forms import EventForm, UserForm, UserProfileForm,  UserProfileEditForm, AdministrasiForm, UserRegister, RegisterTransferForm
+from manajemen.models import Practice, Kelas, PracticeAttendance
+
+from rolepermissions.decorators import has_role_decorator
 
 def index(request):
     context={}
@@ -147,11 +150,33 @@ def events(request):
 
 @login_required
 def myprofile(request):
-    context={}
+    payment_tf = get_object_or_404(Administrasi, user = request.user, jenis__paymentstype='Registration and First Dues')
+    if request.method=="POST":
+        form_transfer = RegisterTransferForm(request.POST, request.FILES, instance= payment_tf)
+        if form_transfer.is_valid():
+            tfpayment = form_transfer.save(commit = False)
+            tfpayment.save()
+
+            bendaharas = User.objects.filter(groups__name='bendahara')
+
+
+            subject = 'Pembayaran Registrasi'
+            message = 'Bukti pembayaran registrasi melalui transfer oleh '+request.user.username+ ' telah diterima'
+            from_email = settings.EMAIL_HOST_USER
+            to_list = [settings.EMAIL_HOST_USER]
+            for bendahara in bendaharas:
+                to_list.append(bendahara.email)
+
+            send_mail(subject, message, from_email, to_list, fail_silently = True)
+
+            return HttpResponseRedirect(reverse('public:myprofile',))
+    else :
+        form_transfer = RegisterTransferForm(instance=payment_tf)
+    context={'form_transfer':form_transfer,}
     administrasi_query = Administrasi.objects.filter(user = request.user)
     context['adminitrasis'] = administrasi_query
-    #kelas_query = Kelas.objects.filter(user= request.user)
-    #context['kelas'] = kelas_query
+    regis_pay = Administrasi.objects.filter(user=request.user).filter(jenis__paymentstype='Registration and First Dues')[0]
+    context['regis_payment'] = regis_pay
     today = today = timezone.now().date()
     events_query = Event.objects.filter(event_status="deal").filter(event_date__gte=today)
     context['events'] = events_query
@@ -160,7 +185,7 @@ def myprofile(request):
 def edit_user(request, pk):
     user = get_object_or_404(UserProfile, pk=pk)
     if request.method == "POST":
-        form_edit_profile = UserProfileEditForm(request.POST, instance = user)
+        form_edit_profile = UserProfileEditForm(request.POST,request.FILES,  instance = user)
         if form_edit_profile.is_valid():
             userprofile = form_edit_profile.save(commit=False)
             userprofile.updated_date= timezone.now()
@@ -169,6 +194,17 @@ def edit_user(request, pk):
     else:
         form_edit_profile = UserProfileEditForm(instance = user)
         return render(request, "public/edit_profile.html", {'form_edit_profile':form_edit_profile})
+
+@has_role_decorator('tutor')
+def home_tutor(request):
+    context={}
+    today = timezone.now().date()
+    practice_query = Practice.objects.filter(date__gte=today)
+    context['practices'] = practice_query
+    present_query = PracticeAttendance.objects.filter(practice__date__gte=today)
+    context['presents'] = present_query
+    context['now'] = timezone.now().date()
+    return render(request, 'public/tutor.html', context)
 
 def permission_denied(request):
     return render(request, 'login/403.html', {})

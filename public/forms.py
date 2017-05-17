@@ -55,6 +55,16 @@ class EventForm(ModelForm):
         widget = {
              'desc': Textarea(attrs={'cols': 80, 'rows': 20}),
         }
+    def clean_image(self):
+        image = self.cleaned_data.get['image']
+        if image:
+            from django.core.files.images import get_image_dimensions
+            w, h = get_image_dimensions(image)
+
+            if w > 958 or h > 460:
+                raise forms.ValidationError(
+                u'That image is too big. The image needs to be width : 958px height :460px ')
+        return image
 
 class UserRegister(forms.ModelForm):
     first_name = forms.CharField(label='Nama Depan', help_text='', required=True)
@@ -99,3 +109,9 @@ class UserProfileEditForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ['phone', 'address','photo', 'about']
+
+class RegisterTransferForm(forms.ModelForm):
+    image = forms.ImageField(label='Bukti Pembayaran', help_text='Upload Bukti Transfer', required=True)
+    class Meta:
+        model = Administrasi
+        fields = ['image',]

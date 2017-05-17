@@ -3,7 +3,7 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
-    
+
     #HPD
     url(r'^hpd/$', views.home_hpd, name='home_hpd'),
     #/new_article
@@ -33,6 +33,9 @@ urlpatterns = [
     url(r'^psdm/new_attendance_kelas/$', views.new_attendance_kelas, name='new_attendance_kelas'),
     #/edit_attendance
     url(r'^psdm/edit_attendance/(?P<attendance_id>[0-9]+)/$', views.edit_attendance, name='edit_attendance'),
+    #/delete_attendance
+    url(r'^psdm/delete_attendance/(?P<attendance_id>[0-9]+)/$', views.delete_attendance, name='delete_attendance'),
+
     #/detail_schedule
     url(r'^psdm/detail_schedule/(?P<schedule_id>[0-9]+)/$', views.detail_schedule, name='detail_schedule'),
     #/schedule_edit

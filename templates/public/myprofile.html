@@ -1,5 +1,6 @@
 {% extends 'public/base.html' %}
 {% block title%}
+{% load bootstrap3 %}
 Profile
 {% endblock %}
 {% block page_title %}
@@ -14,8 +15,9 @@ Profile
   <div class="col-md-3 col-sm-3 col-xs-12">
     <div class="profile_img">
       <div id="crop-avatar">
-        {% if user.profile.photo %}
-        <img class="img-circle" src="{{user.profile.photo.url}}" height='150' width='150' alt="Avatar" title="Change the avatar">
+
+        {% if request.user.profile.photo %}
+        <img class="img-circle" src="{{request.user.profile.photo.url}}" height='150' width='150' alt="Avatar" title="Change the avatar">
         {% endif %}
       </div>
     </div>
@@ -30,7 +32,7 @@ Profile
         <i class="fa fa-briefcase user-profile-icon"></i> {{ user.profile.tipe_user }}
       </li>
     </ul>
-    <a class="btn btn-success" href= "{% url 'public:edit_profile' user.id %}"><i class="fa fa-edit m-right-xs"></i>Ubah Profile</a>
+    <a class="btn btn-success" href= "{% url 'public:edit_profile' user.profile.id %}"><i class="fa fa-edit m-right-xs"></i>Ubah Profile</a>
     <br />
     <br />
   </div>
@@ -150,10 +152,38 @@ Profile
       </div>
     </div>
   </div>
-{% else %}
+{% elif regis_payment.method == 'cash' %}
 <p>
   Pembayaran Pendaftaran dan Iuran bulan pertama Anda belum dikonfirmasi oleh pihak manajemen
 </p>
+{% else %}
+  {% if regis_payment.image.url %}
+    <h4>Terima Kasih telah melakukan pembayaran. </h4>
+    <p type="button" class="circle btn btn-warning" data-toggle="modal" data-target="#helppenawaran"><small>Upload Bukti Kembali</small></p>
+  {% else %}
+  <h4>Anda mendaftar dengan pilihan pembayaran transfer. Silahkan lampirkan bukti pembayaran Anda.</h4>
+  <button type="button" class="circle btn btn-warning" data-toggle="modal" data-target="#helppenawaran">Upload Bukti Transfer</button>
+  {% endif %}
+    <!-- Modal help Penawaran -->
+    <div id="helppenawaran" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Upload Bukti Pembayaran</h4>
+                </div>
+                <div class="modal-body">
+                  <form method="POST" enctype="multipart/form-data"> {% csrf_token %}
+                    {% bootstrap_form form_transfer %}
+                    <button class = "btn btn-primary" type="submit" class="save btn btn-default">Save</button>
+                  </form>
+                </div>
+            </div>
+        </div>
+    </div>
+  <br /><br />
+
 {% endif %}
 
 {% endblock %}

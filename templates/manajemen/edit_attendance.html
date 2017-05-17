@@ -22,6 +22,11 @@
 <div class ="col-md-8">
   <br>
   <form method="POST"> {% csrf_token %}
+    <div class="form-group">
+      <label class="control-label left" for="id_nama_kelas">
+        Tutor</label>
+        <br><b>{{tutor}}</b>
+      </div>
     {% bootstrap_form form_edit_absensi %}
     <button type="submit" class="save btn btn-primary">Simpan</button>
   </form>
