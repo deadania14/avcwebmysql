@@ -87,11 +87,6 @@
                 <a href="{% url 'manajemen:home_psdm' %}"><br>PSDM</a>
             </li>
             {% endif %}
-            {% if user|has_role:'tutor' %}
-            <li {% if request.resolver_match.url_name == 'home_tutor' %}class="active"{% endif %}>
-                <a href="{% url 'manajemen:home_tutor' %}"><br>Tutor</a>
-            </li>
-            {% endif %}
             {% if user|has_role:'program' %}
             <li {% if request.resolver_match.url_name == 'home_acara' %}class="active"{% endif %}>
                 <a href="{% url 'manajemen:home_acara' %}"><br>Program</a>

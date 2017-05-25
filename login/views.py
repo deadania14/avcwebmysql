@@ -62,7 +62,6 @@ def user_logout(request):
     logout(request)
     return HttpResponseRedirect(reverse('public:index'))
 
-
 def change_password(request):
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)

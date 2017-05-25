@@ -1,8 +1,33 @@
 {% extends 'public/base.html' %}
+{% load permission_tags %}
+{% load bootstrap3 %}
 {% block title %}
   Beranda
 {% endblock %}
 {% block page_title%}
+{% if user|has_role:'hpd' %}
+<div class="right">
+  <button type="button" class="btn btn-success btn-sm cricle" data-toggle="modal" data-target="#myModalNewSlide"><span	class="glyphicon	glyphicon-plus"></span></button>
+</div>
+<div id="myModalNewSlide" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Gambar Baru</h4>
+            </div>
+            <div class="modal-body">
+              <form method="POST" enctype="multipart/form-data"> {% csrf_token %}
+                {% bootstrap_form slider_form %}
+                <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+                <button class = "btn btn-primary" type="submit" class="save btn btn-default">Simpan</button>
+              </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
 <div class="container">
   <div id="myCarousel" class="carousel slide" data-ride="carousel">
     <!-- Indicators -->
@@ -14,9 +39,6 @@
       </li>
       {% endfor %}
     </ol>
-
-
-
     <!-- Wrapper for slides -->
     <div class="carousel-inner">
       {% for slide in sliders %}
@@ -34,7 +56,6 @@
       </div>
       {% endfor %}
     </div>
-
     <!-- Left and right controls -->
     <a class="left carousel-control" href="#myCarousel" data-slide="prev">
       <span class="glyphicon glyphicon-chevron-left"></span>
@@ -61,7 +82,7 @@
             <div class="col-sm-3">
                 <div class="work wow fadeInUp">
                   {% if article.image %}
-                  <img src="{{article.image.url}}"> {% endif %}
+                  <img src="{{article.image.url}}" height='958' width='460'> {% endif %}
                     <h3>{{article.title}}</h3>
                     <p>{{article.text|safe|slice:":100"}}...</p>
                     <div class="work-bottom">

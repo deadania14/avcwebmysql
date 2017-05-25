@@ -7,15 +7,27 @@ from django.contrib.admin.widgets import AdminTimeWidget, AdminSplitDateTime
 from ajax_select.fields import AutoCompleteSelectField, AutoCompleteSelectMultipleField
 from ajax_select import make_ajax_field
 from .models import Article, Practice, Kelas, PracticeAttendance, Inventory, Meeting, Administrasi, AdministrationType
-from public.models import SettingsVariable, Event, UserProfile
+from public.models import SettingsVariable, Event, UserProfile, Timeline
 
 class ArticleForm(forms.ModelForm):
     title = forms.CharField(label='Judul',required=True)
     image = forms.ImageField(label = 'Gambar', required=False)
+    is_publish = forms.BooleanField(label = 'Siap Publikasi ?', required=False)
+    is_concertarticle = forms.BooleanField(label = 'Artikel Konser ?', required=False)
     class Meta:
         model = Article
         fields = ('title','text',
-        'image',)
+        'image', 'is_publish', 'is_concertarticle',)
+    def clean_image(self):
+        image = self.cleaned_data['image']
+        if image:
+            from django.core.files.images import get_image_dimensions
+            w, h = get_image_dimensions(image)
+
+            if w > 958 or h > 460:
+                raise forms.ValidationError(
+                u'That image is un suitable. The image needs to be width : 958px height :460px ')
+        return image
 
 class MainArticleForm(forms.ModelForm):
     image = forms.ImageField(label = 'Gambar', required=False)
@@ -23,6 +35,16 @@ class MainArticleForm(forms.ModelForm):
         model = Article
         fields = ('text',
         'image',)
+    def clean_image(self):
+        image = self.cleaned_data['image']
+        if image:
+            from django.core.files.images import get_image_dimensions
+            w, h = get_image_dimensions(image)
+
+            if w > 958 or h > 460:
+                raise forms.ValidationError(
+                u'That image is un suitable. The image needs to be width : 958px height :460px ')
+        return image
 
 class SchedulesForm(forms.ModelForm):
     date = forms.SplitDateTimeField(label='Tanggal Latihan', required=True, widget=AdminSplitDateTime)
@@ -109,12 +131,23 @@ class NewEventForm(forms.ModelForm):
             empty_label=("Choose Year", "Choose Month", "Choose Day"),
         )
     )
+    is_publish = forms.BooleanField(label = 'Siap Publikasi ?', required=False)
     class Meta:
         model = Event
-        fields = ['event_name', 'desc', 'image', 'event_date',]
+        fields = ['event_name', 'desc', 'image', 'event_date','is_publish']
         widget = {
              'note': Textarea(attrs={'cols': 80, 'rows': 20}),
         }
+    def clean_image(self):
+        image = self.cleaned_data.get['image']
+        if image:
+            from django.core.files.images import get_image_dimensions
+            w, h = get_image_dimensions(image)
+
+            if w > 958 or h > 460:
+                raise forms.ValidationError(
+                u'That image is un suitable. The image needs to be width : 958px height :460px ')
+        return image
 
 
 class EditEventForm(forms.ModelForm):
@@ -126,9 +159,10 @@ class EditEventForm(forms.ModelForm):
             empty_label=("Choose Year", "Choose Month", "Choose Day"),
         )
     )
+    is_publish = forms.BooleanField(label = 'Siap Publikasi ?', required=False)
     class Meta:
         model = Event
-        exclude = ('email','corporate', 'phone', 'created_date','published_date','event_status',)
+        exclude = ('email','corporate', 'phone', 'created_date','published_date','event_status','attachment',)
         widget = {
              'note': Textarea(attrs={'cols': 80, 'rows': 20}),
         }
@@ -228,3 +262,13 @@ class EditPaymentTypeForm(forms.ModelForm):
     class Meta:
         model = AdministrationType
         exclude = ['paymentstype', 'created_date', 'updated_date',]
+
+class NewBroadcastMessageForm(forms.ModelForm):
+    title = forms.CharField(label='Judul Pesan', required=True)
+    message = forms.CharField(label='Isi Pesan', widget=forms.Textarea, required=True)
+    class Meta:
+        model = Timeline
+        exclude = ['created_date','writer',]
+        widget = {
+             'note': Textarea(attrs={'cols': 80, 'rows': 20}),
+        }

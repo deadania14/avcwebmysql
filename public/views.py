@@ -16,15 +16,26 @@ from django.utils import timezone
 from django.urls import reverse
 from manajemen.models import Article, Administrasi, AdministrationType, PracticeAttendance, Kelas
 from public.models import SettingsVariable
-from .models import Event, Slider, UserProfile, Kelas
-from .forms import EventForm, UserForm, UserProfileForm,  UserProfileEditForm, AdministrasiForm, UserRegister, RegisterTransferForm
-from manajemen.models import Practice, Kelas, PracticeAttendance
+from .models import Event, Slider, UserProfile, Kelas, Timeline
+from .forms import EventForm, UserForm, UserProfileForm,  UserProfileEditForm, AdministrasiForm, UserRegister, RegisterTransferForm, NewPaymentOfferForm, SliderForm
+from manajemen.models import Practice, Kelas, PracticeAttendance, LogKelas
 
 from rolepermissions.decorators import has_role_decorator
 
 def index(request):
-    context={}
-    articles_query = Article.objects.filter(is_mainarticle=False)[:4]
+    if request.method=="POST":
+        slider_form = SliderForm(request.POST, request.FILES)
+        if slider_form.is_valid():
+            nslide = slider_form.save(commit=False)
+            nslide.updated_date = timezone.now()
+            nslide.publisher = request.user
+            nslide.save()
+        else:
+            print (slider_form.errors)
+    else:
+        slider_form = SliderForm()
+    context={'slider_form' : slider_form,}
+    articles_query = Article.objects.filter(is_mainarticle=False).filter(is_publish=True)[:4]
     context['articles'] = articles_query
     slider_query = Slider.objects.all()[:4]
     context['sliders'] = slider_query
@@ -44,12 +55,6 @@ def konser(request):
     context['concerts'] = konser
     return render(request, 'public/konser.html', context)
 
-def contact(request):
-    context={}
-    contact_us = Article.objects.get(title = 'Hubungi Kami')
-    context['contactus'] = contact_us
-    return render(request, 'public/contact_us.html', context)
-
 def register(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect(reverse('public:index',))
@@ -59,7 +64,6 @@ def register(request):
         user_form = UserForm(data = request.POST)
         profile_form = UserProfileForm(data = request.POST)
         administrasi_form = AdministrasiForm(data = request.POST)
-
         if user_form.is_valid() and profile_form.is_valid and regis_form.is_valid and administrasi_form.is_valid:
             user = user_form.save(commit = False)
             if user_form.cleaned_data['password1'] != user_form.cleaned_data['password2']:
@@ -70,9 +74,6 @@ def register(request):
                 condition_query = Article.objects.get(title="Syarat dan Ketentuan")
                 context['conditions'] = condition_query
                 return render (request, 'public/register.html', context)
-
-
-
             user.set_password(user.password)
             regis = regis_form.save(commit = False)
             user.first_name= regis.first_name
@@ -87,6 +88,9 @@ def register(request):
             kelas= Kelas.objects.get(nama_kelas='Basic')
             profile = profile_form.save(commit = False)
             profile.user_kelas = kelas
+            today = timezone.now().date()
+            logkelas = LogKelas.objects.create(kelas_current=kelas.nama_kelas, user=user.username,
+                joined_date= today)
             user.save()
             profile.user = user
             if 'photo' in request.FILES :
@@ -144,7 +148,7 @@ def events(request):
     else :
         form = EventForm()
     context={'form':form,}
-    deal_event= Event.objects.filter(event_status='deal')
+    deal_event= Event.objects.filter(event_status='deal').filter(is_publish=True)
     context["devent"] = deal_event
     return render(request, 'public/events.html', context)
 
@@ -156,10 +160,7 @@ def myprofile(request):
         if form_transfer.is_valid():
             tfpayment = form_transfer.save(commit = False)
             tfpayment.save()
-
             bendaharas = User.objects.filter(groups__name='bendahara')
-
-
             subject = 'Pembayaran Registrasi'
             message = 'Bukti pembayaran registrasi melalui transfer oleh '+request.user.username+ ' telah diterima'
             from_email = settings.EMAIL_HOST_USER
@@ -178,8 +179,21 @@ def myprofile(request):
     regis_pay = Administrasi.objects.filter(user=request.user).filter(jenis__paymentstype='Registration and First Dues')[0]
     context['regis_payment'] = regis_pay
     today = today = timezone.now().date()
-    events_query = Event.objects.filter(event_status="deal").filter(event_date__gte=today)
-    context['events'] = events_query
+    mykelas = LogKelas.objects.filter(user=request.user)
+    context['mykelas'] = mykelas
+
+    timeline_query = Timeline.objects.all()
+    context['timeline_messages'] = timeline_query
+    # if request.method == 'POST':
+    #     offerpayment_form = NewPaymentOfferForm(data = request.POST)
+    #     if offerpayment_form.is_valid():
+    #         nofferpayment = offerpayment_form.save(commit = False)
+    #
+    #     else:
+    #         print (offerpayment_form.errors)
+    # else:
+    #     offerpayment_form = NewPaymentOfferForm()
+    # context={'offerpayment_form' : offerpayment_form, }
     return render(request, 'public/myprofile.html', context)
 
 def edit_user(request, pk):

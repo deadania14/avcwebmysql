@@ -36,16 +36,10 @@ urlpatterns = [
     #/delete_attendance
     url(r'^psdm/delete_attendance/(?P<attendance_id>[0-9]+)/$', views.delete_attendance, name='delete_attendance'),
 
-    #/detail_schedule
-    url(r'^psdm/detail_schedule/(?P<schedule_id>[0-9]+)/$', views.detail_schedule, name='detail_schedule'),
     #/schedule_edit
     url(r'^psdm/edit_schedule/(?P<schedule_id>[0-9]+)/$', views.edit_schedule, name='edit_schedule'),
     #/schedule_delete
     url(r'^psdm/delete_schedule/(?P<schedule_id>[0-9]+)/$', views.delete_schedule, name='delete_schedule'),
-
-
-    #tutor
-    url(r'^tutor/$', views.home_tutor, name='home_tutor'),
 
     #Keuangan
     url(r'^keuangan/$', views.home_bendahara, name='home_keuangan'),

@@ -10,7 +10,7 @@ from django.forms.fields import Field
 from django.contrib.auth.models import User
 from localflavor.fr.forms import FRPhoneNumberField
 from localflavor.generic.forms import DeprecatedPhoneNumberFormFieldMixin
-from .models import Event, UserProfile
+from .models import Event, UserProfile, Slider
 from manajemen.models import Administrasi
 
 phone_re = re.compile(r'^(\+62|0)[2-9]\d{7,10}$')
@@ -55,16 +55,6 @@ class EventForm(ModelForm):
         widget = {
              'desc': Textarea(attrs={'cols': 80, 'rows': 20}),
         }
-    def clean_image(self):
-        image = self.cleaned_data.get['image']
-        if image:
-            from django.core.files.images import get_image_dimensions
-            w, h = get_image_dimensions(image)
-
-            if w > 958 or h > 460:
-                raise forms.ValidationError(
-                u'That image is too big. The image needs to be width : 958px height :460px ')
-        return image
 
 class UserRegister(forms.ModelForm):
     first_name = forms.CharField(label='Nama Depan', help_text='', required=True)
@@ -72,6 +62,11 @@ class UserRegister(forms.ModelForm):
     class Meta:
         model = User
         fields = ('first_name', 'last_name',)
+
+class NewPaymentOfferForm(forms.ModelForm):
+    class Meta:
+        model = Administrasi
+        exclude = ['jenis', 'method',]
 
 class UserForm(forms.ModelForm):
     username = forms.CharField(label='Username', help_text='*tidakboleh spasi', required=True)
@@ -115,3 +110,20 @@ class RegisterTransferForm(forms.ModelForm):
     class Meta:
         model = Administrasi
         fields = ['image',]
+
+class SliderForm(forms.ModelForm):
+    image = forms.ImageField(label='Foto Slide', required=True)
+    caption = forms.CharField(label='Catatan Pendek', required=True)
+    class Meta:
+        model = Slider
+        fields = ['image', 'caption',]
+    def clean_image(self):
+        image = self.cleaned_data['image']
+        if image:
+            from django.core.files.images import get_image_dimensions
+            w, h = get_image_dimensions(image)
+
+            if w > 958 or h > 460:
+                raise forms.ValidationError(
+                u'That image is un suitable. The image needs to be width : 958px height :460px ')
+        return image

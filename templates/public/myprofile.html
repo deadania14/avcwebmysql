@@ -1,4 +1,5 @@
 {% extends 'public/base.html' %}
+{% load staticfiles %}
 {% block title%}
 {% load bootstrap3 %}
 Profile
@@ -12,12 +13,14 @@ Profile
 {% block content %}
 <br/>
 {% if request.user.profile.is_registration_paid %}
-  <div class="col-md-3 col-sm-3 col-xs-12">
+  <div class="col-md-3 col-sm-3 col-xs-12 ">
     <div class="profile_img">
       <div id="crop-avatar">
 
         {% if request.user.profile.photo %}
         <img class="img-circle" src="{{request.user.profile.photo.url}}" height='150' width='150' alt="Avatar" title="Change the avatar">
+        {% else %}
+        <img class="img-circle img-responsive" src="{% static 'pictures/default_ava.png' %}" height='150' width='150' alt="Avatar" title="the avatar">
         {% endif %}
       </div>
     </div>
@@ -40,7 +43,7 @@ Profile
   <div class="col-md-9 col-sm-9 col-xs-12">
     <div class="" role="tabpanel" data-example-id="togglable-tabs">
       <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
-        <li role="presentation" class="active"><a href="#tab_content1" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Acara Terbaru</a>
+        <li role="presentation" class="active"><a href="#tab_content1" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Pengumuman</a>
         </li>
         <li role="presentation" class=""><a href="#tab_content2" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">Latihan</a>
         </li>
@@ -52,39 +55,31 @@ Profile
 
           <!-- start recent activity -->
           <ul class="messages left">
-            {% for event in events %}
+            {% for message in timeline_messages %}
             <li>
-              {% if event.image %}
-              <img class="avatar" alt="Avatar"src="{{event.image.url}}">
-              {% endif %}
               <div class="message_date">
-                <h3 class="date text-info">{{event.event_date|date:'d'}}</h3>
-                <p class="month">{{event.event_date|date:'F'}}</p>
+                <h3 class="date text-info">{{message.created_date|date:'d'}}</h3>
+                <p class="month">{{message.created_date|date:'F'}}</p>
               </div>
               <div class="message_wrapper">
-                <h4 class="heading">{{event.event_name}}</h4>
-                <blockquote class="message">{{event.desc|slice:":100"}}</blockquote><br/><a data-toggle="modal" data-target="#myModal{{event.id}}">Teruskan membaca...</a>
+                <h4 class="heading">{{message.title}}</h4>
+                <blockquote class="message">{{message.message|slice:":100"}}</blockquote><br/><a data-toggle="modal" data-target="#myModal{{message.id}}">Teruskan membaca...</a>
                 <br />
               </div>
             </li>
             <!-- Modal -->
-            <div id="myModal{{event.id}}" class="modal fade" role="dialog">
+            <div id="myModal{{message.id}}" class="modal fade" role="dialog">
               <div class="modal-dialog">
                 <!-- Modal content-->
                 <div class="modal-content">
                   <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">{{event.event_name}}</h4>
+                    <h4 class="modal-title">{{message.title}}</h4>
                   </div>
                   <div class="modal-body">
-                    <p>{{event.desc|safe}}</p>
-                    <p>tanggal pelaksanaan : <h4>{{event.event_date}}</h4></p>
-
-                    <p>
-                      {% if event.image %}
-                        <img src="{{event.image.url}}">
-                      {% endif %}
-                    </p>
+                    <p>{{message.message|safe}}</p>
+                    <h3 class="date text-info">{{message.created_date|date:'d'}}</h3>
+                    <p class="month">{{message.created_date|date:'F'}}</p>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -103,21 +98,15 @@ Profile
           <table class="data table table-striped table-responsive no-margin">
             <thead>
               <tr>
-                <th>Nama Kelas</th>
-                <th>Note</th>
+                <th>Record Kelas</th>
+                <th>Tanggal</th>
               </tr>
             </thead>
             <tbody>
-              {% for kls in kelas %}
+              {% for kls in mykelas %}
               <tr>
-                <td>{{kls.nama_kelas}}</td>
-                <td>
-                  {% if kls.note %}
-                  {{kls.note}}
-                  {% else %}
-                  -
-                  {% endif %}
-                </td>
+                <td>{{kls.kelas_before}}</td>
+                <td>{{kls.joined_date}}</td>
               </tr>
               {% endfor %}
             </tbody>

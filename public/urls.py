@@ -7,8 +7,6 @@ urlpatterns = [
     url(r'^about/$', views.about, name="about"),
     #konser
     url(r'^konser/$', views.konser, name="konser"),
-    #contact
-    url(r'^contact-us/$', views.contact, name="contact"),
     #/article_detail
     url(r'^article/(?P<article_id>[0-9]+)/$', views.article_detail, name='article_detail'),
     #/event_detail

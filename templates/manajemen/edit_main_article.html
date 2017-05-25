@@ -1,7 +1,7 @@
 {% extends 'manajemen/base.html' %}
 {% load bootstrap3 %}
 {% block title%}
-Barang Baru
+Edit Main Article
 {% endblock %}
 {% block page_title %}
 <!-- Page Title -->
@@ -9,19 +9,19 @@ Barang Baru
     <div class="container">
         <div class="row">
           <div class="col-sm-12 wow fadeIn">
-            <i class="fa fa-dropbox"></i>
-            <h1><a href="{% url 'manajemen:home_inventaris' %}">Inventaris </a>/</h1>
-            <p> Barang Baru</p>
+            <i class="fa fa-pencil"></i>
+            <h1><a href="{% url 'manajemen:home_hpd' %}">HPD /</a></h1>
+            <p>Ubah Artikel <i> Alliance Violin Community</i></p>
           </div>
         </div>
     </div>
 </div>
 {% endblock %}
 {% block content %}
-<div class ="col-md-8 col-xs-12">
+<div class ="col-md-8">
   <br>
   <form method="POST"> {% csrf_token %}
-    {% bootstrap_form form_new_barang %}
+    {% bootstrap_form form_main_edit_article %}
     <button class = "btn btn-primary" type="submit" class="save btn btn-default">Simpan</button>
   </form>
 </div>

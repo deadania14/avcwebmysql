@@ -18,10 +18,7 @@
 {% endblock %}
 {% block content %}
 <div class = 'form-group'>
-  <h1>{{articleid.title}} <small>
-  {% if user.is_authenticated %}
-  <a class="btn	btn-warning" href="{%	url	'manajemen:edit_article'	articleid.id	%}"><span	class="glyphicon	glyphicon-pencil"></span></a>
-  {% endif %}</small></h1>
+  <h1>{{articleid.title}}</h1>
   <div style="font-size:18px">
     <p>{{articleid.text|safe|linebreaksbr}}</p>
   </div>

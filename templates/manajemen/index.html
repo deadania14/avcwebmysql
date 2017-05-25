@@ -1,5 +1,6 @@
 {% extends 'manajemen/base.html' %}
-{% block title%}
+{% block title %}
+{% load staticfiles %}
 {% load permission_tags %}
 Beranda - Manajemen
 {% endblock %}
@@ -28,6 +29,8 @@ Beranda - Manajemen
       </li>
       <li role="presentation" class=""><a href="#tab_content3" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">Rapat</a>
       </li>
+      <li role="presentation" class=""><a href="#tab_content4" role="tab" id="profile-tab3" data-toggle="tab" aria-expanded="false">Pendaftar Baru</a>
+      </li>
     </ul>
     <div id="myTabContent" class="tab-content">
       <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
@@ -45,7 +48,9 @@ Beranda - Manajemen
                         {% endfor %}
                       </i></p>
                       {% if manjs.photo %}
-                      <img class="img-circle img-responsive" src="{{manjs.photo.url}}" height='150' width='150' alt="Avatar" title="Change the avatar">
+                      <img class="img-circle img-responsive" src="{{manjs.photo.url}}" height='150' width='150' alt="Avatar" title="the avatar">
+                      {% else %}
+                      <img class="img-circle img-responsive" src="{% static 'pictures/default_ava.png' %}" height='150' width='150' alt="Avatar" title="the avatar">
                       {% endif %}
                       <h2>{{manjs.user}}</h2>
                       <p><strong>About: </strong>
@@ -146,7 +151,36 @@ Beranda - Manajemen
         <!-- end meetings -->
         </div>
       </div>
-    </div>
+      <div role="tabpanel" class="tab-pane fade active in" id="tab_content4" aria-labelledby="home-tab">
+        <div class="col-md-12 col-xs-12">
+          <div class="x_title">
+            Pendaftar Baru (Pembayaran Belum lunas)
+          </div>
+          <!-- start user info -->
+        <table class="data table table-striped table-responsive no-margin">
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Metode</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+
+
+          </tbody>
+        </table>
+        <!-- end user info -->
+        </div>
+      </div>
   </div>
   </div>
 </div>

@@ -10,7 +10,7 @@ Acara Baru
         <div class="row">
           <div class="col-sm-12 wow fadeIn">
             <i class="glyphicon glyphicon-sunglasses"></i>
-            <h1><a href="{% url 'manajemen:home_acara' %}">Acara </a>/</h1>
+            <h1><a href="{% url 'manajemen:home_acara' %}">Program </a>/</h1>
             <p>Buat Acara</p>
           </div>
         </div>
@@ -26,20 +26,12 @@ Acara Baru
 </style>
 <br />
 <div class="col-md-12 col-sm-12 col-xs-12">
-  <div class="x_panel">
-    <div class="x_title">
-      <h3>Daftar Acara{% if user.is_authenticated %} ~<small>
-          <a href="{%	url	'manajemen:new_event'	%}"> Tambah Baru></a>
-      </small>{% endif %}</h3>
-      <div class="clearfix"></div>
-    </div>
     <div class="x_content">
       <form method="POST" class= "post-form" enctype="multipart/form-data">{% csrf_token %}
         {% bootstrap_form form_new_event %}
         <button type="submit" class="save btn btn-primary" value="Submit">Simpan</button>
       </form>
     </div>
-  </div>
   <div class="col-sm-6 wow fadeIn">
     {% for deals in devent %}
     <div>

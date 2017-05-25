@@ -5,8 +5,8 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.models import User
 from .models import Article, Practice, Administrasi, Kelas, PracticeAttendance, Inventory, Meeting, AdministrationType, LogKelas
-from .forms import ArticleForm, MainArticleForm, SchedulesForm, EditUserClassForm, AbsensiForm, AbsensiPeopleForm, AVCContactForm, NewEventForm, EditBarangForm, AbsensiKelasForm, EditUser, NewMeetingForm, EditMeetingForm, NewBarangForm, EditEventForm, NewPaymentForm, EditPaymentForm, NewClassForm, NewPaymentTypeForm, EditPaymentTypeForm
-from public.models import UserProfile, Event, SettingsVariable
+from .forms import ArticleForm, MainArticleForm, SchedulesForm, EditUserClassForm, AbsensiForm, AbsensiPeopleForm, AVCContactForm, NewEventForm, EditBarangForm, AbsensiKelasForm, EditUser, NewMeetingForm, EditMeetingForm, NewBarangForm, EditEventForm, NewPaymentForm, EditPaymentForm, NewClassForm, NewPaymentTypeForm, EditPaymentTypeForm, NewBroadcastMessageForm
+from public.models import UserProfile, Event, SettingsVariable, Timeline
 
 from rolepermissions.decorators import has_role_decorator
 
@@ -18,6 +18,9 @@ def index(request):
     context={}
     member_user_query = UserProfile.objects.filter(tipe_user='member').filter(user__is_active=True)
     context['members'] = member_user_query
+    #belom kelar
+    regis_payments = Administrasi.objects.filter(jenis__paymentstype= "Registration and First Dues")
+    context['new_members'] = regis_payments
     tutor_user_query = UserProfile.objects.filter(tipe_user='tutor')
     context['tutors'] = tutor_user_query
     manajemen_user_query = UserProfile.objects.filter(user__groups__name='manajemen')
@@ -153,7 +156,7 @@ def cancel_payment(request, payment_id):
     return HttpResponseRedirect(reverse('manajemen:home_keuangan'))
 
 def delete_payment(request, payment_id):
-    payment_query = Practice.objects.get(id=payment_id)
+    payment_query = Administrasi.objects.get(id=payment_id)
     payment_query.delete()
     return HttpResponseRedirect(reverse('manajemen:home_keuangan'))
 
@@ -227,12 +230,6 @@ def edit_schedule(request, schedule_id):
         form_edit_schedule = SchedulesForm(instance = nschedule)
     return render(request, 'manajemen/edit_schedule.html', {'form_edit_schedule':form_edit_schedule})
 
-def detail_schedule(request, schedule_id):
-    context={}
-    schedule_query= Practice.objects.get(id=schedule_id)
-    context['scheduleid'] = schedule_query
-    return render(request, 'manajemen/detail_schedule.html', context)
-
 def delete_schedule(request, schedule_id):
     practice_query = Practice.objects.get(id=schedule_id)
     practice_query.delete()
@@ -293,17 +290,6 @@ def delete_attendance(request, attendance_id):
     absensi_query.delete()
     return HttpResponseRedirect(reverse('manajemen:home_psdm'))
 
-@has_role_decorator('tutor')
-def home_tutor(request):
-    context={}
-    today = timezone.now().date()
-    practice_query = Practice.objects.filter(date__gte=today)
-    context['practices'] = practice_query
-    present_query = PracticeAttendance.objects.filter(practice__date__gte=today)
-    context['presents'] = present_query
-    context['now'] = timezone.now().date()
-    return render(request, 'manajemen/tutor.html', context)
-
 @has_role_decorator('program')
 def home_program(request):
     check_event_expired()
@@ -318,15 +304,15 @@ def check_event_expired():
     today = timezone.now().date()
     acara_query= Event.objects.filter(event_status="waiting", event_date__lt= today)
     for acara in acara_query:
-       acara.event_status = 'cencelled'
-       acara.save()
+        acara.event_status = 'cancelled'
+        acara.save()
 
 def check_event_finish():
     today = timezone.now().date()
     acara_query= Event.objects.filter(event_status="deal", event_date__lt= today)
     for acara in acara_query:
-       acara.event_status = 'done'
-       acara.save()
+        acara.event_status = 'done'
+        acara.save()
 
 def new_event(request):
     context={}
@@ -373,7 +359,7 @@ def cancel_event(request, event_id):
     return HttpResponseRedirect(reverse('manajemen:home_acara'))
 
 def delete_event(request, event_id):
-    event_query = Inventory.objects.get(id=event_id)
+    event_query = Event.objects.get(id=event_id)
     event_query.delete()
     return HttpResponseRedirect(reverse('manajemen:home_acara'))
 
@@ -417,9 +403,22 @@ def delete_barang(request, barang_id):
 
 @has_role_decorator('hpd')
 def home_hpd(request):
-    context={}
+    if request.method == 'POST':
+        message_form = NewBroadcastMessageForm(data = request.POST)
+        if message_form.is_valid():
+            nmessage = message_form.save(commit=False)
+            nmessage.created_date = timezone.now()
+            nmessage.writer = request.user
+            nmessage.save()
+        else:
+            print (message_form.errors)
+    else:
+        message_form = NewBroadcastMessageForm()
+    context={'message_form' : message_form,}
     articles_query = Article.objects.all()
     context['articles'] = articles_query
+    broadcast_query = Timeline.objects.all()
+    context['messages'] = broadcast_query
     return render(request, 'manajemen/hpd.html', context)
 
 def new_article(request):
@@ -438,7 +437,7 @@ def new_article(request):
 def edit_article(request, article_id):
     narticle = get_object_or_404(Article, id=article_id)
     if request.method=="POST":
-        form_edit_article = ArticleForm(request.POST, instance = narticle)
+        form_edit_article = ArticleForm(request.POST, request.FILES, instance = narticle)
         if form_edit_article.is_valid():
             narticle = form_edit_article.save(commit = False)
             narticle.author = request.user
@@ -452,16 +451,16 @@ def edit_article(request, article_id):
 def edit_mainarticle(request, article_id):
     narticle = get_object_or_404(Article, id=article_id)
     if request.method=="POST":
-        form_edit_article = MainArticleForm(request.POST, instance = narticle)
-        if form_edit_article.is_valid():
-            narticle = form_edit_article.save(commit = False)
+        form_main_edit_article = MainArticleForm(request.POST, instance = narticle)
+        if form_main_edit_article.is_valid():
+            narticle = form_main_edit_article.save(commit = False)
             narticle.author = request.user
             narticle.updated_date= timezone.now()
             narticle.save()
             return HttpResponseRedirect(reverse('manajemen:detail_article', args=(narticle.id,)))
     else :
-        form_edit_article = MainArticleForm(instance = narticle)
-    return render(request, 'manajemen/edit_article.html', {'form_edit_article':form_edit_article})
+        form_main_edit_article = MainArticleForm(instance = narticle)
+    return render(request, 'manajemen/edit_main_article.html', {'form_main_edit_article':form_main_edit_article})
 
 def delete_article(request, article_id):
     article_query = Article.objects.get(id=article_id)

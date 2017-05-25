@@ -13,6 +13,8 @@ class Slider(models.Model):
     updated_date = models.DateTimeField(
         blank = True, null = True
     )
+    class Meta:
+        ordering =['-updated_date',]
     def update(self):
         self.updated_date = timezone.now()
         self.save()
@@ -22,11 +24,12 @@ class Event(models.Model):
     corporate = models.CharField(max_length=50)
     desc = models.TextField()
     sender = models.CharField(max_length=20)
-    phone = models.CharField(max_length=20)
-    email = models.EmailField()
+    phone = models.CharField(max_length=20, null=True, blank=True)
+    email = models.EmailField(null=True, blank=True)
     image = models.ImageField(null=True, blank=True, upload_to='images/events')
     attachment = models.FileField(verbose_name = "proposal atau undangan", upload_to='files/events', validators=[validate_file_extension], blank=True)
     event_date = models.DateField( default = timezone.now)
+    is_publish = models.BooleanField(default= False)
     created_date = models.DateTimeField(
             default=timezone.now)
     published_date = models.DateTimeField(
@@ -117,6 +120,14 @@ def create_profile(sender, **kwargs):
 #    if created:
 #        UserProfile.objects.create(user=instance)
 
+class Timeline(models.Model):
+    title = models.CharField(max_length=100)
+    writer = models.ForeignKey(User, related_name="sender_broadcast", null=True,)
+    message = models.CharField(max_length=255)
+    created_date = models.DateTimeField(
+            default=timezone.now)
+    class Meta:
+        ordering =['-created_date',]
 
 class SettingsVariable (models.Model):
     key = models.CharField(max_length=255, null=True)
