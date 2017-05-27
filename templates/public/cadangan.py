@@ -1,3 +1,66 @@
+#user_form = UserForm(data = request.POST)
+#user = user_form.save(commit = False)
+# if user_form.cleaned_data['password1'] != user_form.cleaned_data['password2']:
+#     user_form.add_error('password1', u"Password tidak sama")
+#     context={'regis_form' : regis_form, 'user_form' : user_form, 'profile_form' : profile_form,
+#     'administrasi_form' : administrasi_form,
+#     'registered' : registered}
+#     condition_query = Article.objects.get(title="Syarat dan Ketentuan")
+#     context['conditions'] = condition_query
+#     return render (request, 'public/register.html', context)
+# user.set_password(user.password)
+# regis = regis_form.save(commit = False)
+# user.first_name= regis.first_name
+# user.last_name = regis.last_name
+
+
+            #email
+            subject = 'terima kasih telah mendaftar'
+            message = 'Selamat datang, segera lunasi pembayaran anda '
+            from_email = settings.EMAIL_HOST_USER
+            to_list = [user.email, settings.EMAIL_HOST_USER]
+            send_mail(subject, message, from_email, to_list, fail_silently = True)
+            kelas= Kelas.objects.get(nama_kelas='Basic')
+            profile = profile_form.save(commit = False)
+            profile.user_kelas = kelas
+            today = timezone.now().date()
+            # logkelas = LogKelas.objects.create(kelas_current=kelas.nama_kelas, user=user.username,
+            #     joined_date= today)
+            # user.save()
+            profile.user = user
+            if 'photo' in request.FILES :
+                profile.photo = request.FILES['photo']
+            registered = True
+            administrasi = administrasi_form.save(commit = False)
+            regis_pay = AdministrationType.objects.get(paymentstype="Registration and First Dues")
+            administrasi.jenis = regis_pay
+            administrasi.user = user
+            profile.save()
+            administrasi.save()
+
+        else:
+            print (
+             profile_form.errors, regis_form.errors)
+
+
+{% for field in user_form %}
+<p>
+{{ field.label_tag }}<br>
+{{ field }}
+{% if field.help_text %}
+<small style="color: grey">{{ field.help_text }}</small>
+{% endif %}
+{% for error in field.errors %}
+<p style="color: red">{{ error }}</p>
+{% endfor %}
+</p>
+{% endfor %}
+{% bootstrap_form regis_form %}
+{% bootstrap_form profile_form%}
+{% bootstrap_form administrasi_form %}
+
+
+
 from django.core.mail import EmailMultiAlternatives
 
 subject, from_email, to = 'hello', 'from@example.com', 'to@example.com'

@@ -1,6 +1,7 @@
 import re
 from django.forms import ModelForm
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import ugettext_lazy as _
 from django.core.validators import EMPTY_VALUES
 from django.utils.encoding import force_text
@@ -63,33 +64,25 @@ class UserRegister(forms.ModelForm):
         model = User
         fields = ('first_name', 'last_name',)
 
+class SignUpForm(UserCreationForm):
+    first_name = forms.CharField(max_length=30, required=True, label='Nama Depan')
+    last_name = forms.CharField(max_length=30, required=False, help_text='Optional.', label='Nama Belakang')
+    email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.')
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2', )
+    def clean_mail(self):
+        email = self.cleaned_data['email']
+        if User.objects.filter(email=email).exists():
+            raise ValidationError("email telah terdigunakan")
+        return email
+
 class NewPaymentOfferForm(forms.ModelForm):
     class Meta:
         model = Administrasi
         exclude = ['jenis', 'method',]
 
-class UserForm(forms.ModelForm):
-    username = forms.CharField(label='Username', help_text='*tidakboleh spasi', required=True)
-    email = forms.CharField(label='E-mail', widget = forms.TextInput(attrs= { 'placeholder':'email'}))
-    password1 = forms.CharField(label='Password', help_text='*buat password Anda',widget = forms.PasswordInput(attrs= {'placeholder':'password'}))
-    password2 = forms.CharField(label='Re-password', widget = forms.PasswordInput(attrs= {'placeholder':'re-password'}))
-    class Meta:
-        model = User
-        fields = ('username', 'email',
-        'password1', 'password2',)
-    def clean_mail(self):
-        email = self.cleaned_data['email']
-        if User.objects.filter(email=email).exists():
-            raise ValidationError("email telah terpakai")
-        return email
 
-class UserProfileForm(forms.ModelForm):
-    photo = forms.ImageField(label='Foto Profil', help_text='', required=False)
-    phone = IDPhoneNumberField()
-    address = forms.CharField(label='Alamat Domisili', help_text='', required=True)
-    class Meta:
-        model = UserProfile
-        fields = ('gender', 'phone', 'address','photo',)
 
 class AdministrasiForm(forms.ModelForm):
     class Meta:

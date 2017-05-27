@@ -22,4 +22,5 @@ urlpatterns = [
 
     #tutor
     url(r'^tutor/$', views.home_tutor, name='home_tutor'),
+    
 ]

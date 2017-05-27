@@ -74,7 +74,7 @@ class UserProfile(models.Model):
     update_time = models.DateTimeField(
         default=timezone.now)
     is_registration_paid = models.BooleanField(default=False)
-
+    email_confirmed = models.BooleanField(default=False)
     def __str__(self):
         return self.user.username
 
@@ -108,13 +108,18 @@ class UserProfile(models.Model):
         else:
             return 0.0
 
-
-def create_profile(sender, **kwargs):
-    user = kwargs["instance"]
-    if kwargs["created"]:
-        user_profile = UserProfile(user=user)
-        user_profile.save()
-    post_save.connect(create_profile, sender=User)
+@receiver(post_save, sender=User)
+def update_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
+    instance.profile.save()
+#
+# def create_profile(sender, **kwargs):
+#     user = kwargs["instance"]
+#     if kwargs["created"]:
+#         user_profile = UserProfile(user=user)
+#         user_profile.save()
+#     post_save.connect(create_profile, sender=User)
 #@receiver(post_save, sender=User)
 #def create_user_profile(sender, instance, created, **kwargs):
 #    if created:

@@ -21,25 +21,25 @@ Pendaftaran
             <h4>Profile~</h4>
           </div>
           <div class = "x_content">
-            {% bootstrap_form regis_form %}
-            {% bootstrap_form profile_form%}
+
           </div>
 
           <div class = "x_title">
             <h4>Administrasi~</h4><small>pilih metode pembayaran</small>
-            <p>Pembayaran Pendaftaran dan Iuran bulan pertama Rp. 350.000,00</p>
+            <b><p>Pembayaran Pendaftaran dan Iuran bulan pertama <a>Rp. 350.000,00</a></p></b>
           </div>
           <div class = "x_content">
-            {% bootstrap_form administrasi_form %}
+            {% bootstrap_form regisadm_form%}
           </div>
           <div class = "x_title">
             <h4>Akun~</h4><small>buat akun AVC Anda</small>
           </div>
           <div class = "x_content">
-              {% bootstrap_form user_form %}
-              <label>
+            {% bootstrap_form user_form%}
+            <label>
                 <input type="checkbox" required=True> setuju dengan <a data-toggle="modal" data-target="#termandcondition">syarat dan ketentuan AVC</a>
-              </label>
+            </label>
+
               <br/><br/>
               <input class ="btn btn-primary" type="submit" name="submit" value="Daftar" />
           </div>

@@ -3,6 +3,10 @@ from django.conf import settings
 from django.core.mail import send_mail, BadHeaderError
 from django.core.mail import send_mail
 from django.core.mail import EmailMultiAlternatives
+##
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import UserCreationForm
+##
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
@@ -14,10 +18,11 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.http import HttpResponseRedirect
 from django.utils import timezone
 from django.urls import reverse
+from .forms import SignUpForm, RegisterTransferForm, NewPaymentOfferForm, SliderForm
 from manajemen.models import Article, Administrasi, AdministrationType, PracticeAttendance, Kelas
 from public.models import SettingsVariable
 from .models import Event, Slider, UserProfile, Kelas, Timeline
-from .forms import EventForm, UserForm, UserProfileForm,  UserProfileEditForm, AdministrasiForm, UserRegister, RegisterTransferForm, NewPaymentOfferForm, SliderForm
+from .forms import EventForm, UserProfileEditForm, AdministrasiForm, UserRegister
 from manajemen.models import Practice, Kelas, PracticeAttendance, LogKelas
 
 from rolepermissions.decorators import has_role_decorator
@@ -57,62 +62,47 @@ def konser(request):
 
 def register(request):
     if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('public:index',))
+        return HttpResponseRedirect(reverse('public:myprofile',))
     registered = False
     if request.method == 'POST':
-        regis_form = UserRegister(data = request.POST)
-        user_form = UserForm(data = request.POST)
-        profile_form = UserProfileForm(data = request.POST)
-        administrasi_form = AdministrasiForm(data = request.POST)
-        if user_form.is_valid() and profile_form.is_valid and regis_form.is_valid and administrasi_form.is_valid:
-            user = user_form.save(commit = False)
-            if user_form.cleaned_data['password1'] != user_form.cleaned_data['password2']:
-                user_form.add_error('password1', u"Password tidak sama")
-                context={'regis_form' : regis_form, 'user_form' : user_form, 'profile_form' : profile_form,
-                'administrasi_form' : administrasi_form,
-                'registered' : registered}
-                condition_query = Article.objects.get(title="Syarat dan Ketentuan")
-                context['conditions'] = condition_query
-                return render (request, 'public/register.html', context)
-            user.set_password(user.password)
-            regis = regis_form.save(commit = False)
-            user.first_name= regis.first_name
-            user.last_name = regis.last_name
-
-            #email
-            subject = 'terima kasih telah mendaftar'
-            message = 'Selamat datang, segera lunasi pembayaran anda '
+        user_form = SignUpForm(request.POST)
+        regisadm_form = AdministrasiForm(request.POST)
+        if user_form.is_valid() and regisadm_form.is_valid():
+            user = user_form.save(commit=False)
+            user.save()
+            regadm = regisadm_form.save(commit=False)
+            regis_pay = AdministrationType.objects.get(paymentstype="Registration and First Dues")
+            regadm.jenis = regis_pay
+            regadm.user = user
+            regadm.save()
+            kelas = Kelas.objects.get(nama_kelas='Basic')
+            today = timezone.now().date()
+            LogKelas.objects.create(kelas_current=kelas, user=user,
+            joined_date= today)
+            #<EMAIL>
+            subject = 'Selamat Datang ' + str(user)
+            message = 'Terima kasih telah mendaftar. Selamat datang, segera lunasi pembayaran Anda'
             from_email = settings.EMAIL_HOST_USER
             to_list = [user.email, settings.EMAIL_HOST_USER]
             send_mail(subject, message, from_email, to_list, fail_silently = True)
-            kelas= Kelas.objects.get(nama_kelas='Basic')
-            profile = profile_form.save(commit = False)
-            profile.user_kelas = kelas
-            today = timezone.now().date()
-            logkelas = LogKelas.objects.create(kelas_current=kelas.nama_kelas, user=user.username,
-                joined_date= today)
-            user.save()
-            profile.user = user
-            if 'photo' in request.FILES :
-                profile.photo = request.FILES['photo']
-            registered = True
-            administrasi = administrasi_form.save(commit = False)
-            regis_pay = AdministrationType.objects.get(paymentstype="Registration and First Dues")
-            administrasi.jenis = regis_pay
-            administrasi.user = user
-            profile.save()
-            administrasi.save()
-
-        else:
-            print (user_form.errors, profile_form.errors, regis_form.errors)
+            bendaharas = User.objects.filter(groups__name='bendahara')
+            subjectb = 'Pendaftar Baru '+ str(user)
+            messageb = 'Pendaftar dengan nama '+user.first_name+ ' memilih pembayaran secara '+ str(regadm.method) +'.'
+            from_emailb = settings.EMAIL_HOST_USER
+            to_list = [settings.EMAIL_HOST_USER]
+            for bendahara in bendaharas:
+                to_list.append(bendahara.email)
+            send_mail(subjectb, messageb, from_emailb, to_list, fail_silently = True)
+            # </EMAIL>
+            username = user_form.cleaned_data.get('username')
+            raw_password = user_form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return redirect('public:myprofile')
     else:
-        regis_form = UserRegister()
-        user_form = UserForm()
-        profile_form = UserProfileForm()
-        administrasi_form = AdministrasiForm()
-    context={'regis_form' : regis_form, 'user_form' : user_form, 'profile_form' : profile_form,
-    'administrasi_form' : administrasi_form,
-    'registered' : registered}
+        user_form = SignUpForm()
+        regisadm_form = AdministrasiForm()
+    context={'user_form' : user_form, 'regisadm_form': regisadm_form,}
     condition_query = Article.objects.get(title="Syarat dan Ketentuan")
     context['conditions'] = condition_query
     return render (request, 'public/register.html', context)

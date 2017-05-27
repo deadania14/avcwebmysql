@@ -25,14 +25,16 @@ def user_login(request):
                     return HttpResponseRedirect(reverse('public:index'))
                 else:
                     return HttpResponseRedirect(reverse('manajemen:index'))
-
+                print
             else:
                 logged_in = False
                 return render(request, 'login/login.html', {"logged_in": logged_in})
+                print
         else:
             print ("Invalid login details: {0},{1}".format(username, password))
             logged_in = False
             return render(request, 'login/login.html', {"logged_in": logged_in})
+            print
     else:
         return render(request, 'login/login.html', {"logged_in": logged_in})
 

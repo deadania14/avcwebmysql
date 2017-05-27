@@ -13,8 +13,8 @@ from rolepermissions.decorators import has_role_decorator
 @login_required
 @has_role_decorator('manajemen')
 def index(request):
-    if request.user.profile.tipe_user == 'member':
-        return HttpResponseRedirect(reverse('public:index'))
+    # if request.user.profile.tipe_user == 'member':
+    #     return HttpResponseRedirect(reverse('public:index'))
     context={}
     member_user_query = UserProfile.objects.filter(tipe_user='member').filter(user__is_active=True)
     context['members'] = member_user_query

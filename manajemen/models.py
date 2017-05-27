@@ -62,7 +62,7 @@ class Kelas(models.Model):
 class LogKelas(models.Model):
     kelas_current = models.ForeignKey(Kelas, related_name= 'log_kelas_current')
     user = models.ForeignKey(User, related_name='log_kelas_user')
-    kelas_before = models.ForeignKey(Kelas, related_name='log_kelas_before')
+    kelas_before = models.ForeignKey(Kelas, related_name='log_kelas_before', null=True)
     joined_date = models.DateTimeField(
         default = timezone.now
         )
@@ -118,9 +118,9 @@ class Administrasi(models.Model):
     )
     user = models.ForeignKey(User, related_name="administrasi", null = True)
     jenis = models.ForeignKey(AdministrationType,related_name= "administrasi_jenis", null = True)
-    nominal = models.PositiveIntegerField(null=True)
+    nominal = models.PositiveIntegerField(null=True, blank=True)
     method = models.CharField(max_length=20, choices = method_choices, default= 'cash')
-    image = models.ImageField(null=True, upload_to='images/bukti_payments')
+    image = models.ImageField(null=True, upload_to='images/bukti_payments', blank=True)
     status = models.CharField(max_length=20, choices = status_choices, default= 'pending')
     note = models.TextField(blank = True)
     created_date = models.DateTimeField(

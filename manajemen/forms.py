@@ -203,12 +203,12 @@ class EditBarangForm(forms.ModelForm):
 class NewMeetingForm(forms.ModelForm):
     title = forms.CharField(label='Judul', required=True)
     place = forms.CharField(label='Tempat', required=True)
-    user = forms.ModelMultipleChoiceField(
-        label='Daftar Hadir',
-        queryset=User.objects.all(),
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
+    # user = forms.ModelMultipleChoiceField(
+    #     label='Daftar Hadir',
+    #     queryset=User.objects.all(),
+    #     widget=forms.CheckboxSelectMultiple,
+    #     required=False
+    # )
     note = forms.CharField(label='Catatan', widget=forms.Textarea, required=True)
     date_meet = forms.DateField(
         widget=SelectDateWidget(
@@ -217,7 +217,7 @@ class NewMeetingForm(forms.ModelForm):
     )
     class Meta:
         model = Meeting
-        exclude = ('created_date', 'updated_date',)
+        exclude = ('created_date', 'updated_date','user',)
         widget = {
              'note': Textarea(attrs={'cols': 80, 'rows': 20}),
         }
