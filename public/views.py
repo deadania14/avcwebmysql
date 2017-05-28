@@ -6,6 +6,11 @@ from django.core.mail import EmailMultiAlternatives
 ##
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.template.loader import render_to_string
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes, force_text
+from .tokens import account_activation_token
 ##
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
@@ -18,12 +23,13 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.http import HttpResponseRedirect
 from django.utils import timezone
 from django.urls import reverse
-from .forms import SignUpForm, RegisterTransferForm, NewPaymentOfferForm, SliderForm
 from manajemen.models import Article, Administrasi, AdministrationType, PracticeAttendance, Kelas
+from manajemen.models import Practice, Kelas, PracticeAttendance, LogKelas
 from public.models import SettingsVariable
 from .models import Event, Slider, UserProfile, Kelas, Timeline
+from .forms import SignUpForm, RegisterTransferForm, NewPaymentOfferForm, SliderForm
 from .forms import EventForm, UserProfileEditForm, AdministrasiForm, UserRegister
-from manajemen.models import Practice, Kelas, PracticeAttendance, LogKelas
+
 
 from rolepermissions.decorators import has_role_decorator
 
@@ -60,53 +66,6 @@ def konser(request):
     context['concerts'] = konser
     return render(request, 'public/konser.html', context)
 
-def register(request):
-    if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('public:myprofile',))
-    registered = False
-    if request.method == 'POST':
-        user_form = SignUpForm(request.POST)
-        regisadm_form = AdministrasiForm(request.POST)
-        if user_form.is_valid() and regisadm_form.is_valid():
-            user = user_form.save(commit=False)
-            user.save()
-            regadm = regisadm_form.save(commit=False)
-            regis_pay = AdministrationType.objects.get(paymentstype="Registration and First Dues")
-            regadm.jenis = regis_pay
-            regadm.user = user
-            regadm.save()
-            kelas = Kelas.objects.get(nama_kelas='Basic')
-            today = timezone.now().date()
-            LogKelas.objects.create(kelas_current=kelas, user=user,
-            joined_date= today)
-            #<EMAIL>
-            subject = 'Selamat Datang ' + str(user)
-            message = 'Terima kasih telah mendaftar. Selamat datang, segera lunasi pembayaran Anda'
-            from_email = settings.EMAIL_HOST_USER
-            to_list = [user.email, settings.EMAIL_HOST_USER]
-            send_mail(subject, message, from_email, to_list, fail_silently = True)
-            bendaharas = User.objects.filter(groups__name='bendahara')
-            subjectb = 'Pendaftar Baru '+ str(user)
-            messageb = 'Pendaftar dengan nama '+user.first_name+ ' memilih pembayaran secara '+ str(regadm.method) +'.'
-            from_emailb = settings.EMAIL_HOST_USER
-            to_list = [settings.EMAIL_HOST_USER]
-            for bendahara in bendaharas:
-                to_list.append(bendahara.email)
-            send_mail(subjectb, messageb, from_emailb, to_list, fail_silently = True)
-            # </EMAIL>
-            username = user_form.cleaned_data.get('username')
-            raw_password = user_form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)
-            login(request, user)
-            return redirect('public:myprofile')
-    else:
-        user_form = SignUpForm()
-        regisadm_form = AdministrasiForm()
-    context={'user_form' : user_form, 'regisadm_form': regisadm_form,}
-    condition_query = Article.objects.get(title="Syarat dan Ketentuan")
-    context['conditions'] = condition_query
-    return render (request, 'public/register.html', context)
-
 def event_detail(request, event_id):
     context={}
     eventid_query= Event.objects.get(id=event_id)
@@ -141,6 +100,73 @@ def events(request):
     deal_event= Event.objects.filter(event_status='deal').filter(is_publish=True)
     context["devent"] = deal_event
     return render(request, 'public/events.html', context)
+
+def register(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('public:myprofile',))
+    registered = False
+    if request.method == 'POST':
+        user_form = SignUpForm(request.POST)
+        regisadm_form = AdministrasiForm(request.POST)
+        if user_form.is_valid() and regisadm_form.is_valid():
+            user = user_form.save(commit=False)
+            user.save()
+            regadm = regisadm_form.save(commit=False)
+            regis_pay = AdministrationType.objects.get(paymentstype="Registration and First Dues")
+            regadm.jenis = regis_pay
+            regadm.user = user
+            regadm.save()
+            kelas = Kelas.objects.get(nama_kelas='Basic')
+            today = timezone.now().date()
+            LogKelas.objects.create(kelas_current=kelas, user=user,
+            joined_date= today)
+            #<EMAIL>
+            bendaharas = User.objects.filter(groups__name='bendahara')
+            subjectb = 'Pendaftar Baru '+ str(user)
+            messageb = 'Pendaftar dengan nama '+user.first_name+ ' memilih pembayaran secara '+ str(regadm.method) +'.'
+            from_emailb = settings.EMAIL_HOST_USER
+            to_listb = [settings.EMAIL_HOST_USER]
+            for bendahara in bendaharas:
+                to_listb.append(bendahara.email)
+            send_mail(subjectb, messageb, from_emailb, to_listb, fail_silently = True)
+            # </EMAIL>
+            current_site = get_current_site(request)
+            subject = 'Aktifasi Akun Anda'
+            message = render_to_string('login/account_activation_email.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': account_activation_token.make_token(user),
+            })
+            user.email_user(subject, message)
+            return render(request, 'login/account_activation_sent.html')
+    else:
+        user_form = SignUpForm()
+        regisadm_form = AdministrasiForm()
+    context={'user_form' : user_form, 'regisadm_form': regisadm_form,}
+    condition_query = Article.objects.get(title="Syarat dan Ketentuan")
+    context['conditions'] = condition_query
+    return render (request, 'public/register.html', context)
+
+def account_activation_sent(request):
+    return render(request, 'login/account_activation_sent.html')
+
+def activate(request, uidb64, token):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.profile.email_confirmed = True
+        user.save()
+        login(request, user)
+        return redirect('public:index')
+    else:
+        return render(request, 'login/account_activation_invalid.html')
+
 
 @login_required
 def myprofile(request):

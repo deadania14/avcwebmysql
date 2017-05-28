@@ -7,6 +7,11 @@ Profile
 {% block page_title %}
 <div class="col-sm-12 wow fadeIn">
   <h1><a href="{% url 'public:index' %}">Selamat Datang </a>{{ user.first_name }} <a>!</a></h1>
+{% if user.profile.email_confirmed == False %}
+  <div class="right">
+    <blockquote class="btn btn-danger message">Email Anda belum dikonfirmasi</h3>
+  </div>
+{% endif %}
 </div>
 {% endblock %}
 

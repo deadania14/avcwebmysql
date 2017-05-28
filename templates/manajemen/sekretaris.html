@@ -179,7 +179,7 @@ Sekretaris
                             </div>
                             <div class="modal-footer">
                               <button type="button" class="btn btn-default" data-dismiss="modal">Tidak</button>
-                              <a href="{% url 'manajemen:deactivate_user' profile.id %}"><button type="button" class="btn btn-danger">Ya</button></a>
+                              <a href="{% url 'manajemen:deactivate_user' profile.user.id %}"><button type="button" class="btn btn-danger">Ya</button></a>
                             </div>
                         </div>
                     </div>
@@ -199,7 +199,7 @@ Sekretaris
                             </div>
                             <div class="modal-footer">
                               <button type="button" class="btn btn-default" data-dismiss="modal">Tidak</button>
-                              <a href="{% url 'manajemen:activate_user' profile.id %}"><button type="button" class="btn btn-primary">Ya</button></a>
+                              <a href="{% url 'manajemen:activate_user' profile.user.id %}"><button type="button" class="btn btn-primary">Ya</button></a>
                             </div>
                         </div>
                     </div>

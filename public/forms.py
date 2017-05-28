@@ -106,7 +106,7 @@ class RegisterTransferForm(forms.ModelForm):
 
 class SliderForm(forms.ModelForm):
     image = forms.ImageField(label='Foto Slide', required=True)
-    caption = forms.CharField(label='Catatan Pendek', required=True)
+    caption = forms.CharField(label='Caption', max_length=50, required=True)
     class Meta:
         model = Slider
         fields = ['image', 'caption',]

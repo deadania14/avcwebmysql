@@ -11,8 +11,6 @@ def user_login(request):
     logged_in = True
     if request.user.is_authenticated():
         return HttpResponseRedirect(reverse('public:index'))
-
-
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')

@@ -13,6 +13,11 @@
 # user.first_name= regis.first_name
 # user.last_name = regis.last_name
 
+username = user_form.cleaned_data.get('username')
+raw_password = user_form.cleaned_data.get('password1')
+user = authenticate(username=username, password=raw_password)
+login(request, user)
+
 
             #email
             subject = 'terima kasih telah mendaftar'

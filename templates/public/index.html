@@ -5,29 +5,6 @@
   Beranda
 {% endblock %}
 {% block page_title%}
-{% if user|has_role:'hpd' %}
-<div class="right">
-  <button type="button" class="btn btn-success btn-sm cricle" data-toggle="modal" data-target="#myModalNewSlide"><span	class="glyphicon	glyphicon-plus"></span></button>
-</div>
-<div id="myModalNewSlide" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Gambar Baru</h4>
-            </div>
-            <div class="modal-body">
-              <form method="POST" enctype="multipart/form-data"> {% csrf_token %}
-                {% bootstrap_form slider_form %}
-                <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
-                <button class = "btn btn-primary" type="submit" class="save btn btn-default">Simpan</button>
-              </form>
-            </div>
-        </div>
-    </div>
-</div>
-{% endif %}
 <div class="container">
   <div id="myCarousel" class="carousel slide" data-ride="carousel">
     <!-- Indicators -->
@@ -66,6 +43,31 @@
       <span class="sr-only">Next</span>
     </a>
   </div>
+  {% if user|has_role:'hpd' %}
+  <br>
+  <div class="right">
+    <button type="button" class="btn alert alert-warning btn-sm" data-toggle="modal" data-target="#myModalNewSlide"><strong>Perbaharui foto slider <span class="fa fa-edit"></span></strong></button>
+  </div>
+  <div id="myModalNewSlide" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+          <!-- Modal content-->
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title">Gambar Baru</h4>
+              </div>
+              <div class="modal-body">
+                <p><a><b>Yang akan ditampilkan adalah 3 foto terakhir</b></a></p>
+                <form method="POST" enctype="multipart/form-data"> {% csrf_token %}
+                  {% bootstrap_form slider_form %}
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+                  <button class = "btn btn-primary" type="submit" class="save btn btn-default">Simpan</button>
+                </form>
+              </div>
+          </div>
+      </div>
+  </div>
+  {% endif %}
 </div>
 {% endblock %}
 

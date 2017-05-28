@@ -53,7 +53,7 @@ class Event(models.Model):
 
 BATAS_KELUAR = 60
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, related_name= "profile")
+    user = models.OneToOneField(User, related_name= "profile", on_delete=models.CASCADE)
     user_kelas = models.ForeignKey(Kelas, related_name="profiles", null=True, blank=True)
     gender_choices = (
         ('wanita', 'Wanita',),
@@ -113,17 +113,6 @@ def update_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance)
     instance.profile.save()
-#
-# def create_profile(sender, **kwargs):
-#     user = kwargs["instance"]
-#     if kwargs["created"]:
-#         user_profile = UserProfile(user=user)
-#         user_profile.save()
-#     post_save.connect(create_profile, sender=User)
-#@receiver(post_save, sender=User)
-#def create_user_profile(sender, instance, created, **kwargs):
-#    if created:
-#        UserProfile.objects.create(user=instance)
 
 class Timeline(models.Model):
     title = models.CharField(max_length=100)
