@@ -27,8 +27,8 @@ from manajemen.models import Article, Administrasi, AdministrationType, Practice
 from manajemen.models import Practice, Kelas, PracticeAttendance, LogKelas
 from public.models import SettingsVariable
 from .models import Event, Slider, UserProfile, Kelas, Timeline
-from .forms import SignUpForm, RegisterTransferForm, NewPaymentOfferForm, SliderForm
-from .forms import EventForm, UserProfileEditForm, AdministrasiForm, UserRegister
+from .forms import SignUpForm, RegisterTransferForm, SliderForm, AbsensiForm
+from .forms import EventForm, UserProfileEditForm, AdministrasiForm, UserRegister, NewPaymentForm
 
 
 from rolepermissions.decorators import has_role_decorator
@@ -115,6 +115,7 @@ def register(request):
             regis_pay = AdministrationType.objects.get(paymentstype="Registration and First Dues")
             regadm.jenis = regis_pay
             regadm.user = user
+            regadm.nominal = regis_pay.nominal
             regadm.save()
             kelas = Kelas.objects.get(nama_kelas='Basic')
             today = timezone.now().date()
@@ -146,6 +147,8 @@ def register(request):
     context={'user_form' : user_form, 'regisadm_form': regisadm_form,}
     condition_query = Article.objects.get(title="Syarat dan Ketentuan")
     context['conditions'] = condition_query
+    regis_fee = AdministrationType.objects.get(paymentstype="Registration and First Dues")
+    context['regis_fee'] = regis_fee.nominal
     return render (request, 'public/register.html', context)
 
 def account_activation_sent(request):
@@ -167,10 +170,10 @@ def activate(request, uidb64, token):
     else:
         return render(request, 'login/account_activation_invalid.html')
 
-
 @login_required
 def myprofile(request):
     payment_tf = get_object_or_404(Administrasi, user = request.user, jenis__paymentstype='Registration and First Dues')
+    form_new_payment = NewPaymentForm(request.POST)
     if request.method=="POST":
         form_transfer = RegisterTransferForm(request.POST, request.FILES, instance= payment_tf)
         if form_transfer.is_valid():
@@ -187,9 +190,19 @@ def myprofile(request):
             send_mail(subject, message, from_email, to_list, fail_silently = True)
 
             return HttpResponseRedirect(reverse('public:myprofile',))
+        if form_new_payment.is_valid():
+            npayment = form_new_payment.save(commit = False)
+            npayment.nominal = npayment.jenis.nominal
+            npayment.created_date= timezone.now()
+            status_pending = AdministrationType.objects.get(status="pending")
+            npayment.status= status_pending
+            npayment.user = request.user
+            npayment.save()
+            return HttpResponseRedirect(reverse('public:myprofile', ))
     else :
         form_transfer = RegisterTransferForm(instance=payment_tf)
-    context={'form_transfer':form_transfer,}
+        form_new_payment = NewPaymentForm()
+    context={'form_transfer':form_transfer,'form_new_payment':form_new_payment,}
     administrasi_query = Administrasi.objects.filter(user = request.user)
     context['adminitrasis'] = administrasi_query
     regis_pay = Administrasi.objects.filter(user=request.user).filter(jenis__paymentstype='Registration and First Dues')[0]
@@ -200,16 +213,6 @@ def myprofile(request):
 
     timeline_query = Timeline.objects.all()
     context['timeline_messages'] = timeline_query
-    # if request.method == 'POST':
-    #     offerpayment_form = NewPaymentOfferForm(data = request.POST)
-    #     if offerpayment_form.is_valid():
-    #         nofferpayment = offerpayment_form.save(commit = False)
-    #
-    #     else:
-    #         print (offerpayment_form.errors)
-    # else:
-    #     offerpayment_form = NewPaymentOfferForm()
-    # context={'offerpayment_form' : offerpayment_form, }
     return render(request, 'public/myprofile.html', context)
 
 def edit_user(request, pk):
@@ -235,6 +238,20 @@ def home_tutor(request):
     context['presents'] = present_query
     context['now'] = timezone.now().date()
     return render(request, 'public/tutor.html', context)
+
+def edit_attendance(request, attendance_id):
+    npresent = get_object_or_404(PracticeAttendance, id=attendance_id)
+    if request.method=="POST":
+        form_edit_absensi = AbsensiForm(request.POST, instance = npresent)
+
+        if form_edit_absensi.is_valid():
+            form_edit_absensi.save()
+            return HttpResponseRedirect(reverse('public:home_tutor', ))
+    else :
+        form_edit_absensi = AbsensiForm(instance = npresent)
+    form_edit_absensi.fields['is_present'].queryset = npresent.daftar_orang.all()
+    form_edit_absensi.fields['tutor_pendamping'].queryset = User.objects.filter(profile__tipe_user='tutor').exclude(id=npresent.tutor.id).exclude(profile__user_kelas=npresent.kelas)
+    return render(request, 'public/edit_attendance.html', {'form_edit_absensi':form_edit_absensi, 'tutor': npresent.tutor})
 
 def permission_denied(request):
     return render(request, 'login/403.html', {})

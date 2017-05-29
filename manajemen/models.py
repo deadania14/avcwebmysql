@@ -83,7 +83,7 @@ class PracticeAttendance(models.Model):
         self.updated_date = timezone.now()
         self.save()
     class Meta:
-        ordering =['-practice',]
+        ordering =['-updated_date',]
 
 
 class AdministrationType(models.Model):

@@ -31,13 +31,62 @@
                         <td>{{presenting.kelas}}</td>
                         <td>{{presenting.practice.date.date}}</td>
                         <td>
+                          <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModalAttendanceDetails{{presenting.id}}"><span	class="fa fa-folder"> </span> Lihat</button>
                           {% if now == presenting.practice.date.date %}
-                            Ubah
+                            <a class="btn	btn-warning btn-sm" href="{%	url	'public:edit_attendance'	presenting.id	%}"><span	class="glyphicon	glyphicon-pencil"></span> Ubah</a>
+
                           {% else %}
                           -
                           {% endif %}
                         <td>
                     </tr>
+                    <!-- Modal -->
+                    <div id="myModalAttendanceDetails{{presenting.id}}" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Absensi - {{presenting.kelas}} - {{presenting.practice.date}} -  {{presenting.practice.place}}</h4>
+                                </div>
+                                <div class="modal-body">
+                                  <div class = "col-md-4">
+                                    <b>Tutor</b>
+                                  </div>
+                                  <div class = "col-md-8">
+                                    {{presenting.tutor}}
+                                  </div>
+                                  {% if presenting.tutor_pendamping %}
+                                  <div class = "col-md-4">
+                                    <b>Tutor Pendamping</b>
+                                  </div>
+
+                                      {% for tutor in presenting.tutor_pendamping.all %}
+                                      <div class = "col-md-8">
+                                        {{tutor}}
+                                      </div>
+                                      {% endfor %}
+
+                                  <div class = "clearfix"></div>
+                                  {% endif %}
+                                  <br/>
+                                  <div class = "col-md-4">
+                                    <b>Member yang hadir</b>
+                                  </div>
+                                  <div class = "col-md-8">
+                                    {% for user in presenting.is_present.all %}
+                                    <ul>{{user}}</ul>
+                                    {% endfor %}
+                                  </div>
+                                  <div class = "clearfix"></div>
+                                  <br/>
+                                </div>
+                                <div class="modal-footer">
+                                      <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     {% endfor %}
                 </tbody>
             </table>

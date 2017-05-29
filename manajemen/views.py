@@ -13,8 +13,6 @@ from rolepermissions.decorators import has_role_decorator
 @login_required
 @has_role_decorator('manajemen')
 def index(request):
-    # if request.user.profile.tipe_user == 'member':
-    #     return HttpResponseRedirect(reverse('public:index'))
     context={}
     member_user_query = UserProfile.objects.filter(tipe_user='member').filter(user__is_active=True)
     context['members'] = member_user_query
@@ -153,11 +151,6 @@ def cancel_payment(request, payment_id):
     if payment.jenis.paymentstype == 'Registration and First Dues':
         payment.user.is_active = False
         payment.user.save()
-    return HttpResponseRedirect(reverse('manajemen:home_keuangan'))
-
-def delete_payment(request, payment_id):
-    payment_query = Administrasi.objects.get(id=payment_id)
-    payment_query.delete()
     return HttpResponseRedirect(reverse('manajemen:home_keuangan'))
 
 @has_role_decorator('psdm')

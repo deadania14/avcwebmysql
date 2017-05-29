@@ -1,4 +1,5 @@
 {% extends 'login/base.html' %}
+{% load humanize %}
 {% load bootstrap3 %}
 {% block title %}
 Pendaftaran
@@ -26,8 +27,8 @@ Pendaftaran
 
           <div class = "x_title">
             <h4>Administrasi~</h4><small>pilih metode pembayaran</small>
-            <b><p>Pembayaran Pendaftaran dan Iuran bulan pertama <a>Rp. 350.000,00</a></p></b>
           </div>
+          <b><p>Pembayaran Pendaftaran dan Iuran bulan pertama <a>Rp {{regis_fee|intcomma}},00</a></p></b>
           <div class = "x_content">
             {% bootstrap_form regisadm_form%}
           </div>

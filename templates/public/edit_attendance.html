@@ -1,0 +1,27 @@
+{% extends 'public/base.html' %}
+{% load admin_static %}
+{% load bootstrap3 %}
+{% block title%}
+  Ubah Absensi
+{% endblock %}
+{% block page_title %}
+<div class="col-sm-12 wow fadeIn">
+  <i class="fa fa-edit"></i>
+  <h1><a href="{% url 'public:home_tutor' %}">Tutor</a> /</h1>
+  <p>Perbaharui Absensi </p>
+</div>
+{% endblock %}
+{% block content %}
+<div class ="col-md-8">
+  <br>
+  <form method="POST"> {% csrf_token %}
+    <div class="form-group">
+      <label class="control-label left" for="id_nama_kelas">
+        Tutor</label>
+        <br><b>{{tutor}}</b>
+      </div>
+    {% bootstrap_form form_edit_absensi %}
+    <button type="submit" class="save btn btn-primary">Simpan</button>
+  </form>
+</div>
+{% endblock %}

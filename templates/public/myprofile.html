@@ -120,6 +120,29 @@ Profile
 
         </div>
         <div role="tabpanel" class="tab-pane fade" id="tab_content3" aria-labelledby="profile-tab">
+          <br>
+          <div class="left">
+            <button type="button" class="circle btn btn-warning" data-toggle="modal" data-target="#NewPaymentOfferForm">Ajukan pembayaran Anda</button>
+            <small>Anda dapat mengajukan sebuah catatan pembayaran untuk dikonfirmasi oleh bendahara.</small>
+          </div>
+          <br>
+          <div id="NewPaymentOfferForm" class="modal fade" role="dialog">
+              <div class="modal-dialog">
+                  <!-- Modal content-->
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal">&times;</button>
+                          <h4 class="modal-title">Ajukan catatan pembayaran</h4>
+                      </div>
+                      <div class="modal-body">
+                        <form method="POST" enctype="multipart/form-data"> {% csrf_token %}
+                          {% bootstrap_form form_new_payment %}
+                          <button class = "btn btn-primary" type="submit" class="save btn btn-default">Ajukan</button>
+                        </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
           <!-- start user projects -->
           <table class="data table table-striped table-responsive no-margin">
             <thead>
@@ -151,9 +174,10 @@ Profile
   Pembayaran Pendaftaran dan Iuran bulan pertama Anda belum dikonfirmasi oleh pihak manajemen
 </p>
 {% else %}
-  {% if regis_payment.image.url %}
+  {% if regis_payment.image %}
     <h4>Terima Kasih telah melakukan pembayaran. </h4>
-    <p type="button" class="circle btn btn-warning" data-toggle="modal" data-target="#helppenawaran"><small>Upload Bukti Kembali</small></p>
+    <small>salah upload foto transfer?
+    <p type="button" class="circle btn btn-warning" data-toggle="modal" data-target="#helppenawaran"><small>Upload Bukti Kembali</small></p></small>
   {% else %}
   <h4>Anda mendaftar dengan pilihan pembayaran transfer. Silahkan lampirkan bukti pembayaran Anda.</h4>
   <button type="button" class="circle btn btn-warning" data-toggle="modal" data-target="#helppenawaran">Upload Bukti Transfer</button>
@@ -170,7 +194,7 @@ Profile
                 <div class="modal-body">
                   <form method="POST" enctype="multipart/form-data"> {% csrf_token %}
                     {% bootstrap_form form_transfer %}
-                    <button class = "btn btn-primary" type="submit" class="save btn btn-default">Save</button>
+                    <button class = "btn btn-primary" type="submit" class="save btn btn-default">Submit</button>
                   </form>
                 </div>
             </div>

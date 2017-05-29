@@ -96,16 +96,11 @@ class AbsensiPeopleForm(forms.ModelForm):
     daftar_orang = forms.ModelMultipleChoiceField(
         queryset=User.objects.all(),
         widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
-    tutor_pendamping = forms.ModelMultipleChoiceField(
-        queryset=User.objects.filter(profile__tipe_user='tutor'),
-        widget=forms.CheckboxSelectMultiple,
-        required=False
+        required=True
     )
     class Meta:
         model = PracticeAttendance
-        fields = ('daftar_orang','tutor_pendamping')
+        fields = ('daftar_orang',)
 
 class AbsensiKelasForm(forms.ModelForm):
     class Meta:

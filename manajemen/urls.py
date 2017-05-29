@@ -49,8 +49,6 @@ urlpatterns = [
     url(r'^keuangan/konfirmasi_pembayaran/(?P<payment_id>[0-9]+)/$', views.confirmation_payment, name='confirmation_payment'),
     #Cancel_payments
     url(r'^keuangan/gagalkan_pembayaran/(?P<payment_id>[0-9]+)/$', views.cancel_payment, name='cancel_payment'),
-    #keuangan_delete_payment
-    url(r'^keuangan/delete_(?P<payment_id>[0-9]+)/$', views.delete_payment, name='delete_payment'),
     #keuangan_new_tipe_pembayaran
     url(r'^keuangan/new_tipe_pembayaran/$', views.new_administration_type, name='new_administration_type'),
     #keuangan_edit_administration_type

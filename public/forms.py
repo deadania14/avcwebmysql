@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 from localflavor.fr.forms import FRPhoneNumberField
 from localflavor.generic.forms import DeprecatedPhoneNumberFormFieldMixin
 from .models import Event, UserProfile, Slider
-from manajemen.models import Administrasi
+from manajemen.models import Administrasi, PracticeAttendance
 
 phone_re = re.compile(r'^(\+62|0)[2-9]\d{7,10}$')
 
@@ -77,12 +77,10 @@ class SignUpForm(UserCreationForm):
             raise ValidationError("email telah terdigunakan")
         return email
 
-class NewPaymentOfferForm(forms.ModelForm):
+class NewPaymentForm(forms.ModelForm):
     class Meta:
         model = Administrasi
-        exclude = ['jenis', 'method',]
-
-
+        exclude = ['created_date','nominal','status','user',]
 
 class AdministrasiForm(forms.ModelForm):
     class Meta:
@@ -120,3 +118,20 @@ class SliderForm(forms.ModelForm):
                 raise forms.ValidationError(
                 u'That image is un suitable. The image needs to be width : 958px height :460px ')
         return image
+
+class AbsensiForm(forms.ModelForm):
+    is_present = forms.ModelMultipleChoiceField(
+        label='Daftar Kehadiran',
+        queryset=User.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+    tutor_pendamping = forms.ModelMultipleChoiceField(
+        label='Asisten Tutor',
+        queryset=User.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+    class Meta:
+        model = PracticeAttendance
+        fields = ('is_present', 'tutor_pendamping',)
