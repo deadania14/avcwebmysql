@@ -60,7 +60,7 @@
                   <a href="{% url 'public:konser' %}"><br>Konser</a>
               </li>
               {% if user.is_authenticated %}
-                {% if user|has_role:'manajemen' %}
+                {% if user.profile.tipe_user == 'tutor' %}
                   <li {% if request.resolver_match.url_name == 'home_tutor' %}class="active"{% endif %}>
                       <a href="{% url 'public:home_tutor' %}"><br>Tutor</a>
                   </li>
