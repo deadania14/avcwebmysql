@@ -134,7 +134,7 @@ class NewEventForm(forms.ModelForm):
              'note': Textarea(attrs={'cols': 80, 'rows': 20}),
         }
     def clean_image(self):
-        image = self.cleaned_data.get['image']
+        image = self.cleaned_data['image']
         if image:
             from django.core.files.images import get_image_dimensions
             w, h = get_image_dimensions(image)
