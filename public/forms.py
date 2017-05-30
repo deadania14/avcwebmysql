@@ -68,9 +68,11 @@ class SignUpForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, required=True, label='Nama Depan')
     last_name = forms.CharField(max_length=30, required=False, help_text='Optional.', label='Nama Belakang')
     email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.')
+    phone = IDPhoneNumberField()
+    birth_date = forms.DateField(help_text='Required. Format: YYYY-MM-DD')
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2', )
+        fields = ('username', 'first_name', 'last_name', 'birth_date', 'phone', 'email', 'password1', 'password2', )
     def clean_mail(self):
         email = self.cleaned_data['email']
         if User.objects.filter(email=email).exists():
@@ -97,6 +99,12 @@ class UserProfileEditForm(forms.ModelForm):
         fields = ['phone', 'address','photo', 'about']
 
 class RegisterTransferForm(forms.ModelForm):
+    image = forms.ImageField(label='Bukti Pembayaran', help_text='Upload Bukti Transfer', required=True)
+    class Meta:
+        model = Administrasi
+        fields = ['image',]
+
+class AdministrasiTransferForm(forms.ModelForm):
     image = forms.ImageField(label='Bukti Pembayaran', help_text='Upload Bukti Transfer', required=True)
     class Meta:
         model = Administrasi

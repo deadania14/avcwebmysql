@@ -27,7 +27,7 @@ from manajemen.models import Article, Administrasi, AdministrationType, Practice
 from manajemen.models import Practice, Kelas, PracticeAttendance, LogKelas
 from public.models import SettingsVariable
 from .models import Event, Slider, UserProfile, Kelas, Timeline
-from .forms import SignUpForm, RegisterTransferForm, SliderForm, AbsensiForm
+from .forms import SignUpForm, RegisterTransferForm, SliderForm, AbsensiForm, AdministrasiTransferForm
 from .forms import EventForm, UserProfileEditForm, AdministrasiForm, UserRegister, NewPaymentForm
 
 
@@ -109,7 +109,11 @@ def register(request):
         user_form = SignUpForm(request.POST)
         regisadm_form = AdministrasiForm(request.POST)
         if user_form.is_valid() and regisadm_form.is_valid():
-            user = user_form.save(commit=False)
+            user = user_form.save()
+            # load the profile instance created by the signal
+            user.refresh_from_db()
+            user.profile.phone = user_form.cleaned_data.get('phone')
+            user.profile.date_birth = user_form.cleaned_data.get('birth_date')
             user.save()
             regadm = regisadm_form.save(commit=False)
             regis_pay = AdministrationType.objects.get(paymentstype="Registration and First Dues")
@@ -226,7 +230,27 @@ def edit_user(request, pk):
             return HttpResponseRedirect(reverse('public:myprofile'))
     else:
         form_edit_profile = UserProfileEditForm(instance = user)
-        return render(request, "public/edit_profile.html", {'form_edit_profile':form_edit_profile})
+    return render(request, "public/edit_profile.html", {'form_edit_profile':form_edit_profile})
+
+def upload_transfer(request, administration_id):
+    tf_payments = get_object_or_404(Administrasi, pk=administration_id)
+    if request.method=="POST":
+        form_transfer_payment = AdministrasiTransferForm(request.POST, request.FILES, instance=tf_payments)
+        if form_transfer_payment.is_valid():
+            transfer_payment =form_transfer_payment.save(commit=False)
+            transfer_payment.save()
+            bendaharas = User.objects.filter(groups__name='bendahara')
+            subject = 'Pembayaran '+ str(transfer_payment.jenis) + ' oleh ' + request.user.first_name
+            message = 'Bukti pembayaran '+str(transfer_payment.jenis) + ' oleh ' + request.user.username+ ' telah diterima' + 'silahkan cek bukti dan segera konfirmasi.'
+            from_email = settings.EMAIL_HOST_USER
+            to_list = [settings.EMAIL_HOST_USER]
+            for bendahara in bendaharas:
+                to_list.append(bendahara.email)
+            send_mail(subject, message, from_email, to_list, fail_silently = True)
+            return HttpResponseRedirect(reverse('public:myprofile',))
+    else:
+        form_transfer_payment = AdministrasiTransferForm(instance=tf_payments)
+    return render(request, 'public/transfer_payment.html', {'form_transfer_payment':form_transfer_payment,})
 
 @has_role_decorator('tutor')
 def home_tutor(request):

@@ -1,0 +1,25 @@
+{% extends 'public/base.html' %}
+{% load bootstrap3 %}
+{% block title %}
+User-Payment
+{% endblock%}
+{% block page_title %}
+<div class="col-sm-12 wow fadeIn">
+  <i class="fa fa-edit"></i>
+    <h4 class="modal-title">Upload Bukti Pembayaran</h4>
+</div>
+{% endblock %}
+{% block content %}
+<br>
+<div class= "col-md-4 col-md-12 left">
+  <div class= "x_content">
+    <form method="POST" class="left" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="divider"></div>
+        {% bootstrap_form form_transfer_payment %}
+      <button class = "btn btn-primary" type="submit" >Submit</button>
+    </form>
+  </div>
+</div>
+</br>
+{% endblock %}

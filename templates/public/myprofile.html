@@ -149,18 +149,99 @@ Profile
               <tr>
                 <th>Jenis Pembayaran</th>
                 <th>Metode Pembayaran</th>
-                <th>Tanggal</th>
                 <th>Status</th>
+                <th>Aksi</th>
               </tr>
             </thead>
             <tbody>
               {% for admn in adminitrasis %}
               <tr>
                 <td>{{admn.jenis.paymentstype}}</td>
-                <td>{{admn.method}}</td>
-                <td>{{admn.created_date}}</td>
+                <td>{{admn.method}}
+                  {% if admn.image %}
+                  <small><a>uploaded</a></small>
+                  {% endif %}
+                </td>
                 <td>{{admn.status}}</td>
+                <td>
+                  <button type="button" class="circle btn btn-info" data-toggle="modal" data-target="#detilbayar{{admn.id}}"><span	class="fa fa-folder"></span>Lihat</button>
+                  {% if admn.method == 'transfer' and admn.status == 'pending'%}
+                  <!-- <button type="button" class="circle btn btn-warning" data-toggle="modal" data-target="#detilbayar{{admn.id}}"><span	class="fa fa-folder"></span>Upload bukti</button> -->
+                  <a class="btn	btn-warning btn-sm" href="{%	url	'public:upload_transfer'	admn.id	%}"><span	class="glyphicon	glyphicon-pencil"></span> Upload bukti</a>
+                  {% endif %}
+                </td>
               </tr>
+              <!-- Modal -->
+              <div id="detilbayar{{admn.id}}" class="modal fade" role="dialog">
+                  <div class="modal-dialog">
+                      <!-- Modal content-->
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal">&times;</button>
+                              <h4 class="modal-title">Detail Pembayaran</h4>
+                          </div>
+                          <div class="modal-body">
+                              <div class = "col-md-4">
+                                <b>Jenis</b>
+                              </div>
+                              <div class = "col-md-8">{{admn.jenis.paymentstype}}</div>
+                              <div class = "clearfix"></div>
+                              <br/>
+                              <div class = "col-md-4">
+                                <b>Nominal</b>
+                              </div>
+                              <div class = "col-md-8">{{admn.nominal}}</div>
+                              <div class = "clearfix"></div>
+                              <br/>
+                              <div class = "col-md-4">
+                                <b>Metode Bayar</b>
+                              </div>
+                              <div class = "col-md-8">
+                                {{admn.method}}
+                              </div>
+                              <div class = "clearfix"></div>
+                              {% if admn.image %}
+                              <div class = "col-md-4">
+                                <b>Bukti Pembayaran</b>
+                              </div>
+                              <div class = "col-md-8">
+                                <img class="img" src="{{admn.image.url}}" alt="Avatar" title="proof">
+                              </div>
+                              <div class = "clearfix"></div>
+                              <br/>
+                              {% endif %}
+                              <div class = "clearfix"></div>
+                              <br/>
+                              <div class = "col-md-4">
+                                <b>Tanggal Pembuatan</b>
+                              </div>
+                              <div class = "col-md-8">{{admn.created_date}}</div>
+                              <div class = "clearfix"></div>
+                              <br/>
+                              <div class = "col-md-4">
+                                <b>Catatan</b>
+                              </div>
+                              <div class = "col-md-8">
+                                {% if admn.note %}
+                                  {{admn.note}}
+                                {% else %}
+                                  -tidak ada-
+                                {% endif %}
+                              </div>
+                              <div class = "clearfix"></div>
+                              <br/>
+                              <div class = "col-md-4">
+                                <b>Status</b>
+                              </div>
+                              <div class = "col-md-8">{{admn.status}}</div>
+                              <div class = "clearfix"></div>
+                          </div>
+                          <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                          </div>
+                      </div>
+                  </div>
+              </div>
               {% endfor %}
             </tbody>
           </table>
@@ -180,10 +261,10 @@ Profile
     <p type="button" class="circle btn btn-warning" data-toggle="modal" data-target="#helppenawaran"><small>Upload Bukti Kembali</small></p></small>
   {% else %}
   <h4>Anda mendaftar dengan pilihan pembayaran transfer. Silahkan lampirkan bukti pembayaran Anda.</h4>
-  <button type="button" class="circle btn btn-warning" data-toggle="modal" data-target="#helppenawaran">Upload Bukti Transfer</button>
+  <button type="button" class="circle btn btn-warning" data-toggle="modal" data-target="#uploadbukti">Upload Bukti Transfer</button>
   {% endif %}
-    <!-- Modal help Penawaran -->
-    <div id="helppenawaran" class="modal fade" role="dialog">
+    <!-- Modal uploadbukti -->
+    <div id="uploadbukti" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">

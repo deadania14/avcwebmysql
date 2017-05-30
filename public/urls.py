@@ -20,6 +20,8 @@ urlpatterns = [
     url(r'^profile/$', views.myprofile, name="myprofile"),
     #/edit profile
     url(r'^update_profile/(?P<pk>[0-9]+)/$', views.edit_user, name="edit_profile"),
+    #/payment upload
+    url(r'^payment/(?P<administration_id>[0-9]+)/$', views.upload_transfer, name="upload_transfer"),
 
     #tutor
     url(r'^tutor/$', views.home_tutor, name='home_tutor'),
