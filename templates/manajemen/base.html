@@ -16,7 +16,10 @@
     <link href="{% static 'fonts/opensans.css' %}" rel="stylesheet">
     <!-- <link href="{% static 'css/datetimepicker.css' %}" rel="stylesheet"> -->
     <link href="{% static 'css/dataTables.bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/responsive.bootstrap.min.css' %}" rel="stylesheet">
+
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css" rel="stylesheet">
 
 
@@ -50,6 +53,9 @@
       }
       .table {
         font-size: 14px;
+      }
+      .scrolltable{
+        overflow-x: auto;
       }
     </style>
     {% block addhead %}
@@ -163,10 +169,11 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
     <script src="{% static 'js/bootstrap.js' %}"></script>
-    <script src="{% static 'js/datatables/dataTables.buttons.min.js' %}"></script>
-    <script src="{% static 'js/datatables/buttons.flash.min.js' %}"></script>
-    <script src="{% static 'js/datatables/buttons.html5.min.js' %}"></script>
-    <script src="{% static 'js/datatables/buttons.print.min.js' %}"></script>
+
+    <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/dataTables.responsive.min.js' %}"></script>
+    <script src="{% static 'js/responsive.bootstrap.min.js' %}"></script>
     <script>
         function openNav() {
             document.getElementById("mySidenav").style.width = "250px";

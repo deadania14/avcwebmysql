@@ -74,11 +74,12 @@ Beranda - Manajemen
       </div>
       <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="profile-tab">
         <div class="col-md-12 col-xs-12">
+          <br>
           <div class="x_title">
             Daftar Anggota Aktif
           </div>
           <!-- start user info -->
-        <table class="data table table-striped table-responsive no-margin">
+        <table id="member" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
           <thead>
             <tr>
               <th>Nama</th>
@@ -102,11 +103,12 @@ Beranda - Manajemen
       </div>
       <div role="tabpanel" class="tab-pane fade" id="tab_content3" aria-labelledby="profile-tab">
         <div class="col-md-12 col-xs-12">
+          <br>
           <div class="x_title left">
             Daftar Catatan Rapat
           </div>
         <!-- start user meeting -->
-        <table class="data table table-striped table-responsive no-margin">
+        <table id="rapat" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
           <thead>
             <tr>
               <th>Judul</th>
@@ -119,7 +121,7 @@ Beranda - Manajemen
             <tr>
               <td>{{meeting.title}}</td>
               <td>{{meeting.date_meet}}</td>
-              <td><td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModalRapatView{{meeting.id}}">Lihat</button></td></td>
+              <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModalRapatView{{meeting.id}}">Lihat</button></td>
             </tr>
             <!-- Modal -->
             <div id="myModalRapatView{{meeting.id}}" class="modal fade" role="dialog">
@@ -153,11 +155,12 @@ Beranda - Manajemen
       </div>
       <div role="tabpanel" class="tab-pane fade" id="tab_content4" aria-labelledby="home-tab">
         <div class="col-md-12 col-xs-12">
+          <br>
           <div class="x_title">
-            Pendaftar Baru (Pembayaran Belum lunas)
+            Pendaftar Baru 
           </div>
           <!-- start user info -->
-        <table class="data table table-striped table-responsive no-margin">
+        <table id="newmember" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
           <thead>
             <tr>
               <th>Username</th>
@@ -184,4 +187,15 @@ Beranda - Manajemen
   </div>
   </div>
 </div>
+
+{% block script %}
+<script>
+$(document).ready(function() {
+    $('#member').DataTable();
+    $('#rapat').DataTable();
+    $('#newmember').DataTable();
+} );
+</script>
+{% endblock %}
+
 {% endblock %}
