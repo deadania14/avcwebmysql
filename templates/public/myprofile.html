@@ -26,6 +26,7 @@ Profile
         <img class="img-circle" src="{{request.user.profile.photo.url}}" height='150' width='150' alt="Avatar" title="Change the avatar">
         {% else %}
         <img class="img-circle img-responsive" src="{% static 'pictures/default_ava.png' %}" height='150' width='150' alt="Avatar" title="the avatar">
+        
         {% endif %}
       </div>
     </div>

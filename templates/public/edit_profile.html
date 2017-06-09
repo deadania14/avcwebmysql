@@ -17,8 +17,9 @@ Pengaturan
       {% csrf_token %}
       <div class="divider"></div>
         {% bootstrap_form form_edit_profile %}
-      <button class = "btn btn-primary" type="submit" >Simpan</button>
+      <a class="btn btn-default" href= "{% url 'public:myprofile' %}"><i class="fa fa-back m-right-xs"></i>Kembali</a>
       <a class="btn btn-warning" href= "{% url 'login:change_password' %}"><i class="fa fa-edit m-right-xs"></i>Ubah Password</a>
+      <button class = "btn btn-primary" type="submit" >Simpan</button>
     </form>
   </div>
 </div>
