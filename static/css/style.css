@@ -530,6 +530,10 @@ img.avatar, ul.messages li img.avatar {
 
 footer {
     margin: 0 auto;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    position: absolute;
     padding-bottom: 10px;
     background: #f8f8f8;
     -moz-box-shadow: 0 5px 15px 0 rgba(0,0,0,.05) inset; -webkit-box-shadow: 0 5px 15px 0 rgba(0,0,0,.05) inset; box-shadow: 0 5px 15px 0 rgba(0,0,0,.05) inset;

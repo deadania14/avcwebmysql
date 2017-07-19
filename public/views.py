@@ -29,7 +29,7 @@ from public.models import SettingsVariable
 from .models import Event, Slider, UserProfile, Kelas, Timeline
 from .forms import SignUpForm, RegisterTransferForm, SliderForm, AbsensiForm, AdministrasiTransferForm
 from .forms import EventForm, UserProfileEditForm, AdministrasiForm, UserRegister, NewPaymentForm
-
+from .gmail import send_mail_gmail
 
 from rolepermissions.decorators import has_role_decorator
 
@@ -133,7 +133,8 @@ def register(request):
             to_listb = [settings.EMAIL_HOST_USER]
             for bendahara in bendaharas:
                 to_listb.append(bendahara.email)
-            send_mail(subjectb, messageb, from_emailb, to_listb, fail_silently = True)
+                send_mail_gmail(subjectb, messageb, from_emailb, bendahara.email)
+            #send_mail(subjectb, messageb, from_emailb, to_listb, fail_silently = True)
             # </EMAIL>
             current_site = get_current_site(request)
             subject = 'Aktifasi Akun Anda'
@@ -143,7 +144,8 @@ def register(request):
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': account_activation_token.make_token(user),
             })
-            user.email_user(subject, message)
+            #user.email_user(subject, message)
+            send_mail_gmail(subject, message, from_emailb, user.email)
             return render(request, 'login/account_activation_sent.html')
     else:
         user_form = SignUpForm()
