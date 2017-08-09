@@ -1,9 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.conf import settings
 from django.core.mail import send_mail, BadHeaderError
-from django.core.mail import send_mail
 from django.core.mail import EmailMultiAlternatives
-##
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -11,7 +9,6 @@ from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
 from .tokens import account_activation_token
-##
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
@@ -90,9 +87,7 @@ def events(request):
             subject = 'Acara'+nevent.event_name+'Akan Dipertimbangkan'
             message = 'Terima kasih telah mengirim ajuan. Acara Anda akan kami pertimbangkan segera.'
             from_email = settings.EMAIL_HOST_USER
-            to_list = [user, settings.EMAIL_HOST_USER]
-            send_mail(subject, message, from_email, to_list, fail_silently = True)
-
+            send_mail_gmail(subject, message, from_email, user)
             return HttpResponseRedirect(reverse('public:events',))
     else :
         form = EventForm()
@@ -128,11 +123,12 @@ def register(request):
             #<EMAIL>
             bendaharas = User.objects.filter(groups__name='bendahara')
             subjectb = 'Pendaftar Baru '+ str(user)
-            messageb = 'Pendaftar dengan nama '+user.first_name+ ' memilih pembayaran secara '+ str(regadm.method) +'.'
+            messageb = 'Pendaftar dengan nama '+user.first_name+ '('+user.profile.phone+')'+' memilih pembayaran secara '+ str(regadm.method) +'.'
             from_emailb = settings.EMAIL_HOST_USER
-            to_listb = [settings.EMAIL_HOST_USER]
+            #to_listb = [settings.EMAIL_HOST_USER]
+            #send_mail_gmail(subjectb, messageb, from_emailb, settings.EMAIL_HOST_USER)
             for bendahara in bendaharas:
-                to_listb.append(bendahara.email)
+                #to_listb.append(bendahara.email)
                 send_mail_gmail(subjectb, messageb, from_emailb, bendahara.email)
             #send_mail(subjectb, messageb, from_emailb, to_listb, fail_silently = True)
             # </EMAIL>
@@ -180,6 +176,7 @@ def activate(request, uidb64, token):
 def myprofile(request):
     payment_tf = get_object_or_404(Administrasi, user = request.user, jenis__paymentstype='Registration and First Dues')
     form_new_payment = NewPaymentForm(request.POST)
+    from_email = settings.EMAIL_HOST_USER
     if request.method=="POST":
         form_transfer = RegisterTransferForm(request.POST, request.FILES, instance= payment_tf)
         if form_transfer.is_valid():
@@ -187,23 +184,26 @@ def myprofile(request):
             tfpayment.save()
             bendaharas = User.objects.filter(groups__name='bendahara')
             subject = 'Pembayaran Registrasi'
-            message = 'Bukti pembayaran registrasi melalui transfer oleh '+request.user.username+ ' telah diterima'
-            from_email = settings.EMAIL_HOST_USER
-            to_list = [settings.EMAIL_HOST_USER]
+            message = 'Bukti pembayaran registrasi melalui transfer oleh '+request.user.username+'('+request.user.profile.phone+')' +' telah diterima. Mohon untuk memeriksa bukti pembayaran dan segera konfirmasi'
+            #to_list = [settings.EMAIL_HOST_USER]
             for bendahara in bendaharas:
-                to_list.append(bendahara.email)
-
-            send_mail(subject, message, from_email, to_list, fail_silently = True)
-
+                #to_list.append(bendahara.email)
+                send_mail_gmail(subject, message, from_email, bendahara.email)
+                #send_mail(subject, message, from_email, to_list, fail_silently = True)
             return HttpResponseRedirect(reverse('public:myprofile',))
         if form_new_payment.is_valid():
             npayment = form_new_payment.save(commit = False)
             npayment.nominal = npayment.jenis.nominal
             npayment.created_date= timezone.now()
-            status_pending = AdministrationType.objects.get(status="pending")
-            npayment.status= status_pending
             npayment.user = request.user
             npayment.save()
+            bendaharas = User.objects.filter(groups__name='bendahara')
+            subject = 'Pembayaran '+ npayment.jenis + ' a/n '+npayment.user
+            message = 'Saudara '+ npayment.user +'('+npayment.user.profile.phone+')' +' mengajukan pembayaran '+ npayment.jenis +' sebesar '+ npayment.jenis.nominal+'.'
+            #to_list = [settings.EMAIL_HOST_USER]
+            for bendahara in bendaharas:
+                #to_list.append(bendahara.email)
+                send_mail_gmail(subject, message, from_email, bendahara.email)
             return HttpResponseRedirect(reverse('public:myprofile', ))
     else :
         form_transfer = RegisterTransferForm(instance=payment_tf)
@@ -217,7 +217,7 @@ def myprofile(request):
     mykelas = LogKelas.objects.filter(user=request.user)
     context['mykelas'] = mykelas
 
-    timeline_query = Timeline.objects.all()
+    timeline_query = Timeline.objects.all()[:5]
     context['timeline_messages'] = timeline_query
     return render(request, 'public/myprofile.html', context)
 
@@ -243,12 +243,12 @@ def upload_transfer(request, administration_id):
             transfer_payment.save()
             bendaharas = User.objects.filter(groups__name='bendahara')
             subject = 'Pembayaran '+ str(transfer_payment.jenis) + ' oleh ' + request.user.first_name
-            message = 'Bukti pembayaran '+str(transfer_payment.jenis) + ' oleh ' + request.user.username+ ' telah diterima' + 'silahkan cek bukti dan segera konfirmasi.'
+            message = 'Bukti pembayaran '+str(transfer_payment.jenis) + ' oleh ' + request.user.username+ ' telah diterima silahkan cek bukti dan segera konfirmasi.'
             from_email = settings.EMAIL_HOST_USER
-            to_list = [settings.EMAIL_HOST_USER]
+            # to_list = [settings.EMAIL_HOST_USER]
             for bendahara in bendaharas:
-                to_list.append(bendahara.email)
-            send_mail(subject, message, from_email, to_list, fail_silently = True)
+                # to_list.append(bendahara.email)
+                send_mail_gmail(subject, message, from_email, bendahara.email)
             return HttpResponseRedirect(reverse('public:myprofile',))
     else:
         form_transfer_payment = AdministrasiTransferForm(instance=tf_payments)
@@ -269,7 +269,6 @@ def edit_attendance(request, attendance_id):
     npresent = get_object_or_404(PracticeAttendance, id=attendance_id)
     if request.method=="POST":
         form_edit_absensi = AbsensiForm(request.POST, instance = npresent)
-
         if form_edit_absensi.is_valid():
             form_edit_absensi.save()
             return HttpResponseRedirect(reverse('public:home_tutor', ))

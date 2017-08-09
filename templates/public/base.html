@@ -18,6 +18,16 @@
     <link href="{% static 'fonts/opensans.css' %}" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 
+    <link href="{% static 'css/dataTables.bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/responsive.bootstrap.min.css' %}" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script
+			  src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"
+			  integrity="sha256-ugED92WALymbx9ylw12aADWaCrsQysE29DyvnAv5i3w="
+			  crossorigin="anonymous"></script>
+    <script src="{% static 'ajax_select/js/ajax_select.js' %}"></script>
+
     <style>
       .form-group {
         text-align: left;
@@ -67,7 +77,7 @@
                 {% endif %}
               <li>
                 <li class="dropdown {% if request.resolver_match.url_name == 'myprofile' %}active{% endif %}" >
-    							<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000">
+    							<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
     								<br>Hi <strong>{{user.username}}</strong> <span class="caret"></span>
     							</a>
     							<ul class="dropdown-menu dropdown-menu-left" role="menu">
@@ -100,7 +110,7 @@
             </div>
         </div>
     </div>
-    <div class="container">
+    <div class="container" style="min-height: 200px;">
         <div class="row">
             {% block content %} {% endblock %}
         </div>
@@ -154,10 +164,15 @@
     </div>
 </div>
 </footer>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
   <script src="{% static 'js/bootstrap.js' %}"></script>
+
+  <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+  <script src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/dataTables.responsive.min.js' %}"></script>
+  <script src="{% static 'js/responsive.bootstrap.min.js' %}"></script>
+
 </body>
 {% block script %}
 {% endblock %}

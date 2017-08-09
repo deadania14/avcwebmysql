@@ -78,8 +78,6 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.username
 
-
-
     def schedule_last_three_months(self):
         today = timezone.now()
         three_months_ago = today + timezone.timedelta(days=-BATAS_KELUAR)
@@ -107,6 +105,16 @@ class UserProfile(models.Model):
             return attend_last_three_months/schedule_last_three_months * 100
         else:
             return 0.0
+
+    def user_check_schedule(self):
+        check_schedule = PracticeAttendance.objects.filter(daftar_orang=self.user)
+        return check_schedule.count()
+
+    def new_member(self):
+        if self.user.is_active and self.user_check_schedule() == 0:
+            return True
+        else:
+            return False
 
 @receiver(post_save, sender=User)
 def update_user_profile(sender, instance, created, **kwargs):

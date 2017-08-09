@@ -1,13 +1,15 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.models import User
+from django.template.loader import render_to_string
 from .models import Article, Practice, Administrasi, Kelas, PracticeAttendance, Inventory, Meeting, AdministrationType, LogKelas
 from .forms import ArticleForm, MainArticleForm, SchedulesForm, EditUserClassForm, AbsensiForm, AbsensiPeopleForm, AVCContactForm, NewEventForm, EditBarangForm, AbsensiKelasForm, EditUser, NewMeetingForm, EditMeetingForm, NewBarangForm, EditEventForm, NewPaymentForm, EditPaymentForm, NewClassForm, NewPaymentTypeForm, EditPaymentTypeForm, NewBroadcastMessageForm
 from public.models import UserProfile, Event, SettingsVariable, Timeline
-
+from public.gmail import send_mail_gmail
 from rolepermissions.decorators import has_role_decorator
 
 @login_required
@@ -17,8 +19,9 @@ def index(request):
     member_user_query = UserProfile.objects.filter(tipe_user='member').filter(user__is_active=True)
     context['members'] = member_user_query
     #belom kelar
-    regis_payments = Administrasi.objects.filter(jenis__paymentstype= "Registration and First Dues")
-    context['new_members'] = regis_payments
+    new_member_query = UserProfile.objects.filter(tipe_user='member')
+    context['new_members'] = new_member_query
+
     tutor_user_query = UserProfile.objects.filter(tipe_user='tutor')
     context['tutors'] = tutor_user_query
     manajemen_user_query = UserProfile.objects.filter(user__groups__name='manajemen')
@@ -40,12 +43,28 @@ def deactivate_user(request, user_id):
     user = get_object_or_404(User, id=user_id)
     user.is_active = False
     user.save()
+    subject = 'Status Akun Anda'
+    message = message = render_to_string('messages/akun.html', {
+    'user' : user,
+    'status': 'tidak aktif',
+    'sender': 'Alliance Violin Community Depok Official',
+    })
+    from_email = settings.EMAIL_HOST_USER
+    send_mail_gmail(subject, message, from_email, user.email)
     return HttpResponseRedirect(reverse('manajemen:home_sekretaris'))
 
 def activate_user(request, user_id):
     user = get_object_or_404(User, id=user_id)
     user.is_active = True
     user.save()
+    subject = 'Status Akun Anda'
+    message = message = render_to_string('messages/akun.html', {
+    'user' : user,
+    'status': 'aktif',
+    'sender': 'Alliance Violin Community Depok Official',
+    })
+    from_email = settings.EMAIL_HOST_USER
+    send_mail_gmail(subject, message, from_email, user.email)
     return HttpResponseRedirect(reverse('manajemen:home_sekretaris'))
 
 def new_meeting(request):
@@ -129,6 +148,10 @@ def new_pembayaran(request):
             npayment.nominal = npayment.jenis.nominal
             npayment.created_date= timezone.now()
             npayment.save()
+            from_email = settings.EMAIL_HOST_USER
+            subject = 'Status Pembayaran '+ payment.jenis.paymentstype +' a/n '+payment.user
+            message = 'Pembayaran '+ payment.jenis.paymentstype  +'Anda telah berhasil dikonfirmasi. Salam Gesek Selalu by AVC'
+            send_mail_gmail(subject, message, from_email, npayment.profile.email)
             return HttpResponseRedirect(reverse('manajemen:home_keuangan', ))
     else :
         form_new_payment = NewPaymentForm()
@@ -138,10 +161,28 @@ def confirmation_payment(request, payment_id):
     payment = Administrasi.objects.get(id=payment_id)
     payment.status = "paid"
     payment.save()
+    from_email = settings.EMAIL_HOST_USER
     if payment.jenis.paymentstype == 'Registration and First Dues':
-        userp = UserProfile.objects.get(user = payment.user)
-        userp.is_registration_paid = True
-        userp.save()
+        userp = User.objects.get(username = payment.user)
+        userp.profile.is_registration_paid = True
+        userp.profile.save()
+        subject = 'Pendaftaran '+ str(userp.username) +' berhasil'
+        message = render_to_string('login/welcome.html', {
+        'user': userp,
+        })
+        send_mail_gmail(subject, message, from_email, userp.email)
+    else :
+        userp = User.objects.get(username = payment.user)
+        subject = 'Status Pembayaran '+ payment.jenis.paymentstype +' a/n '+ str(userp.username)
+        message = 'Pembayaran '+ payment.jenis.paymentstype  +'Anda telah berhasil dikonfirmasi. Salam Gesek Selalu by AVC'
+        send_mail_gmail(subject, message, from_email, userp.email)
+    subject = 'Pemberitahuan konfirmasi pembayaran'
+    message = render_to_string('messages/verifikasitindakan.html', {
+    'user': userp,
+    'tindakan': 'konfirmasi penerimaan pembayaran '+ payment.jenis.paymentstype +' a/n ',
+    'userlogged': request.user,
+    })
+    send_mail_gmail(subject, message, from_email, userp.email)
     return HttpResponseRedirect(reverse('manajemen:home_keuangan'))
 
 def cancel_payment(request, payment_id):
@@ -151,6 +192,11 @@ def cancel_payment(request, payment_id):
     if payment.jenis.paymentstype == 'Registration and First Dues':
         payment.user.is_active = False
         payment.user.save()
+    from_email = settings.EMAIL_HOST_USER
+    userp = User.objects.get(username = payment.user)
+    subject = 'Status Pembayaran '+ payment.jenis.paymentstype +' a/n '+str(userp.username)
+    message = 'Pembayaran '+ payment.jenis.paymentstype  +'Anda telah digagalkan. Salam Gesek Selalu by AVC.'
+    send_mail_gmail(subject, message, from_email, userp.email)
     return HttpResponseRedirect(reverse('manajemen:home_keuangan'))
 
 @has_role_decorator('psdm')
@@ -166,7 +212,6 @@ def home_psdm(request):
     present_query = PracticeAttendance.objects.all()
     context['presents'] = present_query
     context['now'] = today
-
     return render(request, 'manajemen/psdm.html', context)
 
 def move_class(request, user_id):
@@ -232,7 +277,6 @@ def edit_attendance(request, attendance_id):
     npresent = get_object_or_404(PracticeAttendance, id=attendance_id)
     if request.method=="POST":
         form_edit_absensi = AbsensiForm(request.POST, instance = npresent)
-
         if form_edit_absensi.is_valid():
             form_edit_absensi.save()
             return HttpResponseRedirect(reverse('manajemen:home_psdm', ))
@@ -343,12 +387,28 @@ def confirmation_event(request, event_id):
     eventconf = Event.objects.get(id=event_id)
     eventconf.event_status = "deal"
     eventconf.save()
+    from_email = settings.EMAIL_HOST_USER
+    subject = 'Keputusan Partisipasi dalam Acara '+eventconf.event_name
+    message = render_to_string('messages/acara.html', {
+    'sender': eventconf.sender,
+    'status': 'menerima',
+    'event': eventconf.event_name,
+    })
+    send_mail_gmail(subject, message, from_email, eventconf.email)
     return HttpResponseRedirect(reverse('manajemen:home_acara'))
 
 def cancel_event(request, event_id):
     eventconf = Event.objects.get(id=event_id)
     eventconf.event_status = "cancelled"
     eventconf.save()
+    from_email = settings.EMAIL_HOST_USER
+    subject = 'Keputusan Partisipasi dalam Acara '+eventconf.event_name
+    message = render_to_string('messages/acara.html', {
+    'sender': eventconf.sender,
+    'status': 'menunda',
+    'event': eventconf.event_name,
+    })
+    send_mail_gmail(subject, message, from_email, eventconf.email)
     return HttpResponseRedirect(reverse('manajemen:home_acara'))
 
 def delete_event(request, event_id):

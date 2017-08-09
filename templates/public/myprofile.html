@@ -26,7 +26,7 @@ Profile
         <img class="img-circle" src="{{request.user.profile.photo.url}}" height='150' width='150' alt="Avatar" title="Change the avatar">
         {% else %}
         <img class="img-circle img-responsive" src="{% static 'pictures/default_ava.png' %}" height='150' width='150' alt="Avatar" title="the avatar">
-        
+
         {% endif %}
       </div>
     </div>
@@ -101,7 +101,7 @@ Profile
         <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="profile-tab">
 
           <!-- start user projects -->
-          <table class="data table table-striped table-responsive no-margin">
+          <table id = "latihan" class="data table table-striped table-responsive no-margin">
             <thead>
               <tr>
                 <th>Record Kelas</th>
@@ -145,7 +145,7 @@ Profile
               </div>
           </div>
           <!-- start user projects -->
-          <table class="data table table-striped table-responsive no-margin">
+          <table id="pembayaran" class="data table table-striped table-responsive no-margin">
             <thead>
               <tr>
                 <th>Jenis Pembayaran</th>
@@ -259,7 +259,7 @@ Profile
   {% if regis_payment.image %}
     <h4>Terima Kasih telah melakukan pembayaran. </h4>
     <small>salah upload foto transfer?
-    <p type="button" class="circle btn btn-warning" data-toggle="modal" data-target="#helppenawaran"><small>Upload Bukti Kembali</small></p></small>
+    <p type="button" class="circle btn btn-warning" data-toggle="modal" data-target="#uploadbukti"><small>Upload Bukti Kembali</small></p></small>
   {% else %}
   <h4>Anda mendaftar dengan pilihan pembayaran transfer. Silahkan lampirkan bukti pembayaran Anda.</h4>
   <button type="button" class="circle btn btn-warning" data-toggle="modal" data-target="#uploadbukti">Upload Bukti Transfer</button>
@@ -286,6 +286,11 @@ Profile
 
 {% endif %}
 
-{% endblock %}
-{% block script %}
+{% endblock %}{% block script %}
+<script>
+$(document).ready(function() {
+    $('#latihan').DataTable();
+    $('#pembayaran').DataTable();
+} );
+</script>
 {% endblock %}

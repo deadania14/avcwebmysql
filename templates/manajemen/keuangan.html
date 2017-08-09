@@ -69,11 +69,11 @@ Bendahara
       <div class="clearfix"></div>
     </div>
     <div class="x_content">
-      <div class="col-md-12">
+      <!-- <div class="col-md-12">
         <h3 style="text-align: right"><a>
-          Saldo*  Rp {{ saldo|intcomma }},00</a>
+          Saldo*  Rp {{# saldo|intcomma }},00</a>
         </h3>
-      </div>
+      </div> -->
       <div class="col-md-12 right">
         <p>*Saldo adalah jumlah rupiah yang telah dikonfirmasi</p>
       </div>
@@ -123,7 +123,7 @@ Bendahara
                       <button type="button" class="close" data-dismiss="modal">&times;</button>
                       <h4 class="modal-title">Konfirmasi Penerimaan Pembayaran</h4>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body center">
                       <p>Apakah Anda yakin telah menerima pembayaran<h3>{{admn.jenis.paymentstype}}</h3> oleh saudara
                       <h4>{{admn.user}}</h4> ? </p>
                     </div>
