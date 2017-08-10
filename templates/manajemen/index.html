@@ -48,9 +48,9 @@ Beranda - Manajemen
                         {% endfor %}
                       </i></p>
                       {% if manjs.photo %}
-                      <img class="img-circle img-responsive" src="{{manjs.photo.url}}" height='150' width='150' alt="Avatar" title="the avatar">
+                      <img class="img-circle img-responsive" src="{{manjs.photo.url}}" style = "width:100px;height:100px" alt="Avatar" title="the avatar">
                       {% else %}
-                      <img class="img-circle img-responsive" src="{% static 'pictures/default_ava.png' %}" height='150' width='150' alt="Avatar" title="the avatar">
+                      <img class="img-circle img-responsive" src="{% static 'pictures/default_ava.png' %}" style = "width:100px;height:100px" alt="Avatar" title="the avatar">
                       {% endif %}
                       <h2>{{manjs.user}}</h2>
                       <p><strong>About: </strong>

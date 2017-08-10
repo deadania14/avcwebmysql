@@ -5,6 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import ugettext_lazy as _
 from django.core.validators import EMPTY_VALUES
 from django.utils.encoding import force_text
+from django.forms.extras.widgets import SelectDateWidget
 from django.forms import ValidationError
 from django.forms import Textarea
 from django.forms.fields import Field
@@ -48,7 +49,11 @@ class EventForm(ModelForm):
     email = forms.EmailField(label='E-mail Pengaju',)
     image = forms.ImageField(label='Pamflet atau Poster', required=False,)
     attachment = forms.FileField(label='File Pendukung', help_text='*harus .pdf', required=False)
-    event_date = forms.DateField(label='Tanggal Acara', help_text="*Tanggal Kerja Sama")
+    event_date= forms.DateField(
+        widget=SelectDateWidget(
+            empty_label=("Choose Year", "Choose Month", "Choose Day"),
+        )
+    )
     class Meta:
         model = Event
         fields = ['event_name', 'corporate', 'desc', 'sender', 'phone','email',

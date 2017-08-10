@@ -1,3 +1,4 @@
+{% load staticfiles %}
 /*
  *
  * Template Name: Andia
@@ -198,10 +199,10 @@ img.avatar, ul.messages li img.avatar {
 .navbar>.container .navbar-brand { margin-left: 0; }
 
 .navbar-brand {
-	width: 167px;
-	height: 106px;
-	background: url(../img/logo.png) left center no-repeat;
-	text-indent: -99999px;
+	width: 100%;
+	height: auto;
+	background-image: : url('{% static 'pictures/AVC-300x277.png' %}') left center no-repeat;
+	/*text-indent: -99999px;*/
 }
 
 /***** Slider *****/
@@ -610,7 +611,8 @@ footer {
 .page-title-container {
     margin: 0 auto;
     padding: 30px 0 35px 0;
-    background: #f8f8f8 url;
+    background: #f8f8f8;
+    /*background: #f8f8f8 url('../pictures/pattern.jpg') left top repeat;*/
     text-align: left;
     -moz-box-shadow: 0 5px 15px 0 rgba(0,0,0,.05) inset, 0 -5px 15px 0 rgba(0,0,0,.05) inset;
     -webkit-box-shadow: 0 5px 15px 0 rgba(0,0,0,.05) inset, 0 -5px 15px 0 rgba(0,0,0,.05) inset;
