@@ -92,7 +92,7 @@
     						</li>
               </li>
                 {% else %}
-              <li>
+              <li {% if request.resolver_match.url_name == 'register' %}class="active"{% endif %}>
                 <a href="{% url 'public:register' %}"><br>Pendaftaran</a>
               </li>
               <li>
