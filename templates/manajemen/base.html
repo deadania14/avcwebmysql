@@ -114,8 +114,9 @@
                   <br>Hi <strong>{{user.username}}</strong> <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-left" role="menu">
-                  <li><a href="{% url 'login:logout' %}"><i class="glyphicon glyphicon-log-out"></i> Keluar </a></li>
+                  <li><a href="{% url 'public:index' %}"><i class="fa fa-globe"></i> Web Publik</a></li>
                   <li><a href="{% url 'public:myprofile' %}"><i class="glyphicon glyphicon-user"></i> Profile </a></li>
+                  <li><a href="{% url 'login:logout' %}"><i class="glyphicon glyphicon-log-out"></i> Keluar </a></li>
                 </ul>
               </li>
             </li>
