@@ -14,10 +14,11 @@ class ArticleForm(forms.ModelForm):
     image = forms.ImageField(label = 'Gambar', required=False)
     is_publish = forms.BooleanField(label = 'Siap Publikasi ?', required=False)
     is_concertarticle = forms.BooleanField(label = 'Artikel Konser ?', required=False)
+    is_event = forms.BooleanField(label = 'Artikel Konser ?', required=False)
     class Meta:
         model = Article
         fields = ('title','text',
-        'image', 'is_publish', 'is_concertarticle',)
+        'image', 'is_publish', 'is_concertarticle', 'is_event')
     def clean_image(self):
         image = self.cleaned_data['image']
         if image:
@@ -126,7 +127,6 @@ class NewEventForm(forms.ModelForm):
             empty_label=("Choose Year", "Choose Month", "Choose Day"),
         )
     )
-    is_publish = forms.BooleanField(label = 'Siap Publikasi ?', required=False)
     class Meta:
         model = Event
         fields = ['event_name', 'desc', 'image', 'event_date','is_publish']

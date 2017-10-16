@@ -23,7 +23,7 @@ from django.urls import reverse
 from manajemen.models import Article, Administrasi, AdministrationType, PracticeAttendance, Kelas
 from manajemen.models import Practice, Kelas, PracticeAttendance, LogKelas
 from public.models import SettingsVariable
-from .models import Event, Slider, UserProfile, Kelas, Timeline
+from .models import Event, Slider, UserProfile, Kelas, Timeline, QuenstionAnswer
 from .forms import SignUpForm, RegisterTransferForm, SliderForm, AbsensiForm, AdministrasiTransferForm
 from .forms import EventForm, UserProfileEditForm, AdministrasiForm, UserRegister, NewPaymentForm
 from .gmail import send_mail_gmail
@@ -57,17 +57,17 @@ def about(request):
     context['cprofile'] = companyprofile
     return render(request, 'public/about.html', context)
 
-def konser(request):
-    context={}
-    konser = Article.objects.filter(is_concertarticle= True)
-    context['concerts'] = konser
-    return render(request, 'public/konser.html', context)
-
 def event_detail(request, event_id):
     context={}
     eventid_query= Event.objects.get(id=event_id)
     context['eventid'] = eventid_query
     return render(request, 'public/event_detail.html', context)
+
+def articles(request):
+    context={}
+    readyarticle = Article.objects.filter(is_publish= True)
+    context['artikelready'] = readyarticle
+    return render(request, 'public/article.html', context)
 
 def article_detail(request, article_id):
     context={}
@@ -92,8 +92,9 @@ def events(request):
     else :
         form = EventForm()
     context={'form':form,}
-    deal_event= Event.objects.filter(event_status='deal').filter(is_publish=True)
-    context["devent"] = deal_event
+    event_article = Article.objects.filter(is_event = True).filter(is_publish = True)
+    context["eventarticle"] = event_article
+    # return HttpResponseRedirect(reverse('public:events',))
     return render(request, 'public/events.html', context)
 
 def register(request):
@@ -151,6 +152,8 @@ def register(request):
     context['conditions'] = condition_query
     regis_fee = AdministrationType.objects.get(paymentstype="Registration and First Dues")
     context['regis_fee'] = regis_fee.nominal
+    questions = QuenstionAnswer.objects.all
+    context['questionanswer'] = questions
     return render (request, 'public/register.html', context)
 
 def account_activation_sent(request):
@@ -213,7 +216,7 @@ def myprofile(request):
     context['adminitrasis'] = administrasi_query
     regis_pay = Administrasi.objects.filter(user=request.user).filter(jenis__paymentstype='Registration and First Dues')[0]
     context['regis_payment'] = regis_pay
-    today = today = timezone.now().date()
+    today = timezone.now().date()
     mykelas = LogKelas.objects.filter(user=request.user)
     context['mykelas'] = mykelas
 

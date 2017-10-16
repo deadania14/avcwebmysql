@@ -1,16 +1,32 @@
-{% extends 'public/base2.html' %}
+{% extends 'public/base.html' %}
 {% load humanize %}
 {% load bootstrap3 %}
 {% block title %}
 Pendaftaran
 {% endblock %}
+{% block page_title%}
+<div class="col-sm-12 wow fadeIn">
+    <i class="fa fa-play"></i>
+    <h1><a href ="{% url 'public:register' %}">Ayo mulai !! </a>/</h1>
+    <p>pendaftaran</p>
+</div>
+{% endblock %}
 {% block content %}
-<div class="col-md-12">
-  <h1 style = "font-size:40px; padding:30px;"> Daftarkan Dirimu</h1>
+<br>
+<div class="col-md-6 col-xs-12 left" style="padding: 24px">
+  <strong><h1 style="font-family:Arial;">"Satu jam lebih baik dari pada satu minggu menunggu"</h1></strong>
+  <p style="font-family:Akagi Pro, sans-serif;font-size:20">AVC Depok adalah sebuah wadah untuk berkeluarga dan bersatu demi sesuatu yang dicintai bersama. ~MUSIK~</p>
+  <br>
+  <h4>Pertanyaan yang sering diajukan :</h4>
+  {% for tanyajawab in questionanswer %}
+  <br>
+  <strong>{{tanyajawab.question}}</strong>
+  <p>{{tanyajawab.answer}}</p>
+  {% endfor %}
+  <br>
+  <strong>Kawan-kawan dapat mengajukan pertanyaan lain melalui sosial media AVC atau contact HP AVC ya.</strong>
 </div>
-<div class="col-md-6">
-</div>
-<div class="col-md-6">
+<div class="col-md-6 col-xs-12 left">
   {% if registered %}
     <strong>Terima Kasih telah mendaftar, Silahkan Cek e-mail Anda!</strong>
     <a href="{% url 'public:index' %}">Kembali ke Beranda</a><br />
@@ -37,6 +53,7 @@ Pendaftaran
               <br/><br/>
               <input class ="btn btn-primary" type="submit" name="submit" value="Daftar" />
           </div>
+        </div>
     </form>
   {% endif %}
   <!-- Modal -->

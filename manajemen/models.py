@@ -11,6 +11,7 @@ class Article(models.Model):
     image = models.ImageField(null=True, blank=True, upload_to='images/articles')
     is_mainarticle = models.BooleanField(default = False)
     is_concertarticle = models.BooleanField(default= False)
+    is_event = models.BooleanField(default= False)
     is_publish = models.BooleanField(default= False)
     created_date = models.DateTimeField(
         default = timezone.now
@@ -22,7 +23,7 @@ class Article(models.Model):
         blank = True, null = True
     )
     class Meta:
-        ordering =['-updated_date',]
+        ordering =['-created_date',]
     def publish(self):
         self.published_date = timezone.now()
         self.save()

@@ -353,6 +353,7 @@ def check_event_finish():
 
 def new_event(request):
     context={}
+    today = timezone.now().date()
     deal_event= Event.objects.all()
     context["devent"] = deal_event
     if request.method=="POST":
@@ -362,8 +363,11 @@ def new_event(request):
             nevent.corporate = "AVC"
             nevent.sender = request.user
             nevent.event_status = "deal"
-            nevent.created_date= timezone.now()
+            nevent.created_date= today
             nevent.save()
+            #membuat artikel dari event yang telah dikonfirmasi
+            eventarticle = Article.objects.create(author = request.user, title = nevent.event_name,
+            text = nevent.desc, image = nevent.image, is_event = True,  created_date = nevent.created_date)
             return HttpResponseRedirect(reverse('manajemen:home_acara', ))
     else :
         form_new_event = NewEventForm()
@@ -384,9 +388,13 @@ def edit_event(request, event_id):
     return render(request, 'manajemen/edit_event.html', {'form_edit_event':form_edit_event})
 
 def confirmation_event(request, event_id):
+    today = timezone.now().date()
     eventconf = Event.objects.get(id=event_id)
     eventconf.event_status = "deal"
     eventconf.save()
+    #membuat artikel dari event yang telah dikonfirmasi
+    eventarticle = Article.objects.create(author = request.user, title = eventconf.event_name,
+    text = eventconf.desc, image = eventconf.image, is_event = True,  created_date = today)
     from_email = settings.EMAIL_HOST_USER
     subject = 'Keputusan Partisipasi dalam Acara '+eventconf.event_name
     message = render_to_string('messages/acara.html', {

@@ -1,0 +1,46 @@
+{% extends 'public/base.html' %}
+
+{% block title %}
+Artikel
+{% endblock %}
+{% block page_title%}
+<div class="col-sm-12 wow fadeIn">
+    <i class="fa fa-newspaper-o"></i>
+    <h1><a href ="{% url 'public:articles' %}">Artikel</a>/</h1>
+    <p>article</p>
+</div>
+{% endblock %}
+{% block content %}
+<style>
+  .form-group {
+    text-align: left;
+    padding-bottom: 20px;
+  }
+</style>
+<div class="container">
+    <div class="row">
+      <div class="col-sm-12 form-group">
+      {% for article in artikelready %}
+      <div class="col-md-3">
+        <div class="event-box {{deals.status}}-design">
+          <div class="event-box-container">
+            {% if article.image %}
+            <img src="{{article.image.url}}">
+            {% endif %}
+            <div class="event-box-text">
+              <h3>{{article.title}}</h3>
+              <p>{{article.text|safe|linebreaksbr|slice:":100"}}</p>
+              <div class="work-bottom">
+                  <a href="{% url 'public:article_detail' article.id %}">Teruskan membaca...</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+        <div class="col-sm-1">
+        </div>
+    </div>
+</div>
+{% endblock %}

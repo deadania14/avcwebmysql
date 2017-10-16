@@ -140,3 +140,16 @@ class SettingsVariable (models.Model):
     def update(self):
         self.updated_date = timezone.now()
         self.save()
+
+class QuenstionAnswer(models.Model):
+    question = models.CharField(max_length=255, null=True)
+    answer = models.TextField(null=True)
+    created_date= models.DateTimeField(
+        blank = True, null = True
+    )
+    updated_date = models.DateTimeField(
+        blank = True, null = True
+    )
+    def created_date(self):
+        self.updated_date = timezone.now()
+        self.save()

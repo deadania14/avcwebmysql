@@ -68,8 +68,8 @@
               <li {% if request.resolver_match.url_name == 'about' %}class="active"{% endif %}>
                   <a href="{% url 'public:about' %}"><br>Tentang</a>
               </li>
-              <li {% if request.resolver_match.url_name == 'konser' %}class="active"{% endif %}>
-                  <a href="{% url 'public:konser' %}"><br>Konser</a>
+              <li {% if request.resolver_match.url_name == 'articles' %}class="active"{% endif %}>
+                  <a href="{% url 'public:articles' %}"><br>Artikel</a>
               </li>
               {% if user.is_authenticated %}
                 {% if user.profile.tipe_user == 'tutor' %}
@@ -92,8 +92,8 @@
     						</li>
               </li>
                 {% else %}
-              <li>
-                <a href="{% url 'public:register' %}"><br>Pendaftaran</a>
+              <li {% if request.resolver_match.url_name == 'register' %}class="active"{% endif %}>
+                  <a href="{% url 'public:register' %}"><br>Daftar</a>
               </li>
               <li>
                 <a href="{% url 'login:login' %}"><br>Login</a>
