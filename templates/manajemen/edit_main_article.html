@@ -20,7 +20,7 @@ Edit Main Article
 {% block content %}
 <div class ="col-md-8">
   <br>
-  <form method="POST"> {% csrf_token %}
+  <form method="POST" enctype="multipart/form-data"> {% csrf_token %}
     {% bootstrap_form form_main_edit_article %}
     <button class = "btn btn-primary" type="submit" class="save btn btn-default">Simpan</button>
   </form>

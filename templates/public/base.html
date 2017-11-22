@@ -41,6 +41,10 @@
       .center{
         text-align: center;
       }
+      .image-detail{
+        max-width: 150px;
+        height: auto;
+      }
     </style>
 </head>
 <body>
@@ -52,7 +56,7 @@
           </button>
           <!-- <a class="navbar-brand" href="{% url 'public:index' %}">alalala</a> -->
           <!-- <h2 class = "left" style = "padding-left:15px"><a	href="{% url 'public:index' %}">Alliance Violin Community</a></h2> -->
-          <img class = "img-responsive img-circle" src="{% static 'pictures/AVC-300x277.png'%}" style = 'width:31%;height:auto;padding-top:1px'>
+          <a href="{% url 'public:index' %}"><img class = "img-responsive img-circle" src="{% static 'pictures/AVC-300x277.png'%}" style = 'width:100px;height:auto;padding-top:1px'></a>
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse left" id="top-navbar-1">
@@ -155,7 +159,7 @@
     </div>
     <div class="row">
         <div class="col-sm-7 footer-copyright wow fadeIn">
-            <p>Copyright 2017 Indonesia - All rights reserved. Template by <a href="http://azmind.com">Azmind</a>.</p>
+            <p>Copyright 2017 Indonesia - All rights reserved. Template by <a href="http://azmind.com">Azmind</a> modified by Dea.</p>
         </div>
         <div class="col-sm-5 footer-social wow fadeIn">
           <a href="{% facebook_footer %}"><i class="fa fa-facebook"></i></a>
@@ -174,8 +178,20 @@
   <script src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
   <script src="{% static 'js/dataTables.responsive.min.js' %}"></script>
   <script src="{% static 'js/responsive.bootstrap.min.js' %}"></script>
+  <script>
+      function openNav() {
+          document.getElementById("mySidenav").style.width = "250px";
+          document.getElementById("main").style.marginLeft = "250px";
+          document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
+      }
 
-</body>
+      function closeNav() {
+          document.getElementById("mySidenav").style.width = "0";
+          document.getElementById("main").style.marginLeft = "0";
+          document.body.style.backgroundColor = "white";
+      }
+  </script>
 {% block script %}
 {% endblock %}
+</body>
 </html>

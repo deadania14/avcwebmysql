@@ -14,21 +14,11 @@ class ArticleForm(forms.ModelForm):
     image = forms.ImageField(label = 'Gambar', required=False)
     is_publish = forms.BooleanField(label = 'Siap Publikasi ?', required=False)
     is_concertarticle = forms.BooleanField(label = 'Artikel Konser ?', required=False)
-    is_event = forms.BooleanField(label = 'Artikel Konser ?', required=False)
+    is_event = forms.BooleanField(label = 'Artikel Acara ?', required=False)
     class Meta:
         model = Article
         fields = ('title','text',
         'image', 'is_publish', 'is_concertarticle', 'is_event')
-    def clean_image(self):
-        image = self.cleaned_data['image']
-        if image:
-            from django.core.files.images import get_image_dimensions
-            w, h = get_image_dimensions(image)
-
-            if w > 958 or h > 460:
-                raise forms.ValidationError(
-                u'That image is un suitable. The image needs to be width : 958px height :460px ')
-        return image
 
 class MainArticleForm(forms.ModelForm):
     image = forms.ImageField(label = 'Gambar', required=False)
@@ -36,16 +26,6 @@ class MainArticleForm(forms.ModelForm):
         model = Article
         fields = ('text',
         'image',)
-    def clean_image(self):
-        image = self.cleaned_data['image']
-        if image:
-            from django.core.files.images import get_image_dimensions
-            w, h = get_image_dimensions(image)
-
-            if w > 958 or h > 460:
-                raise forms.ValidationError(
-                u'That image is un suitable. The image needs to be width : 958px height :460px ')
-        return image
 
 class SchedulesForm(forms.ModelForm):
     date = forms.SplitDateTimeField(label='Tanggal Latihan', required=True, widget=AdminSplitDateTime)
@@ -161,17 +141,6 @@ class EditEventForm(forms.ModelForm):
         widget = {
              'note': Textarea(attrs={'cols': 80, 'rows': 20}),
         }
-    def clean_image(self):
-        image = self.cleaned_data.get('image')
-        if image:
-            from django.core.files.images import get_image_dimensions
-            w, h = get_image_dimensions(image)
-
-            if w > 958 or h > 460:
-                raise forms.ValidationError(
-                u'That image is too big. The image needs to be width : 958px height :460px ')
-        return image
-
 
 class NewBarangForm(forms.ModelForm):
     thingsname = forms.CharField(label='Nama Barang', required=True)
@@ -267,3 +236,14 @@ class NewBroadcastMessageForm(forms.ModelForm):
         widget = {
              'note': Textarea(attrs={'cols': 80, 'rows': 20}),
         }
+# validator image
+    # def clean_image(self):
+    # image = self.cleaned_data['image']
+    # if image:
+    #     from django.core.files.images import get_image_dimensions
+    #     w, h = get_image_dimensions(image)
+    #
+    #     if w > 958 or h > 460:
+    #         raise forms.ValidationError(
+    #         u'That image is un suitable. The image needs to be width : 958px height :460px ')
+    # return image

@@ -11,7 +11,7 @@ Artikel Baru
           <div class="col-sm-12 wow fadeIn">
             <i class="fa fa-adjust"></i>
             <h1><a href="{% url 'manajemen:home_hpd' %}">HPD</a>/</h1>
-            <p>Artikel Baru <i> Alliance Violin Community</i></p>
+            <p>Artikel Baru</p>
           </div>
         </div>
     </div>
@@ -20,9 +20,9 @@ Artikel Baru
 {% block content %}
 <div class ="col-md-10">
   <br>
-  <form method="POST"> {% csrf_token %}
+  <form method="POST" enctype="multipart/form-data"> {% csrf_token %}
     {% bootstrap_form form_edit_article %}
-    <button class = "btn btn-info" type="submit" class="save btn btn-default">Save</button>
+    <button class = "btn btn-info" type="submit" class="save btn btn-default">Simpan</button>
   </form>
 </div>
 {% endblock %}

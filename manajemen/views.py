@@ -484,13 +484,16 @@ def home_hpd(request):
 
 def new_article(request):
     if request.method=="POST":
-        form_edit_article = ArticleForm(request.POST)
+        form_edit_article = ArticleForm(request.POST, request.FILES)
         if form_edit_article.is_valid():
             narticle = form_edit_article.save(commit = False)
             narticle.author = request.user
+            narticle.updated_date= timezone.now()
             narticle.published_date= timezone.now()
             narticle.save()
             return HttpResponseRedirect(reverse('manajemen:detail_article', args=(narticle.id,)))
+        else:
+            print (form_edit_article.errors)
     else :
         form_edit_article = ArticleForm()
     return render(request, 'manajemen/new_article.html', {'form_edit_article':form_edit_article})

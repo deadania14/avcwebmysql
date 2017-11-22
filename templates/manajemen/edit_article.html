@@ -11,7 +11,7 @@ Edit Article
           <div class="col-sm-12 wow fadeIn">
             <i class="fa fa-pencil"></i>
             <h1><a href="{% url 'manajemen:home_hpd' %}">HPD /</a></h1>
-            <p>Ubah Artikel <i> Alliance Violin Community</i></p>
+            <p>Ubah Artikel</p>
           </div>
         </div>
     </div>
@@ -20,7 +20,7 @@ Edit Article
 {% block content %}
 <div class ="col-md-8">
   <br>
-  <form method="POST"> {% csrf_token %}
+  <form method="POST" enctype="multipart/form-data"> {% csrf_token %}
     {% bootstrap_form form_edit_article %}
     <button class = "btn btn-primary" type="submit" class="save btn btn-default">Simpan</button>
   </form>

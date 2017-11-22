@@ -10,7 +10,7 @@
           <div class="col-sm-12 wow fadeIn">
             <i class="fa fa-adjust"></i>
             <h1><a href="{% url 'manajemen:home_hpd' %}">HPD</a>/</h1>
-            <p>Detail Artikel <i> Alliance Violin Community</i></p>
+            <p>Detail Artikel</p>
           </div>
         </div>
     </div>
@@ -19,12 +19,23 @@
 {% block content %}
 <div class = 'form-group'>
   <h1>{{articleid.title}}</h1>
+  <div class="col-md-6">
+    <p>{{articleid.created_date}}</p>
+    </div>
+  <div class="col-md-6 right">
+    {% if articleid.is_mainarticle %}
+      <a class="btn	btn-warning btn-sm" href="{%	url	'manajemen:edit_mainarticle'	articleid.id	%}"><span	class="glyphicon	glyphicon-pencil"></span> Ubah</a>
+    {% else %}
+      <a class="btn	btn-success btn-sm" href="{%	url	'manajemen:edit_article'	articleid.id	%}"><span	class="glyphicon	glyphicon-pencil"></span> Ubah</a>
+    {% endif %}
+  </div>
+
   <div style="font-size:18px">
+
+    {% if articleid.image %}
+    <br><img src="{{articleid.image.url}}">
+    {% endif %}
     <p>{{articleid.text|safe|linebreaksbr}}</p>
   </div>
-  {% if articleid.image %}
-  <br><img class="img-circle" src="{{articleid.image.url}}" height='150' width='150'>
-  {% endif %}
-  <p>{{articleid.created_date}}</p>
 </div>
 {% endblock %}

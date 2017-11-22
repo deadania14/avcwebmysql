@@ -65,7 +65,7 @@ def event_detail(request, event_id):
 
 def articles(request):
     context={}
-    readyarticle = Article.objects.filter(is_publish= True)
+    readyarticle = Article.objects.filter(is_publish= True).filter(is_event=False)[:8]
     context['artikelready'] = readyarticle
     return render(request, 'public/article.html', context)
 
@@ -92,7 +92,9 @@ def events(request):
     else :
         form = EventForm()
     context={'form':form,}
-    event_article = Article.objects.filter(is_event = True).filter(is_publish = True)
+    allevent = Event.objects.filter(event_status = 'done')
+    context["allevent"] = allevent
+    event_article = Article.objects.filter(is_event = True).filter(is_publish = True)[:4]
     context["eventarticle"] = event_article
     # return HttpResponseRedirect(reverse('public:events',))
     return render(request, 'public/events.html', context)

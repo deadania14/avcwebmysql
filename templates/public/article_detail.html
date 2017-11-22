@@ -10,11 +10,12 @@ Detail Artikel
 </div>
 {% endblock %}
 {% block content %}
-<div class = 'form-group'>
+<div class= 'form-group'>
   <h1>{{articleid.title}}</h1>
-  <p>{{articleid.text|safe}}</p>
-  {% if articleid.image %}
-  <br><img src="{{articleid.image.url}}">{% endif %}
   <p>{{articleid.created_date}}</p>
+  {% if articleid.image %}
+  <br><img class="image-detail " src="{{articleid.image.url}}">{% endif %}
+  <br>
+  <p><br>{{articleid.text|safe}}</p>
 </div>
 {% endblock %}

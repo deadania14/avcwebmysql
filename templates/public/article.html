@@ -18,6 +18,12 @@ Artikel
   }
 </style>
 <div class="container">
+  <div class="row">
+      <div class="col-sm-12 work-title wow fadeIn ">
+        <br>
+          <h2>Artikel Terbaru</h2>
+      </div>
+  </div>
     <div class="row">
       <div class="col-sm-12 form-group">
       {% for article in artikelready %}
@@ -29,6 +35,7 @@ Artikel
             {% endif %}
             <div class="event-box-text">
               <h3>{{article.title}}</h3>
+              <p>{{article.created_date}}</p>
               <p>{{article.text|safe|linebreaksbr|slice:":100"}}</p>
               <div class="work-bottom">
                   <a href="{% url 'public:article_detail' article.id %}">Teruskan membaca...</a>
@@ -39,8 +46,6 @@ Artikel
       </div>
       {% endfor %}
     </div>
-        <div class="col-sm-1">
-        </div>
     </div>
 </div>
 {% endblock %}
