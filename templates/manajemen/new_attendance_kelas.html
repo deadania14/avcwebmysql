@@ -6,9 +6,11 @@ Absensi-Kelas
 {% endblock %}
 
 {% block content %}
+<div class ="col-md-4 col-xs-12">
 <h1>Absensi</h1>
 <form method="POST"> {% csrf_token %}
   {% bootstrap_form form_absensi_kelas %}
   <button type="submit" class="save btn btn-primary">Lanjut</button>
 </form>
+</div>
 {% endblock %}

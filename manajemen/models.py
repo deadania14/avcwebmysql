@@ -40,10 +40,10 @@ class Practice(models.Model):
     created_date = models.DateTimeField(
         default = timezone.now
         )
-    class Meta:
-        ordering =['-date',]
-    def __str__(self):
-        return "{} {}".format(self.date.date(),self.date.time() )
+# class Meta:
+#     ordering =['-date',]
+# def __str__(self):
+#     return "{} {}".format(self.date.date())
 
 class Kelas(models.Model):
     nama_kelas = models.CharField(default='', max_length=50)
@@ -138,7 +138,6 @@ class Inventory(models.Model):
     thingsname = models.CharField(max_length=40)
     stock = models.PositiveIntegerField(validators=[MinValueValidator(1)])
     detail = models.CharField(max_length=100)
-    note = models.CharField(max_length=200)
     created_date = models.DateTimeField(
         default = timezone.now
     )

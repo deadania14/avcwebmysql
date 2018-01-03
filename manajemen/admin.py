@@ -19,7 +19,7 @@ admin.site.register(LogKelas, logkelas)
 
 class article(admin.ModelAdmin):
     model = Article
-    list_display = ['title', 'author', 'is_mainarticle',]
+    list_display = ['title', 'author', 'is_mainarticle','is_event','is_publish']
 admin.site.register(Article, article)
 
 from ajax_select import make_ajax_form

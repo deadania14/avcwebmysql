@@ -37,7 +37,7 @@ Inventaris
     <tbody>
       {% for barang in inventories %}
       <tr>
-        <td>{{barang.thingsname}}</td>
+        <td>{{barang.thingsname|slice:":10"}}..</td>
         <td>{{barang.stock}}</td>
         <td><button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModalDetailInventory{{barang.id}}"><span	class="fa fa-folder"></span></button>
           <a class="btn	btn-warning btn-sm" href="{%	url	'manajemen:edit_barang'	barang.id	%}"><span	class="glyphicon	glyphicon-pencil"></span></a>

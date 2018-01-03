@@ -6,8 +6,8 @@
 {% block page_title%}
 <div class="col-sm-12 wow fadeIn">
     <i class="fa fa-key"></i>
-    <h1><a href= "{% url 'public:events' %}">Acara</a> /</h1>
-    <p>Events</p>
+    <h1><a href= "{% url 'public:events' %}">Acara</a> /events</h1>
+
 </div>
 {% endblock %}
 
@@ -30,7 +30,7 @@
   <div class="container">
       <div class="row">
           <div class="col-sm-12 work-title wow fadeIn ">
-              <h2>Acara Pilihan</h2>
+              <h2>Acara Terbaru</h2>
           </div>
       </div>
       <div class="row">
@@ -126,9 +126,12 @@
 </div>
 {% block script %}
 <script>
-$(document).ready(function() {
-    $('#allevent').DataTable();
-} );
+$('#allevent').DataTable({
+  "ordering":false
+});
+
+$(document).ready(function() {}
+    );
 </script>
 {% endblock %}
 {% endblock %}

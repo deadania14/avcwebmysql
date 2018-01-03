@@ -145,7 +145,6 @@ class EditEventForm(forms.ModelForm):
 class NewBarangForm(forms.ModelForm):
     thingsname = forms.CharField(label='Nama Barang', required=True)
     detail = forms.CharField(label='Keterangan', widget=forms.Textarea, required=True)
-    note = forms.CharField(label='Catatan', widget=forms.Textarea, required=True)
     class Meta:
         model = Inventory
         exclude = ('created_date','updated_date',)
@@ -155,7 +154,6 @@ class NewBarangForm(forms.ModelForm):
 
 class EditBarangForm(forms.ModelForm):
     detail = forms.CharField(label='Keterangan', widget=forms.Textarea, required=True)
-    note = forms.CharField(label='Catatan', widget=forms.Textarea, required=True)
     class Meta:
         model = Inventory
         exclude = ('thingsname','created_date','updated_date',)
@@ -193,11 +191,14 @@ class EditMeetingForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
-    note = forms.CharField(label='Catatan', required=True)
+    note = forms.CharField(label='Catatan', widget=forms.Textarea, required=True)
     place = forms.CharField(label='Tempat', required=True)
     class Meta:
         model = Meeting
         fields = ('place', 'user', 'note',)
+        widget = {
+             'note': Textarea(attrs={'cols': 80, 'rows': 20}),
+        }
 
 class EditUser(forms.ModelForm):
     class Meta:

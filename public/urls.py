@@ -8,6 +8,8 @@ urlpatterns = [
     url(r'^about/$', views.about, name="about"),
     #articles
     url(r'^artikel/$', views.articles, name="articles"),
+    url(r'^load_articles/$', views.load_articles, name="load_articles"),
+    
     #/article_detail
     url(r'^artikel/(?P<article_id>[0-9]+)/$', views.article_detail, name='article_detail'),
     #/event_detail

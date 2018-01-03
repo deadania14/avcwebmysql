@@ -31,7 +31,6 @@
               <thead>
                   <tr>
                       <th>Tanggal</th>
-                      <th>Tempat</th>
                       <th>Aksi</th>
                   </tr>
               </thead>
@@ -39,7 +38,6 @@
                   {% for practice in practices %}
                   <tr>
                       <td>{{practice.date}}</td>
-                      <td>{{practice.place}}</td>
                       <td><button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModalDetails{{practice.id}}"><span	class="fa fa-folder"></span> Lihat</button>
                           {% if now <= practice.date.date %}
                           <a class="btn	btn-warning btn-sm" href="{%	url	'manajemen:edit_schedule'	practice.id	%}"><span	class="glyphicon	glyphicon-pencil"></span> Ubah</a>
@@ -284,11 +282,14 @@
 </div>
 {% block script %}
 <script>
+$('#jadwalatihan').DataTable({
+  "ordering": false
+  });
 $(document).ready(function() {
     $('#member').DataTable();
     $('#kelas').DataTable();
     $('#absensi').DataTable();
-    $('#jadwalatihan').DataTable();
+
 } );
 </script>
 {% endblock %}

@@ -20,9 +20,12 @@ Ubah Data Barang
 {% block content %}
 <div class ="col-md-8 col-xs-12">
   <br>
-  <form method="POST"> {% csrf_token %}
+
+  <form method="POST">
+  <div class='left'><strong>Nama Barang</strong> <p><i>{{stuff_name}}</i></p></div>
+    {% csrf_token %}
     {% bootstrap_form form_edit_barang %}
-    <button class = "btn btn-primary" type="submit" class="save btn btn-default">Save</button>
+    <button class = "btn btn-primary" type="submit" class="save btn btn-default">Simpan</button>
   </form>
 </div>
 {% endblock %}

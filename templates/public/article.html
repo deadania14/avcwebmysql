@@ -6,8 +6,8 @@ Artikel
 {% block page_title%}
 <div class="col-sm-12 wow fadeIn">
     <i class="fa fa-newspaper-o"></i>
-    <h1><a href ="{% url 'public:articles' %}">Artikel</a>/</h1>
-    <p>article</p>
+    <h1><a href ="{% url 'public:articles' %}">Artikel</a> /article</h1>
+
 </div>
 {% endblock %}
 {% block content %}
@@ -21,31 +21,54 @@ Artikel
   <div class="row">
       <div class="col-sm-12 work-title wow fadeIn ">
         <br>
-          <h2>Artikel Terbaru</h2>
+          <h2>Artikel</h2>
       </div>
   </div>
     <div class="row">
       <div class="col-sm-12 form-group">
-      {% for article in artikelready %}
-      <div class="col-md-3">
-        <div class="event-box {{deals.status}}-design">
-          <div class="event-box-container">
-            {% if article.image %}
-            <img src="{{article.image.url}}">
-            {% endif %}
-            <div class="event-box-text">
-              <h3>{{article.title}}</h3>
-              <p>{{article.created_date}}</p>
-              <p>{{article.text|safe|linebreaksbr|slice:":100"}}</p>
-              <div class="work-bottom">
-                  <a href="{% url 'public:article_detail' article.id %}">Teruskan membaca...</a>
-              </div>
-            </div>
-          </div>
+        <div id="articles">{% include 'public/articleposts.html' %}</div>
+        <br><br>
+        <div class="col-md-12 center">
+          <a class="btn btn-primary" id="loadmorearticle"
+          href="javascript:void(0);"
+          data-page="2"><i>Load More Article</i></a>
         </div>
       </div>
-      {% endfor %}
-    </div>
     </div>
 </div>
+
+{% endblock %}
+{% block script %}
+<script>
+(function($) {
+  $('#loadmorearticle').on('click', function() {
+    var link = $(this);
+    var page = link.data('page');
+
+    $.ajax({
+      type: 'POST',
+      url: '/load_articles/',
+      data: {
+        'page': page,
+        'csrfmiddlewaretoken': "{{ csrf_token }}" // from index.html
+      },
+      success: function(data) {
+        // if there are still more pages to load,
+        // add 1 to the "Load More Posts" link's page data attribute
+        // else hide the link
+        if (data.has_next) {
+            link.data('page', page+1);
+        } else {
+          link.hide();
+        }
+        // append html to the posts div
+        $('#articles').append(data.article_html);
+      },
+      error: function(xhr, status, error) {
+        // shit happens friends!
+      }
+    });
+  });
+}(jQuery));
+</script>
 {% endblock %}

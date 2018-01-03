@@ -27,6 +27,9 @@ from .models import Event, Slider, UserProfile, Kelas, Timeline, QuenstionAnswer
 from .forms import SignUpForm, RegisterTransferForm, SliderForm, AbsensiForm, AdministrasiTransferForm
 from .forms import EventForm, UserProfileEditForm, AdministrasiForm, UserRegister, NewPaymentForm
 from .gmail import send_mail_gmail
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.template import loader
+from django.http import JsonResponse
 
 from rolepermissions.decorators import has_role_decorator
 
@@ -65,9 +68,36 @@ def event_detail(request, event_id):
 
 def articles(request):
     context={}
-    readyarticle = Article.objects.filter(is_publish= True).filter(is_event=False)[:8]
+    readyarticle = Article.objects.filter(is_publish=True)[:4]
     context['artikelready'] = readyarticle
     return render(request, 'public/article.html', context)
+
+def load_articles(request):
+    context={}
+    page = request.POST.get('page', 2)
+    readyarticle = Article.objects.filter(is_publish=True)
+    print(readyarticle, 'readyarticle')
+
+    results_per_page = 4
+    paginator = Paginator(readyarticle, results_per_page)
+    try:
+        readyarticle = paginator.page(page)
+    except PageNotAnInteger:
+        readyarticle = paginator.page(2)
+    except EmptyPage:
+        readyarticle = paginator.page(paginator.num_pages)
+    # build a html posts list with the paginated posts
+    context['artikelready'] = readyarticle
+    article_html = loader.render_to_string(
+        'public/articleposts.html',
+        context
+    )
+    # package output data and return it as a JSON object
+    output_data = {
+        'article_html': article_html,
+        'has_next': readyarticle.has_next()
+    }
+    return JsonResponse(output_data)
 
 def article_detail(request, article_id):
     context={}
@@ -145,6 +175,7 @@ def register(request):
             })
             #user.email_user(subject, message)
             send_mail_gmail(subject, message, from_emailb, user.email)
+            # if regadm.method=='Transfer':    
             return render(request, 'login/account_activation_sent.html')
     else:
         user_form = SignUpForm()

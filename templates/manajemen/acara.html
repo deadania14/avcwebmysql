@@ -39,7 +39,7 @@ Acara
           <tbody>
               {% for event in acaras %}
               <tr>
-                  <td>{{event.event_name}}</td>
+                  <td>{{event.event_name|slice:":20"}}..</td>
                   <td>{{event.corporate}}</td>
                   <td>{{event.event_date}}</td>
                   <th>{{event.event_status}}</th>
@@ -186,9 +186,10 @@ Acara
 </div>
 {% block script %}
 <script>
-$(document).ready(function() {
-    $('#acara').DataTable();
-} );
+$('#acara').DataTable({
+  "ordering":false,
+  "ScrollX":true,
+});
 </script>
 {% endblock %}
 

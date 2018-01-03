@@ -21,7 +21,8 @@ def index(request):
     #belom kelar
     new_member_query = UserProfile.objects.filter(tipe_user='member')
     context['new_members'] = new_member_query
-
+    inventory_query = Inventory.objects.all()
+    context['inventories']= inventory_query
     tutor_user_query = UserProfile.objects.filter(tipe_user='tutor')
     context['tutors'] = tutor_user_query
     manajemen_user_query = UserProfile.objects.filter(user__groups__name='manajemen')
@@ -205,7 +206,7 @@ def home_psdm(request):
     today = timezone.now().date()
     user_profile = UserProfile.objects.all()
     context['userprofiles']= user_profile
-    practice_query = Practice.objects.all()
+    practice_query = Practice.objects.order_by('-date')
     context['practices'] = practice_query
     kelas_query = Kelas.objects.all()
     context['classes'] = kelas_query
@@ -446,6 +447,7 @@ def new_barang(request):
 def edit_barang(request, barang_id):
     context={}
     barang = get_object_or_404(Inventory, id=barang_id)
+    context['stuff_name']=barang.thingsname
     if request.method=="POST":
         form_edit_barang = EditBarangForm(request.POST, instance = barang)
         if form_edit_barang.is_valid():
@@ -455,7 +457,8 @@ def edit_barang(request, barang_id):
             return HttpResponseRedirect(reverse('manajemen:home_inventaris', ))
     else :
         form_edit_barang = EditBarangForm(instance = barang)
-    return render(request, 'manajemen/edit_barang.html', {'form_edit_barang':form_edit_barang})
+    context['form_edit_barang']=form_edit_barang
+    return render(request, 'manajemen/edit_barang.html', context)
 
 def delete_barang(request, barang_id):
     barang_query = Inventory.objects.get(id=barang_id)
