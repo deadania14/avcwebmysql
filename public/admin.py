@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Event, UserProfile, SettingsVariable, Slider, Timeline, QuenstionAnswer
+from .models import Event, UserProfile, SettingsVariable, Slider, Timeline, QuestionAnswer
 
 class userprofile(admin.ModelAdmin):
     list_display = ['user', 'phone', 'tipe_user','user_kelas',]
@@ -23,4 +23,4 @@ admin.site.register(Timeline, timeline)
 
 class questionanswer(admin.ModelAdmin):
     list_display = ['question', 'answer', 'created_date', 'updated_date']
-admin.site.register(QuenstionAnswer, questionanswer)
+admin.site.register(QuestionAnswer, questionanswer)

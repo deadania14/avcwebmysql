@@ -23,7 +23,7 @@ from django.urls import reverse
 from manajemen.models import Article, Administrasi, AdministrationType, PracticeAttendance, Kelas
 from manajemen.models import Practice, Kelas, PracticeAttendance, LogKelas
 from public.models import SettingsVariable
-from .models import Event, Slider, UserProfile, Kelas, Timeline, QuenstionAnswer
+from .models import Event, Slider, UserProfile, Kelas, Timeline, QuestionAnswer
 from .forms import SignUpForm, RegisterTransferForm, SliderForm, AbsensiForm, AdministrasiTransferForm
 from .forms import EventForm, UserProfileEditForm, AdministrasiForm, UserRegister, NewPaymentForm
 from .gmail import send_mail_gmail
@@ -160,10 +160,10 @@ def register(request):
             from_emailb = settings.EMAIL_HOST_USER
             #to_listb = [settings.EMAIL_HOST_USER]
             #send_mail_gmail(subjectb, messageb, from_emailb, settings.EMAIL_HOST_USER)
-            for bendahara in bendaharas:
+            # for bendahara in bendaharas:
                 #to_listb.append(bendahara.email)
-                send_mail_gmail(subjectb, messageb, from_emailb, bendahara.email)
-            #send_mail(subjectb, messageb, from_emailb, to_listb, fail_silently = True)
+                # send_mail_gmail(subjectb, messageb, from_emailb, bendahara.email)
+            send_mail(subjectb, messageb, from_emailb, bendaharas, fail_silently = True)
             # </EMAIL>
             current_site = get_current_site(request)
             subject = 'Aktifasi Akun Anda'
@@ -173,9 +173,10 @@ def register(request):
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': account_activation_token.make_token(user),
             })
-            #user.email_user(subject, message)
-            send_mail_gmail(subject, message, from_emailb, user.email)
-            # if regadm.method=='Transfer':    
+            user.email_user(subject, message)
+            #send_mail_gmail(subject, message, from_emailb, user.email)
+            # send_mail(subject, message, from_emailb, user.email)
+            # if regadm.method=='Transfer':
             return render(request, 'login/account_activation_sent.html')
     else:
         user_form = SignUpForm()
@@ -185,7 +186,7 @@ def register(request):
     context['conditions'] = condition_query
     regis_fee = AdministrationType.objects.get(paymentstype="Registration and First Dues")
     context['regis_fee'] = regis_fee.nominal
-    questions = QuenstionAnswer.objects.all
+    questions = QuestionAnswer.objects.all
     context['questionanswer'] = questions
     return render (request, 'public/register.html', context)
 
@@ -224,8 +225,8 @@ def myprofile(request):
             #to_list = [settings.EMAIL_HOST_USER]
             for bendahara in bendaharas:
                 #to_list.append(bendahara.email)
-                send_mail_gmail(subject, message, from_email, bendahara.email)
-                #send_mail(subject, message, from_email, to_list, fail_silently = True)
+                #send_mail_gmail(subject, message, from_email, bendahara.email)
+                send_mail(subject, message, from_email, to_list, fail_silently = True)
             return HttpResponseRedirect(reverse('public:myprofile',))
         if form_new_payment.is_valid():
             npayment = form_new_payment.save(commit = False)

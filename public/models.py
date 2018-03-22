@@ -141,7 +141,7 @@ class SettingsVariable (models.Model):
         self.updated_date = timezone.now()
         self.save()
 
-class QuenstionAnswer(models.Model):
+class QuestionAnswer(models.Model):
     question = models.CharField(max_length=255, null=True)
     answer = models.TextField(null=True)
     created_date= models.DateTimeField(
