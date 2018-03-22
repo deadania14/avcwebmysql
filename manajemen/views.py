@@ -9,7 +9,6 @@ from django.template.loader import render_to_string
 from .models import Article, Practice, Administrasi, Kelas, PracticeAttendance, Inventory, Meeting, AdministrationType, LogKelas
 from .forms import ArticleForm, MainArticleForm, SchedulesForm, EditUserClassForm, AbsensiForm, AbsensiPeopleForm, AVCContactForm, NewEventForm, EditBarangForm, AbsensiKelasForm, EditUser, NewMeetingForm, EditMeetingForm, NewBarangForm, EditEventForm, NewPaymentForm, EditPaymentForm, NewClassForm, NewPaymentTypeForm, EditPaymentTypeForm, NewBroadcastMessageForm
 from public.models import UserProfile, Event, SettingsVariable, Timeline
-from public.gmail import send_mail_gmail
 from rolepermissions.decorators import has_role_decorator
 
 @login_required
@@ -51,7 +50,7 @@ def deactivate_user(request, user_id):
     'sender': 'Alliance Violin Community Depok Official',
     })
     from_email = settings.EMAIL_HOST_USER
-    send_mail_gmail(subject, message, from_email, user.email)
+    send_mail(subject, message, from_email, user.email)
     return HttpResponseRedirect(reverse('manajemen:home_sekretaris'))
 
 def activate_user(request, user_id):
@@ -65,7 +64,7 @@ def activate_user(request, user_id):
     'sender': 'Alliance Violin Community Depok Official',
     })
     from_email = settings.EMAIL_HOST_USER
-    send_mail_gmail(subject, message, from_email, user.email)
+    send_mail(subject, message, from_email, user.email)
     return HttpResponseRedirect(reverse('manajemen:home_sekretaris'))
 
 def new_meeting(request):
@@ -152,7 +151,7 @@ def new_pembayaran(request):
             from_email = settings.EMAIL_HOST_USER
             subject = 'Status Pembayaran '+ payment.jenis.paymentstype +' a/n '+payment.user
             message = 'Pembayaran '+ payment.jenis.paymentstype  +'Anda telah berhasil dikonfirmasi. Salam Gesek Selalu by AVC'
-            send_mail_gmail(subject, message, from_email, npayment.profile.email)
+            send_mail(subject, message, from_email, npayment.profile.email)
             return HttpResponseRedirect(reverse('manajemen:home_keuangan', ))
     else :
         form_new_payment = NewPaymentForm()
@@ -171,19 +170,19 @@ def confirmation_payment(request, payment_id):
         message = render_to_string('login/welcome.html', {
         'user': userp,
         })
-        send_mail_gmail(subject, message, from_email, userp.email)
+        send_mail(subject, message, from_email, userp.email)
     else :
         userp = User.objects.get(username = payment.user)
         subject = 'Status Pembayaran '+ payment.jenis.paymentstype +' a/n '+ str(userp.username)
         message = 'Pembayaran '+ payment.jenis.paymentstype  +'Anda telah berhasil dikonfirmasi. Salam Gesek Selalu by AVC'
-        send_mail_gmail(subject, message, from_email, userp.email)
+        send_mail(subject, message, from_email, userp.email)
     subject = 'Pemberitahuan konfirmasi pembayaran'
     message = render_to_string('messages/verifikasitindakan.html', {
     'user': userp,
     'tindakan': 'konfirmasi penerimaan pembayaran '+ payment.jenis.paymentstype +' a/n ',
     'userlogged': request.user,
     })
-    send_mail_gmail(subject, message, from_email, userp.email)
+    send_mail(subject, message, from_email, userp.email)
     return HttpResponseRedirect(reverse('manajemen:home_keuangan'))
 
 def cancel_payment(request, payment_id):
@@ -197,7 +196,7 @@ def cancel_payment(request, payment_id):
     userp = User.objects.get(username = payment.user)
     subject = 'Status Pembayaran '+ payment.jenis.paymentstype +' a/n '+str(userp.username)
     message = 'Pembayaran '+ payment.jenis.paymentstype  +'Anda telah digagalkan. Salam Gesek Selalu by AVC.'
-    send_mail_gmail(subject, message, from_email, userp.email)
+    send_mail(subject, message, from_email, userp.email)
     return HttpResponseRedirect(reverse('manajemen:home_keuangan'))
 
 @has_role_decorator('psdm')
@@ -403,7 +402,7 @@ def confirmation_event(request, event_id):
     'status': 'menerima',
     'event': eventconf.event_name,
     })
-    send_mail_gmail(subject, message, from_email, eventconf.email)
+    send_mail(subject, message, from_email, eventconf.email)
     return HttpResponseRedirect(reverse('manajemen:home_acara'))
 
 def cancel_event(request, event_id):
@@ -417,7 +416,7 @@ def cancel_event(request, event_id):
     'status': 'menunda',
     'event': eventconf.event_name,
     })
-    send_mail_gmail(subject, message, from_email, eventconf.email)
+    send_mail(subject, message, from_email, eventconf.email)
     return HttpResponseRedirect(reverse('manajemen:home_acara'))
 
 def delete_event(request, event_id):

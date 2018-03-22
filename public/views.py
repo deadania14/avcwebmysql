@@ -26,7 +26,6 @@ from public.models import SettingsVariable
 from .models import Event, Slider, UserProfile, Kelas, Timeline, QuestionAnswer
 from .forms import SignUpForm, RegisterTransferForm, SliderForm, AbsensiForm, AdministrasiTransferForm
 from .forms import EventForm, UserProfileEditForm, AdministrasiForm, UserRegister, NewPaymentForm
-from .gmail import send_mail_gmail
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template import loader
 from django.http import JsonResponse
@@ -117,7 +116,7 @@ def events(request):
             subject = 'Acara'+nevent.event_name+'Akan Dipertimbangkan'
             message = 'Terima kasih telah mengirim ajuan. Acara Anda akan kami pertimbangkan segera.'
             from_email = settings.EMAIL_HOST_USER
-            send_mail_gmail(subject, message, from_email, user)
+            send_mail(subject, message, from_email, user)
             return HttpResponseRedirect(reverse('public:events',))
     else :
         form = EventForm()
@@ -158,12 +157,8 @@ def register(request):
             subjectb = 'Pendaftar Baru '+ str(user)
             messageb = 'Pendaftar dengan nama '+user.first_name+ '('+user.profile.phone+')'+' memilih pembayaran secara '+ str(regadm.method) +'.'
             from_emailb = settings.EMAIL_HOST_USER
-            #to_listb = [settings.EMAIL_HOST_USER]
-            #send_mail_gmail(subjectb, messageb, from_emailb, settings.EMAIL_HOST_USER)
-            # for bendahara in bendaharas:
-                #to_listb.append(bendahara.email)
-                # send_mail_gmail(subjectb, messageb, from_emailb, bendahara.email)
-            send_mail(subjectb, messageb, from_emailb, bendaharas, fail_silently = True)
+            for bendahara in bendaharas:
+                send_mail(subjectb, messageb, from_emailb, bendaharas, fail_silently = True)
             # </EMAIL>
             current_site = get_current_site(request)
             subject = 'Aktifasi Akun Anda'
@@ -174,8 +169,7 @@ def register(request):
                 'token': account_activation_token.make_token(user),
             })
             user.email_user(subject, message)
-            #send_mail_gmail(subject, message, from_emailb, user.email)
-            # send_mail(subject, message, from_emailb, user.email)
+            send_mail(subject, message, from_emailb, user.email)
             # if regadm.method=='Transfer':
             return render(request, 'login/account_activation_sent.html')
     else:
@@ -222,10 +216,7 @@ def myprofile(request):
             bendaharas = User.objects.filter(groups__name='bendahara')
             subject = 'Pembayaran Registrasi'
             message = 'Bukti pembayaran registrasi melalui transfer oleh '+request.user.username+'('+request.user.profile.phone+')' +' telah diterima. Mohon untuk memeriksa bukti pembayaran dan segera konfirmasi'
-            #to_list = [settings.EMAIL_HOST_USER]
             for bendahara in bendaharas:
-                #to_list.append(bendahara.email)
-                #send_mail_gmail(subject, message, from_email, bendahara.email)
                 send_mail(subject, message, from_email, to_list, fail_silently = True)
             return HttpResponseRedirect(reverse('public:myprofile',))
         if form_new_payment.is_valid():
@@ -237,10 +228,8 @@ def myprofile(request):
             bendaharas = User.objects.filter(groups__name='bendahara')
             subject = 'Pembayaran '+ npayment.jenis + ' a/n '+npayment.user
             message = 'Saudara '+ npayment.user +'('+npayment.user.profile.phone+')' +' mengajukan pembayaran '+ npayment.jenis +' sebesar '+ npayment.jenis.nominal+'.'
-            #to_list = [settings.EMAIL_HOST_USER]
             for bendahara in bendaharas:
-                #to_list.append(bendahara.email)
-                send_mail_gmail(subject, message, from_email, bendahara.email)
+                send_mail(subject, message, from_email, bendahara.email)
             return HttpResponseRedirect(reverse('public:myprofile', ))
     else :
         form_transfer = RegisterTransferForm(instance=payment_tf)
@@ -282,10 +271,8 @@ def upload_transfer(request, administration_id):
             subject = 'Pembayaran '+ str(transfer_payment.jenis) + ' oleh ' + request.user.first_name
             message = 'Bukti pembayaran '+str(transfer_payment.jenis) + ' oleh ' + request.user.username+ ' telah diterima silahkan cek bukti dan segera konfirmasi.'
             from_email = settings.EMAIL_HOST_USER
-            # to_list = [settings.EMAIL_HOST_USER]
             for bendahara in bendaharas:
-                # to_list.append(bendahara.email)
-                send_mail_gmail(subject, message, from_email, bendahara.email)
+                send_mail(subject, message, from_email, bendahara.email)
             return HttpResponseRedirect(reverse('public:myprofile',))
     else:
         form_transfer_payment = AdministrasiTransferForm(instance=tf_payments)
