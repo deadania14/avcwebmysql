@@ -1,5 +1,6 @@
 {% extends 'public/base.html' %}
 {% load permission_tags %}
+{% load home_dynamic %}
 {% load bootstrap3 %}
 {% block title %}
   Beranda
@@ -72,6 +73,19 @@
 {% endblock %}
 
 {% block content %}
+<div class="testimonials-container">
+  <div class="container">
+    <div class="row">
+      <h3>Alliance Violin Community Depok</h3>
+    </div>
+      <div class="row">
+          <div class="col-sm-12 work-title wow fadeIn ">
+            <br>
+              <p>{% isi_desk %}</p>
+          </div>
+      </div>
+    </div>
+</div>
 <div class="work-container center">
     <div class="container">
         <div class="row">
