@@ -25,7 +25,7 @@ from manajemen.models import Practice, Kelas, PracticeAttendance, LogKelas
 from public.models import SettingsVariable
 from .models import Event, Slider, UserProfile, Kelas, Timeline, QuestionAnswer
 from .forms import SignUpForm, RegisterTransferForm, SliderForm, AbsensiForm, AdministrasiTransferForm
-from .forms import EventForm, UserProfileEditForm, AdministrasiForm, UserRegister, NewPaymentForm
+from .forms import EventForm, UserProfileEditForm, AdministrasiForm, UserRegister, NewPaymentForm, DeskripsiAVCForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template import loader
 from django.http import JsonResponse
@@ -33,8 +33,12 @@ from django.http import JsonResponse
 from rolepermissions.decorators import has_role_decorator
 
 def index(request):
+    deskripsi = SettingsVariable.objects.get(key="isi_deskripsi_home")
+    default_data = {'value':deskripsi.value}
     if request.method=="POST":
+        # For Slider
         slider_form = SliderForm(request.POST, request.FILES)
+        deskripsi_form = DeskripsiAVCForm(request.POST)
         if slider_form.is_valid():
             nslide = slider_form.save(commit=False)
             nslide.updated_date = timezone.now()
@@ -42,9 +46,16 @@ def index(request):
             nslide.save()
         else:
             print (slider_form.errors)
+        # For description
+        if deskripsi_form.is_valid():
+            # deskripsi = deskripsi_form.save(commit=False)
+            deskripsi.value = deskripsi_form.cleaned_data.get('deskripsi')
+            deskripsi.updated_date = timezone.now()
+            deskripsi.save()
     else:
         slider_form = SliderForm()
-    context={'slider_form' : slider_form,}
+        deskripsi_form = DeskripsiAVCForm(initial = default_data)
+    context={'slider_form' : slider_form,'deskripsi_form' : deskripsi_form,}
     articles_query = Article.objects.filter(is_mainarticle=False).filter(is_publish=True)[:4]
     context['articles'] = articles_query
     slider_query = Slider.objects.all()[:4]

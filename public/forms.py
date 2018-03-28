@@ -12,7 +12,7 @@ from django.forms.fields import Field
 from django.contrib.auth.models import User
 from localflavor.fr.forms import FRPhoneNumberField
 from localflavor.generic.forms import DeprecatedPhoneNumberFormFieldMixin
-from .models import Event, UserProfile, Slider
+from .models import Event, UserProfile, Slider, SettingsVariable
 from manajemen.models import Administrasi, PracticeAttendance
 
 phone_re = re.compile(r'^(\+62|0)[2-9]\d{7,10}$')
@@ -148,3 +148,11 @@ class AbsensiForm(forms.ModelForm):
     class Meta:
         model = PracticeAttendance
         fields = ('is_present', 'tutor_pendamping',)
+
+class DeskripsiAVCForm(forms.ModelForm):
+    # value = forms.CharField(
+    #     label='Isi Deskripsi',
+    #     widget=forms.Textarea)
+    class Meta:
+        model = SettingsVariable
+        fields = ['value']

@@ -76,6 +76,29 @@
 <div class="testimonials-container">
   <div class="container">
     <div class="row">
+      {% if user|has_role:'hpd' %}
+      <div class="right">
+        <button type="button" class="btn alert alert-warning btn-sm" data-toggle="modal" data-target="#myModalEditDesc"><strong>Edit <span class="fa fa-edit"></span></strong></button>
+      </div>
+      <div id="myModalEditDesc" class="modal fade" role="dialog">
+          <div class="modal-dialog">
+              <!-- Modal content-->
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">Edit Deskripsi</h4>
+                  </div>
+                  <div class="modal-body">
+                    <form method="POST" enctype="multipart/form-data"> {% csrf_token %}
+                      {% bootstrap_form deskripsi_form %}
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+                      <button class = "btn btn-primary" type="submit" class="save btn btn-default">Simpan</button>
+                    </form>
+                  </div>
+              </div>
+          </div>
+      </div>
+      {% endif %}
       <h3>Alliance Violin Community Depok</h3>
     </div>
       <div class="row">
