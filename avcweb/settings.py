@@ -146,7 +146,7 @@ STATICFILES_DIRS = [
 ]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-
+STATIC_ROOT = '/home/avcwebid/public_html/static'
 from django.conf.locale.id import formats as id_formats
 id_formats.DATE_INPUT_FORMATS = [
     '%d-%m-%Y', '%d/%m/%Y',             # '25-10-2009', 25/10/2009'
