@@ -1,6 +1,6 @@
-{% autoescape off %}
-{% load staticfiles %}
+<!-- #{% autoescape off %} -->
 {% extends 'mails/base.html' %}
+{% load staticfiles %}
 {% block content %}
   <p>Hi {{ event.sender }},</p>
 
@@ -11,4 +11,4 @@
   akan segera kami pertimbangkan segera.
   </p>
 {% endblock %}
-{% endautoescape %}
+<!-- #{% endautoescape %} -->
