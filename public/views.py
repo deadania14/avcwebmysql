@@ -159,7 +159,7 @@ def register(request):
             regadm.user = user
             regadm.nominal = regis_pay.nominal
             regadm.save()
-            kelas = Kelas.objects.get(nama_kelas='Basic')
+            kelas = Kelas.objects.get(nama_kelas='Violin Basic')
             today = timezone.now().date()
             LogKelas.objects.create(kelas_current=kelas, user=user,
             joined_date= today)
@@ -168,8 +168,11 @@ def register(request):
             subjectb = 'Pendaftar Baru '+ str(user)
             messageb = 'Pendaftar dengan nama '+user.first_name+ '('+user.profile.phone+')'+' memilih pembayaran secara '+ str(regadm.method) +'.'
             from_emailb = settings.EMAIL_HOST_USER
+            list_mail = []
             for bendahara in bendaharas:
-                send_mail(subjectb, messageb, from_emailb, bendaharas, fail_silently = True)
+                list_mail.append(bendahara.email)
+            email_terkirim = send_mail(subjectb, messageb, from_emailb, list_mail, fail_silently = False)
+            print('email yang terkirim : ' + str (email_terkirim))
             # </EMAIL>
             current_site = get_current_site(request)
             subject = 'Aktifasi Akun Anda'
@@ -180,7 +183,7 @@ def register(request):
                 'token': account_activation_token.make_token(user),
             })
             user.email_user(subject, message)
-            send_mail(subject, message, from_emailb, user.email)
+            send_mail(subject, message, from_emailb, list(user.email))
             # if regadm.method=='Transfer':
             return render(request, 'login/account_activation_sent.html')
     else:
