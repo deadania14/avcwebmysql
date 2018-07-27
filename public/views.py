@@ -127,7 +127,6 @@ def events(request):
             message = render_to_string('mails/submission-event.html', {
             'event': nevent,
             })
-            message = 'Terima kasih telah mengirim ajuan. Acara Anda akan kami pertimbangkan segera.'
             from_email = settings.EMAIL_HOST_USER
             send_mail(subject, message, from_email, [nevent.email])
             return HttpResponseRedirect(reverse('public:events',))
