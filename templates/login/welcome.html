@@ -1,7 +1,9 @@
 {% autoescape off %}
+{% load staticfiles %}
+<a href= "https://avc.web.id"> <img class = "img-responsive img-circle" src="{% static 'pictures/AVC-300x277.png'%}" style = 'width:100px;height:auto;padding-top:1px'></a>
 Hi {{ user.first_name }},
 
 Selamat kamu telah resmi menjadi member Alliance Violin Community Depok.
 Untuk info lebih lanjut kunjungi :
-http://depok.avc.web.id
+
 {% endautoescape %}

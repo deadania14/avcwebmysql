@@ -1,0 +1,14 @@
+{% autoescape off %}
+{% load staticfiles %}
+{% extends 'mails/base.html' %}
+{% block content %}
+  <p>Hi {{ event.sender }},</p>
+
+  <p>Terima kasih telah mengirim ajuan. Acara Anda yaitu :
+  Nama Acara : {{event.event_name}}
+  Deskripsi  : {{event.desc}}
+  Waktu      : {{event.event_date}}
+  akan segera kami pertimbangkan segera.
+  </p>
+{% endblock %}
+{% endautoescape %}

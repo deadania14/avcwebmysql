@@ -123,12 +123,13 @@ def events(request):
             nevent.status_choices = "waiting"
             nevent.created_date= timezone.now()
             nevent.save()
-            list_mail = []
-            list_mail.append(nevent.email)
             subject = 'Acara'+nevent.event_name+'Akan Dipertimbangkan'
+            message = render_to_string('mails/submission-event.html', {
+            'event': nevent,
+            })
             message = 'Terima kasih telah mengirim ajuan. Acara Anda akan kami pertimbangkan segera.'
             from_email = settings.EMAIL_HOST_USER
-            send_mail(subject, message, from_email, list_mail)
+            send_mail(subject, message, from_email, [nevent.email])
             return HttpResponseRedirect(reverse('public:events',))
     else :
         form = EventForm()
