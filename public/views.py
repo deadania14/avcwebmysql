@@ -123,11 +123,12 @@ def events(request):
             nevent.status_choices = "waiting"
             nevent.created_date= timezone.now()
             nevent.save()
-            user = nevent.email
+            list_mail = []
+            list_mail.append(nevent.email)
             subject = 'Acara'+nevent.event_name+'Akan Dipertimbangkan'
             message = 'Terima kasih telah mengirim ajuan. Acara Anda akan kami pertimbangkan segera.'
             from_email = settings.EMAIL_HOST_USER
-            send_mail(subject, message, from_email, user)
+            send_mail(subject, message, from_email, list_mail)
             return HttpResponseRedirect(reverse('public:events',))
     else :
         form = EventForm()
@@ -171,8 +172,9 @@ def register(request):
             list_mail = []
             for bendahara in bendaharas:
                 list_mail.append(bendahara.email)
-            email_terkirim = send_mail(subjectb, messageb, from_emailb, list_mail, fail_silently = False)
-            print('email yang terkirim : ' + str (email_terkirim))
+            # email_terkirim =
+            send_mail(subjectb, messageb, from_emailb, list_mail, fail_silently = False)
+            # print('email yang terkirim : ' + str (email_terkirim))
             # </EMAIL>
             current_site = get_current_site(request)
             subject = 'Aktifasi Akun Anda'
@@ -182,7 +184,7 @@ def register(request):
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': account_activation_token.make_token(user),
             })
-            user.email_user(subject, message)
+            #user.email_user(subject, message)
             send_mail(subject, message, from_emailb, list(user.email))
             # if regadm.method=='Transfer':
             return render(request, 'login/account_activation_sent.html')
@@ -230,8 +232,10 @@ def myprofile(request):
             bendaharas = User.objects.filter(groups__name='bendahara')
             subject = 'Pembayaran Registrasi'
             message = 'Bukti pembayaran registrasi melalui transfer oleh '+request.user.username+'('+request.user.profile.phone+')' +' telah diterima. Mohon untuk memeriksa bukti pembayaran dan segera konfirmasi'
+            list_mail = []
             for bendahara in bendaharas:
-                send_mail(subject, message, from_email, to_list, fail_silently = True)
+                list_mail.append(bendahara.email)
+            send_mail(subject, message, from_email, list_mail, fail_silently = True)
             return HttpResponseRedirect(reverse('public:myprofile',))
         if form_new_payment.is_valid():
             npayment = form_new_payment.save(commit = False)
@@ -285,8 +289,10 @@ def upload_transfer(request, administration_id):
             subject = 'Pembayaran '+ str(transfer_payment.jenis) + ' oleh ' + request.user.first_name
             message = 'Bukti pembayaran '+str(transfer_payment.jenis) + ' oleh ' + request.user.username+ ' telah diterima silahkan cek bukti dan segera konfirmasi.'
             from_email = settings.EMAIL_HOST_USER
+            list_mail = []
             for bendahara in bendaharas:
-                send_mail(subject, message, from_email, bendahara.email)
+                list_mail.append(bendahara.email)
+            send_mail(subject, message, from_email, list_mail)
             return HttpResponseRedirect(reverse('public:myprofile',))
     else:
         form_transfer_payment = AdministrasiTransferForm(instance=tf_payments)
