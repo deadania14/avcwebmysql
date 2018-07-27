@@ -128,7 +128,7 @@ def events(request):
             'event': nevent,
             })
             from_email = settings.EMAIL_HOST_USER
-            send_mail(subject, message, from_email, [nevent.email])
+            send_mail(subject, message, from_email, [nevent.email], html_message = message)
             return HttpResponseRedirect(reverse('public:events',))
     else :
         form = EventForm()
