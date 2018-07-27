@@ -1,12 +1,13 @@
+
 {% extends 'mails/base.html' %}
 {% load staticfiles %}
 {% block content %}
-  <p>Hi {{ event.sender }},</p>
+  <p>Hi {{ event.sender | safe }},</p>
 
   <p>Terima kasih telah mengirim ajuan. Acara Anda yaitu :
-  Nama Acara : {{event.event_name}}
+  Nama Acara : {{event.event_name | safe}}
   Deskripsi  : {{event.desc}}
-  Waktu      : {{event.event_date}}
+  Waktu      : {{event.event_date | safe}}
   akan segera kami pertimbangkan segera.
   </p>
 {% endblock %}
