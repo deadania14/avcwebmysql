@@ -11,11 +11,12 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 #for gmail OR google apps
 import os
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
+EMAIL_HOST = 'mail.avc.web.id'
 EMAIL_HOST_USER = os.environ.get('EMAIL_NAME','')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD','')
-EMAIL_PORT = 587
+EMAIL_PORT = 465
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 import django_extensions
