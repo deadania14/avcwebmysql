@@ -1,0 +1,11 @@
+
+{% extends 'mails/base.html' %}
+{% load staticfiles %}
+{% block content %}
+  <p>Hi {{first_name}} {{last_name}}
+  <br/>Pembayaran {{jenis_pembayaran}} sebesar {{nominal}} Saudara {{first_name}} {{last_name}}, ({{phone}}) telah diberhasil dikonfirmasi.
+  <br/>Terima kasih
+  <br/>Salam Gesek :)
+  <br/><strong>Alliance Violin Community Depok Official</strong></p>
+  </p>
+{% endblock %}

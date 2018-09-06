@@ -1,0 +1,9 @@
+
+{% extends 'mails/base.html' %}
+{% load staticfiles %}
+{% block content %}
+  <p>Hi {{ userlogged.username }},
+  <br/>Anda telah melakukan {{tindakan}}. 
+  <br/>Hubungi Admministrator bila ingin bertanya atau terjadi kesalahan.
+  <br/><strong>{{sender}}</strong></p>
+{% endblock %}

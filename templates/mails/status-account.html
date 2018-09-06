@@ -1,0 +1,9 @@
+
+{% extends 'mails/base.html' %}
+{% load staticfiles %}
+{% block content %}
+  <p>Hi {{ user.username}},
+  <br/>Status terbaru akun <strong> {{user.username}} </strong> pada web ALLIANCE VIOLIN COMMUNITY DEPOK adalah <strong>{{status}}</strong>.
+  <br/>Hubungi Admministrator bila ingin bertanya atau terjadi kesalahan.
+  <br/><strong>{{sender}}</strong></p>
+{% endblock %}

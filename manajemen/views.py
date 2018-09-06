@@ -43,12 +43,12 @@ def deactivate_user(request, user_id):
     user = get_object_or_404(User, id=user_id)
     user.is_active = False
     user.save()
-    subject = 'Status Akun Anda'
-    message = message = render_to_string('messages/akun.html', {
-    'user' : user,
-    'status': 'tidak aktif',
-    'sender': 'Alliance Violin Community Depok Official',
-    })
+    subject = 'Pembaharuan status akun'
+    message = render_to_string('mails/status-account.html', {
+        'user' : user,
+        'status': 'tidak aktif',
+        'sender': 'Alliance Violin Community Depok Official',
+        })
     from_email = settings.EMAIL_HOST_USER
     send_mail(subject, message, from_email, [user.email])
     return HttpResponseRedirect(reverse('manajemen:home_sekretaris'))
@@ -57,12 +57,12 @@ def activate_user(request, user_id):
     user = get_object_or_404(User, id=user_id)
     user.is_active = True
     user.save()
-    subject = 'Status Akun Anda'
-    message = message = render_to_string('messages/akun.html', {
-    'user' : user,
-    'status': 'aktif',
-    'sender': 'Alliance Violin Community Depok Official',
-    })
+    subject = 'Pembaharuan status akun'
+    message = message = render_to_string('mails/status-account.html', {
+        'user' : user,
+        'status': 'aktif',
+        'sender': 'Alliance Violin Community Depok Official',
+        })
     from_email = settings.EMAIL_HOST_USER
     send_mail(subject, message, from_email, [user.email])
     return HttpResponseRedirect(reverse('manajemen:home_sekretaris'))
@@ -133,7 +133,7 @@ def edit_administration_type(request, payment_type_id):
         form_edit_payment_type= EditPaymentTypeForm(request.POST, instance = edpaymentipe)
         if form_edit_payment_type.is_valid():
             edpaymentipe = form_edit_payment_type.save(commit = False)
-            edpaymentipe.updated_date= timezone.now()
+            edpaymentipe.updated_date = timezone.now()
             edpaymentipe.save()
             return HttpResponseRedirect(reverse('manajemen:home_keuangan', ))
     else :
@@ -146,11 +146,17 @@ def new_pembayaran(request):
         if form_new_payment.is_valid():
             npayment = form_new_payment.save(commit = False)
             npayment.nominal = npayment.jenis.nominal
-            npayment.created_date= timezone.now()
+            npayment.created_date = timezone.now()
             npayment.save()
             from_email = settings.EMAIL_HOST_USER
-            subject = 'Status Pembayaran '+ payment.jenis.paymentstype +' a/n '+payment.user
-            message = 'Pembayaran '+ payment.jenis.paymentstype  +'Anda telah berhasil dikonfirmasi. Salam Gesek Selalu by AVC'
+            subject = 'Pembayaran '+ str(npayment.jenis) + ' oleh '+ npayment.user.first_name + ' ' + npayment.user.last_name
+            message = render_to_string('mails/payment-confirmation.html', {
+                'first_name': npayment.user.first_name,
+                'last_name' : npayment.user.last_name,
+                'phone' : npayment.user.profile.phone,
+                'jenis_pembayaran' : str(npayment.jenis),
+                'nominal': npayment.jenis.nominal,
+            })
             send_mail(subject, message, from_email, [npayment.profile.email])
             return HttpResponseRedirect(reverse('manajemen:home_keuangan', ))
     else :
@@ -173,14 +179,20 @@ def confirmation_payment(request, payment_id):
         send_mail(subject, message, from_email, [userp.email])
     else :
         userp = User.objects.get(username = payment.user)
-        subject = 'Status Pembayaran '+ payment.jenis.paymentstype +' a/n '+ str(userp.username)
-        message = 'Pembayaran '+ payment.jenis.paymentstype  +'Anda telah berhasil dikonfirmasi. Salam Gesek Selalu by AVC'
+        subject = 'Pembayaran '+ str(payment.jenis) +' oleh ' + str(userp.first_name)+ ' '+ str(userp.last_name)
+        message = render_to_string('mails/payment-confirmation.html', {
+            'first_name': payment.user.first_name,
+            'last_name' : payment.user.last_name,
+            'phone' : payment.user.profile.phone,
+            'jenis_pembayaran' : str(payment.jenis),
+            'nominal': payment.jenis.nominal,
+        })
         send_mail(subject, message, from_email, [userp.email])
-    subject = 'Pemberitahuan konfirmasi pembayaran'
-    message = render_to_string('messages/verifikasitindakan.html', {
-    'user': userp,
-    'tindakan': 'konfirmasi penerimaan pembayaran '+ payment.jenis.paymentstype +' a/n ',
-    'userlogged': request.user,
+    subject = 'Verifikasi tindakan konfirmasi pembayaran'
+    message = render_to_string('mails/act-verification.html', {
+        'user': userp,
+        'tindakan': 'konfirmasi penerimaan pembayaran '+ str(payment.jenis) +' dari ' + userp.first_name + ' ' + userp.last_name,
+        'userlogged': request.user,
     })
     send_mail(subject, message, from_email, [userp.email])
     return HttpResponseRedirect(reverse('manajemen:home_keuangan'))
@@ -194,6 +206,15 @@ def cancel_payment(request, payment_id):
         payment.user.save()
     from_email = settings.EMAIL_HOST_USER
     userp = User.objects.get(username = payment.user)
+    '''
+    subject = 'Verifikasi tindakan menggagalkan pembayaran'
+    message = render_to_string('mails/act-verification.html', {
+        'user': userp,
+        'tindakan': 'cancel pembayaran '+ str(payment.jenis) +' dari ' + userp.first_name + ' ' + userp.last_name,
+        'userlogged': request.user,
+    })
+    send_mail(subject, message, from_email, [userp.email])
+    '''
     subject = 'Status Pembayaran '+ payment.jenis.paymentstype +' a/n '+str(userp.username)
     message = 'Pembayaran '+ payment.jenis.paymentstype  +'Anda telah digagalkan. Salam Gesek Selalu by AVC.'
     send_mail(subject, message, from_email, [userp.email])

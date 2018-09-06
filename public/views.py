@@ -164,29 +164,30 @@ def register(request):
             today = timezone.now().date()
             LogKelas.objects.create(kelas_current=kelas, user=user,
             joined_date= today)
-            #<EMAIL>
+            #<EMAIL> for treasurers
             bendaharas = User.objects.filter(groups__name='bendahara')
             subjectb = 'Pendaftar Baru '+ str(user)
-            messageb = 'Pendaftar dengan nama '+user.first_name+ '('+user.profile.phone+')'+' memilih pembayaran secara '+ str(regadm.method) +'.'
+            messageb = render_to_string('mails/registration-treasurers.html', {
+            'first_name': user.first_name,
+            'last_name' : user.last_name,
+            'phone' : user.profile.phone,
+            'method' : str(regadm.method),
+            })
             from_emailb = settings.EMAIL_HOST_USER
             list_mail = []
             for bendahara in bendaharas:
                 list_mail.append(bendahara.email)
-            # email_terkirim =
             send_mail(subjectb, messageb, from_emailb, list_mail, fail_silently = False)
-            # print('email yang terkirim : ' + str (email_terkirim))
-            # </EMAIL>
             current_site = get_current_site(request)
-            subject = 'Aktifasi Akun Anda'
+            # </EMAIL> for new user
+            subject = 'Segera Aktifasi Akun Anda'
             message = render_to_string('login/account_activation_email.html', {
                 'user': user,
                 'domain': current_site.domain,
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': account_activation_token.make_token(user),
             })
-            #user.email_user(subject, message)
             send_mail(subject, message, from_emailb, list(user.email))
-            # if regadm.method=='Transfer':
             return render(request, 'login/account_activation_sent.html')
     else:
         user_form = SignUpForm()
@@ -230,24 +231,38 @@ def myprofile(request):
             tfpayment = form_transfer.save(commit = False)
             tfpayment.save()
             bendaharas = User.objects.filter(groups__name='bendahara')
-            subject = 'Pembayaran Registrasi'
-            message = 'Bukti pembayaran registrasi melalui transfer oleh '+request.user.username+'('+request.user.profile.phone+')' +' telah diterima. Mohon untuk memeriksa bukti pembayaran dan segera konfirmasi'
+            subject = 'Pembayaran '+ str(tfpayment.jenis) + ' oleh '+ request.user.first_name + ' ' + request.user.last_name
+            message = render_to_string('mails/check-transfer-payment.html', {
+            'first_name': request.user.first_name,
+            'last_name' : request.user.last_name,
+            'phone' : request.user.profile.phone,
+            'jenis_pembayaran' : str(tfpayment.jenis),
+            'nominal' : tfpayment.jenis.nominal,
+            })
             list_mail = []
             for bendahara in bendaharas:
                 list_mail.append(bendahara.email)
-            send_mail(subject, message, from_email, list_mail, fail_silently = True)
+            send_mail(subject, message, from_email, list_mail, fail_silently = False)
             return HttpResponseRedirect(reverse('public:myprofile',))
         if form_new_payment.is_valid():
             npayment = form_new_payment.save(commit = False)
             npayment.nominal = npayment.jenis.nominal
-            npayment.created_date= timezone.now()
+            npayment.created_date = timezone.now()
             npayment.user = request.user
             npayment.save()
             bendaharas = User.objects.filter(groups__name='bendahara')
-            subject = 'Pembayaran '+ npayment.jenis + ' a/n '+npayment.user
-            message = 'Saudara '+ npayment.user +'('+npayment.user.profile.phone+')' +' mengajukan pembayaran '+ npayment.jenis +' sebesar '+ npayment.jenis.nominal+'.'
+            subject = 'Pembayaran '+ str(npayment.jenis) + ' oleh '+ npayment.user.first_name + ' ' + npayment.user.last_name
+            message = render_to_string('mails/new-payment.html', {
+                'first_name': npayment.user.first_name,
+                'last_name' : npayment.user.last_name,
+                'phone' : npayment.user.profile.phone,
+                'jenis_pembayaran' : str(npayment.jenis),
+                'nominal': npayment.jenis.nominal,
+            })
+            list_mail = []
             for bendahara in bendaharas:
-                send_mail(subject, message, from_email, bendahara.email)
+                list_mail.append(bendahara.email)
+            send_mail(subject, message, from_email, list_mail, fail_silently = False)
             return HttpResponseRedirect(reverse('public:myprofile', ))
     else :
         form_transfer = RegisterTransferForm(instance=payment_tf)
@@ -260,7 +275,6 @@ def myprofile(request):
     today = timezone.now().date()
     mykelas = LogKelas.objects.filter(user=request.user)
     context['mykelas'] = mykelas
-
     timeline_query = Timeline.objects.all()[:5]
     context['timeline_messages'] = timeline_query
     return render(request, 'public/myprofile.html', context)
@@ -286,13 +300,19 @@ def upload_transfer(request, administration_id):
             transfer_payment =form_transfer_payment.save(commit=False)
             transfer_payment.save()
             bendaharas = User.objects.filter(groups__name='bendahara')
-            subject = 'Pembayaran '+ str(transfer_payment.jenis) + ' oleh ' + request.user.first_name
-            message = 'Bukti pembayaran '+str(transfer_payment.jenis) + ' oleh ' + request.user.username+ ' telah diterima silahkan cek bukti dan segera konfirmasi.'
+            subject = 'Pembayaran '+ str(transfer_payment.jenis) + ' oleh '+ npayment.user.first_name + ' ' + npayment.user.last_name
+            message = render_to_string('mails/check-transfer-payment.html', {
+            'first_name': request.user.first_name,
+            'last_name' : request.user.last_name,
+            'phone' : request.user.profile.phone,
+            'jenis_pembayaran' : str(transfer_payment.jenis),
+            'nominal' : transfer_payment.jenis.nominal,
+            })
             from_email = settings.EMAIL_HOST_USER
             list_mail = []
             for bendahara in bendaharas:
                 list_mail.append(bendahara.email)
-            send_mail(subject, message, from_email, list_mail)
+            send_mail(subject, message, from_email, list_mail, fail_silently = False)
             return HttpResponseRedirect(reverse('public:myprofile',))
     else:
         form_transfer_payment = AdministrasiTransferForm(instance=tf_payments)

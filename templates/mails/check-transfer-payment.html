@@ -1,0 +1,10 @@
+
+{% extends 'mails/base.html' %}
+{% load staticfiles %}
+{% block content %}
+  <p>Hi TREASURER(Bendahara AVC)
+  <br/>Ada pembayaran {{jenis_pembayaran}} <strong><i>{{nominal}}</i></strong>melalui transfer ayo di cek.
+  <br/>Bukti pembayaran transfer oleh {{first_name}} {{last_name}}, ({{phone}}) telah diterima. Mohon untuk memeriksa bukti pembayaran dan segera konfirmasi melalui web ya.
+  <br/>Salam Gesek :)
+  </p>
+{% endblock %}

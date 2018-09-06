@@ -5,9 +5,9 @@
   <p>Hi {{ event.sender | safe }},</p>
 
   <p>Terima kasih telah mengirim ajuan. Acara Anda yaitu :
-  Nama Acara : {{event.event_name | safe}}
-  Deskripsi  : {{event.desc}}
-  Waktu      : {{event.event_date | safe}}
-  akan segera kami pertimbangkan segera.
+  <br/>Nama Acara : {{event.event_name | safe}}
+  <br/>Deskripsi  : {{event.desc}}
+  <br/>Waktu      : {{event.event_date | safe}}
+  <br/>akan segera kami pertimbangkan segera.
   </p>
 {% endblock %}

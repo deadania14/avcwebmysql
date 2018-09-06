@@ -1,0 +1,10 @@
+
+{% extends 'mails/base.html' %}
+{% load staticfiles %}
+{% block content %}
+  <p>Hi TREASURER(Bendahara AVC)
+  <br/>Ada member yang mengajukan telah melakukan pembayaran.
+  <br/>Saudara {{first_name}} {{last_name}}, ({{phone}}) mengajukan pembayaran {{jenis_pembayaran}} sebesar {{nominal}}.
+  <br/>Salam Gesek :)
+  </p>
+{% endblock %}

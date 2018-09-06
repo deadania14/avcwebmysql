@@ -1,0 +1,10 @@
+
+{% extends 'mails/base.html' %}
+{% load staticfiles %}
+{% block content %}
+  <p>Hi TREASURER(Bendahara AVC)
+  <br/>Ada pendaftar baru loh.
+  <br/>Pendaftar dengan nama {{first_name}} {{last_name}}, ({{phone}}) memilih pembayaran secara {{method}}.
+  <br/>Salam Gesek :)
+  </p>
+{% endblock %}
