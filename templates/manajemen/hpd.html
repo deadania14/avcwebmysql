@@ -182,7 +182,13 @@
           <label><i class="fa fa-phone"></i> Bantuan </label>
         </div>
         <div class="col-md-10">
-          <p>{% call2_footer %}</p>
+          <p>
+            {% if call2_footer%}
+             {% call2_footer %}
+            {% else %}
+            <i>null</i>
+            {% endif %}
+          </p>
         </div>
         <div class="col-md-2" style="text-align:right">
           <label><i class="fa fa-envelope"></i></label>

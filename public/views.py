@@ -187,7 +187,9 @@ def register(request):
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': account_activation_token.make_token(user),
             })
-            send_mail(subject, message, from_emailb, list(user.email))
+            list_mail_user = []
+            list_mail_user.append(str(user.email))
+            send_mail(subject, message, from_emailb, list_mail_user)
             return render(request, 'login/account_activation_sent.html')
     else:
         user_form = SignUpForm()

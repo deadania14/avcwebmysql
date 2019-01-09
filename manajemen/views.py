@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
 from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -176,7 +177,9 @@ def confirmation_payment(request, payment_id):
         message = render_to_string('login/welcome.html', {
         'user': userp,
         })
-        send_mail(subject, message, from_email, [userp.email])
+        list_mail_pay_conf = []
+        list_mail_pay_conf.append(str(userp.email))
+        send_mail(subject, message, from_emailb, list_mail_pay_conf)
     else :
         userp = User.objects.get(username = payment.user)
         subject = 'Pembayaran '+ str(payment.jenis) +' oleh ' + str(userp.first_name)+ ' '+ str(userp.last_name)
@@ -187,14 +190,18 @@ def confirmation_payment(request, payment_id):
             'jenis_pembayaran' : str(payment.jenis),
             'nominal': payment.jenis.nominal,
         })
-        send_mail(subject, message, from_email, [userp.email])
+        list_mail_pay_conf_gen = []
+        list_mail_pay_conf_gen.append(str(userp.email))
+        send_mail(subject, message, from_emailb, list_mail_pay_conf_gen)
     subject = 'Verifikasi tindakan konfirmasi pembayaran'
     message = render_to_string('mails/act-verification.html', {
         'user': userp,
         'tindakan': 'konfirmasi penerimaan pembayaran '+ str(payment.jenis) +' dari ' + userp.first_name + ' ' + userp.last_name,
         'userlogged': request.user,
     })
-    send_mail(subject, message, from_email, [userp.email])
+    list_mail_pay_conf_ver = []
+    list_mail_pay_conf_ver.append(str(userp.email))
+    send_mail(subject, message, from_emailb, list_mail_pay_conf_ver)
     return HttpResponseRedirect(reverse('manajemen:home_keuangan'))
 
 def cancel_payment(request, payment_id):
