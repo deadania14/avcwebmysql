@@ -1,8 +1,5 @@
-{% autoescape off %}
-Hi {{ user.username }},
+Hi {{ user.username }}
+Terima kasih telah mendaftar menjadi anggota AVC Depok :)
 
-Please click on the link below to confirm your registration:<br/>
-<i>Klik link dibawah untuk konfirmasi pendaftaranmu</i>
-
+Klik link dibawah untuk konfirmasi email dan pendaftaranmu.
 http://{{ domain }}{% url 'public:activate' uidb64=uid token=token %}
-{% endautoescape %}

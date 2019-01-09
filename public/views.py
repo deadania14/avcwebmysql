@@ -123,7 +123,7 @@ def events(request):
             nevent.status_choices = "waiting"
             nevent.created_date= timezone.now()
             nevent.save()
-            subject = 'Acara'+nevent.event_name+'Akan Dipertimbangkan'
+            subject = 'Acara '+nevent.event_name+' Akan Dipertimbangkan'
             message = render_to_string('mails/submission-event.html', {
             'event': nevent,
             })
